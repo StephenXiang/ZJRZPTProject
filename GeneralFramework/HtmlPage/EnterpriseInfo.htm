@@ -19,6 +19,14 @@
         var thisDate = new Date;
         var thisMonth = thisDate.getMonth();
         var thisYear = thisDate.getFullYear();
+        var llyear = thisYear - 2;
+        var lyear = thisYear - 1;
+        var thisyearMonth = "";
+        if (thisMonth == 0) {
+            thisyearMonth = (thisYear - 1) + "-12";
+        } else {
+            thisyearMonth = thisYear + "-" + thisMonth;
+        }
         $(function () {
             $('#BusinessLicenseImgTD').hide();
             $('#UserNameTD').hide();
@@ -197,6 +205,9 @@
         function GetJsonData() {
             var EnterpriseFinanceInfoJson =
                 {
+                    "llyear": llyear,
+                    "lyear": lyear,
+                    "thisyear": thisyearMonth,
                     "llzcze": $('#llzczetext').val().trim(),
                     "lzcze": $('#lzczetext').val().trim(),
                     "thiszcze": $('#thiszczetext').val().trim(),
