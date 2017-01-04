@@ -12,6 +12,7 @@
     <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         var UserInfo;
+        UserInfo = JSON.parse($.cookie('UserInfo'));
         var Enterprise;
         var thisMonthLab = "";
         var lastYearLab = "";
@@ -205,6 +206,7 @@
         function GetJsonData() {
             var EnterpriseFinanceInfoJson =
                 {
+                    "UserName": UserInfo["name"],
                     "llyear": llyear,
                     "lyear": lyear,
                     "thisyear": thisyearMonth,

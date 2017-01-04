@@ -10,3 +10,15 @@ E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\Gen
 E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLL\bin\Debug\Newtonsoft.Json.dll
 E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLL\bin\Debug\Newtonsoft.Json.pdb
 E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLL\bin\Debug\Newtonsoft.Json.xml
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\GeneralFrameworkBLL.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\GeneralFrameworkBLL.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\GeneralFrameworkBLLModel.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\GeneralFrameworkDAL.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\Newtonsoft.Json.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\GeneralFrameworkBLLModel.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\GeneralFrameworkDAL.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\Newtonsoft.Json.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\bin\Debug\Newtonsoft.Json.xml
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\obj\Debug\GeneralFrameworkBLL.csprojResolveAssemblyReference.cache
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\obj\Debug\GeneralFrameworkBLL.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLL\obj\Debug\GeneralFrameworkBLL.pdb

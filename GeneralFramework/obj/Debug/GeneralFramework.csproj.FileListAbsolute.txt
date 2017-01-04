@@ -10,3 +10,18 @@ E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\Gen
 E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFramework\bin\GeneralFrameworkDAL.pdb
 E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFramework\bin\Newtonsoft.Json.pdb
 E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFramework\bin\Newtonsoft.Json.xml
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFramework.dll.config
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFramework.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFramework.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFrameworkBLL.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFrameworkBLLModel.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFrameworkDAL.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\Newtonsoft.Json.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFrameworkBLLModel.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFrameworkBLL.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\GeneralFrameworkDAL.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\Newtonsoft.Json.pdb
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\bin\Newtonsoft.Json.xml
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\obj\Debug\GeneralFramework.csprojResolveAssemblyReference.cache
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\obj\Debug\GeneralFramework.dll
+D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFramework\obj\Debug\GeneralFramework.pdb
