@@ -15,7 +15,6 @@ namespace GeneralFrameworkDAL
         /// </summary>
         public static string ConStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
-
         /// <summary>
         /// 获取数据，返回DataReader
         /// </summary>
