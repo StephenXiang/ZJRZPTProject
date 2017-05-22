@@ -12,37 +12,9 @@
     <script type="text/javascript" language="javascript">
         $(function () {
             $('#Enterprisedlg').dialog('close');
-
-            //选择文件
-            $(".file").on("change", "input[type='file']", function () {
-                var filePath = $(this).val();
-                //设置上传文件类型
-                if (filePath.indexOf("xls") != -1 || filePath.indexOf("xlsx") != -1) {
-                    //上传文件
-                    $.ajaxFileUpload({
-                        url: '../../WebServer/UserLoginWebService.ashx?Method=testUpload',
-                        secureuri: false,
-                        fileElementId: 'btnfile',
-                        dataType: 'json',
-                        success: function (data, status) {
-                            //获取上传文件路径
-                            $("#txt_filePath").val(data.filenewname);
-                            alert("文件上传成功！");
-                        },
-                        error: function (data, status, e) {
-                            alert(e);
-                        }
-                    });
-                } else {
-                    alert("请选择正确的文件格式！");
-                    //清空上传路径
-                    $("#txt_filePath").val("");
-                    return false;
-                }
-            });
-        })
         });
         function login() {
+            alert('123');
             $.ajax({
                 type: "Post",
                 dataType: "text",
@@ -135,10 +107,7 @@
             <form id="ff" method="post">
                 <table>
                     <tr>
-                        <td>
-
-
-                        </td>
+                        <td></td>
 
                     </tr>
                     <tr>
