@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css">
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" language="javascript">
+        var SysMatMenu;
+        $(function () {
+            $.ajax({
+                type: "Get",
+                dataType: "json",
+                async: false,
+                url: "../../WebServer/NavMenuWebService.ashx?Method=GetSysMatMenuJson",
+                success: function (json) {
+                    if (json != "") {
+                        SysMatMenu = json;
+
+                        CreateSysMatChildMenu();
+                    }
+                }
+            });
+            function CreateSysMatChildMenu() {
+
+                var title;
+                for (var i = 0; i < SysMatMenu.length; i++) {
+                    if (i == 0) {
+                        title = SysMatMenu[i].MenuName;
+                    }
+                    $('#SysMatChildMenu').tabs('add', {
+                        title: SysMatMenu[i].MenuName,
+                        content: createSysMatChildMenuFrame(SysMatMenu[i].MenuUrl),
+                        closable: false
+                    });
+                }
+                $('#SysMatChildMenu').tabs('select', title);
+            }
+
+            function createSysMatChildMenuFrame(url) {
+                var s = '<iframe scrolling="yes" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+                return s;
+            }
+        });
+    </script>
+</html>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <div id="SysMatChildMenu" class="easyui-tabs" style="width: auto; height: 100%;"
+            tabposition='left'>
+        </div>
+    </div>
+</body>

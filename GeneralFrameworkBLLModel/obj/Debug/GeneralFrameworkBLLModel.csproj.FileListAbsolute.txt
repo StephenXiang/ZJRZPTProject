@@ -1,0 +1,4 @@
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\bin\Debug\GeneralFrameworkBLLModel.dll
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\bin\Debug\GeneralFrameworkBLLModel.pdb
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\obj\Debug\GeneralFrameworkBLLModel.dll
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\obj\Debug\GeneralFrameworkBLLModel.pdb

@@ -1,0 +1,10 @@
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\bin\Debug\GeneralFrameworkDAL.dll
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\bin\Debug\GeneralFrameworkDAL.pdb
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\bin\Debug\GeneralFrameworkBLLModel.dll
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\bin\Debug\GeneralFrameworkBLLModel.pdb
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\obj\Debug\GeneralFrameworkDAL.csprojResolveAssemblyReference.cache
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\obj\Debug\GeneralFrameworkDAL.dll
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\obj\Debug\GeneralFrameworkDAL.pdb
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\bin\Debug\Newtonsoft.Json.dll
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\bin\Debug\Newtonsoft.Json.pdb
+E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkDAL\bin\Debug\Newtonsoft.Json.xml

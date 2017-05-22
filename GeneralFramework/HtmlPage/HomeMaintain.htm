@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css">
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../HighCharts/code/highcharts.js"></script>
+    <script src="../../HighCharts/code/css/js/modules/exporting.js"></script>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'east'" style="width: 50%; padding: 10px; border: 0px;">
+            <table id="TZGG" style="width: 100%; height: 30%; padding: 10px;">
+            </table>
+            <br />
+            <table id="ZCZX" style="width: 100%; height: 30%; padding: 10px;">
+            </table>
+            <br />
+            <div id="FWLC" class="easyui-panel" title="服务流程" style="width: 100%; height: 33%;
+                padding: 10px;">
+                <img style="height: 100%; margin: 0 auto" />
+            </div>
+        </div>
+        <div data-options="region:'center'" style="padding: 10px; border: 0px;">
+            <table id="QYFC" style="width: 100%; height: 30%; padding: 10px;">
+            </table>
+            <br />
+            <table id="JRCP" style="width: 100%; height: 30%; padding: 10px;">
+            </table>
+            <br />
+            <div id="SSSJ" class="easyui-panel" title="实时数据" style="width: 100%; height: 33%;
+                padding: 10px;">
+                <div id="container" style="height: 100%; width: 100%; margin: 0 auto">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $('#QYFC').datagrid({
+            //url: '../../WebService/UsersServer.ashx?Method=GetUsers',
+            rownumbers: true,
+            singleSelect: true,
+            striped: true,
+            title: '企业风采',
+            fitColumns: true,
+            pagination: true,
+            pagePosition: 'bottom',
+            loadMsg: '正在加载数据...请稍后',
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            columns: [[
+                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'TypeName', title: '人员类型', width: 150, align: 'center' },
+                                    { field: 'LoginID', title: '登录ID', width: 150, align: 'center' },
+                                    { field: 'CreateDate', title: '创建时间', width: 150, align: 'center' },
+                                    { field: 'Is_Val', title: '是否启用', width: 150, align: 'center', formatter:
+                                        function (value, row, index) {
+                                            UserID = row.ID;
+                                            if (value == '启用') {
+                                                return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                            } else if (value == '未启用') {
+                                                return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                            }
+                                        }
+                                    }
+
+
+                                 ]]
+        });
+
+
+        $('#JRCP').datagrid({
+            //url: '../../WebService/UsersServer.ashx?Method=GetUsers',
+            rownumbers: true,
+            singleSelect: true,
+            striped: true,
+            title: '金融产品',
+            fitColumns: true,
+            pagination: true,
+            pagePosition: 'bottom',
+            loadMsg: '正在加载数据...请稍后',
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            columns: [[
+                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'TypeName', title: '人员类型', width: 150, align: 'center' },
+                                    { field: 'LoginID', title: '登录ID', width: 150, align: 'center' },
+                                    { field: 'CreateDate', title: '创建时间', width: 150, align: 'center' },
+                                    { field: 'Is_Val', title: '是否启用', width: 150, align: 'center', formatter:
+                                        function (value, row, index) {
+                                            UserID = row.ID;
+                                            if (value == '启用') {
+                                                return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                            } else if (value == '未启用') {
+                                                return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                            }
+                                        }
+                                    }
+
+
+                                 ]]
+        });
+
+        $('#TZGG').datagrid({
+            //url: '../../WebService/UsersServer.ashx?Method=GetUsers',
+            rownumbers: true,
+            singleSelect: true,
+            striped: true,
+            title: '通知公告',
+            fitColumns: true,
+            pagination: true,
+            pagePosition: 'bottom',
+            loadMsg: '正在加载数据...请稍后',
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            columns: [[
+                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'TypeName', title: '人员类型', width: 150, align: 'center' },
+                                    { field: 'LoginID', title: '登录ID', width: 150, align: 'center' },
+                                    { field: 'CreateDate', title: '创建时间', width: 150, align: 'center' },
+                                    { field: 'Is_Val', title: '是否启用', width: 150, align: 'center', formatter:
+                                        function (value, row, index) {
+                                            UserID = row.ID;
+                                            if (value == '启用') {
+                                                return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                            } else if (value == '未启用') {
+                                                return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                            }
+                                        }
+                                    }
+
+
+                                 ]]
+        });
+
+        $('#ZCZX').datagrid({
+            //url: '../../WebService/UsersServer.ashx?Method=GetUsers',
+            rownumbers: true,
+            singleSelect: true,
+            striped: true,
+            title: '政策资讯',
+            fitColumns: true,
+            pagination: true,
+            pagePosition: 'bottom',
+            loadMsg: '正在加载数据...请稍后',
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            columns: [[
+                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'TypeName', title: '人员类型', width: 150, align: 'center' },
+                                    { field: 'LoginID', title: '登录ID', width: 150, align: 'center' },
+                                    { field: 'CreateDate', title: '创建时间', width: 150, align: 'center' },
+                                    { field: 'Is_Val', title: '是否启用', width: 150, align: 'center', formatter:
+                                        function (value, row, index) {
+                                            UserID = row.ID;
+                                            if (value == '启用') {
+                                                return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                            } else if (value == '未启用') {
+                                                return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                            }
+                                        }
+                                    }
+
+
+                                 ]], toolbar: [{
+                                     iconCls: 'icon-add',
+                                     text: '增加人员',
+                                     handler: function () {
+                                         OpenUserDialog('增加人员');
+                                     }
+                                 }, '-', {
+                                     iconCls: 'icon-remove',
+                                     text: '删除人员',
+                                     handler: function () {
+                                         Del();
+                                     }
+                                 }],
+            onClickRow: (function (index, data) {
+                UserID = data.ID;
+            })
+        });
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '2017年融资总量'
+            },
+            subtitle: {
+                text: '每月融资明细'
+            },
+            xAxis: {
+                categories: [
+            '一月',
+            '二月',
+            '三月',
+            '四月',
+            '五月',
+            '六月',
+            '七月',
+            '八月',
+            '九月',
+            '十月',
+            '十一月',
+            '十二月'
+        ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '单位:（万元）'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} 万</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: '京口区',
+                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+            }, {
+                name: '润州区',
+                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+            }, {
+                name: '丹徒区',
+                data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+
+            }, {
+                name: '大港新区',
+                data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+
+            }]
+        });
+    });
+</script>
+</html>

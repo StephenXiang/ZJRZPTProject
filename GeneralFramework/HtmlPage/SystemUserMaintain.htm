@@ -1,0 +1,162 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#UserRoledlg').dialog('close');
+            $("#UserTree").tree({
+                url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
+                onClick: function (node) {
+                    if (node.attributes) {
+                        loadUserDG(node.attributes.ID);
+                    }
+                }
+            });
+
+        });
+        function loadUserDG(Id) {
+            $('#user_dg').datagrid({
+                url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                queryParams: { DepartmentId: Id },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '用户列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'UserRolesID', title: '用户角色', width: 150, align: 'center' },
+                                    { field: 'UserDepartment', title: '所属组织', width: 150, align: 'center' },
+                                    { field: 'UserID', title: '登陆ID', width: 150, align: 'center' },
+                                    {
+                                        field: 'IsEnable', title: '是否启用', width: 150, align: 'center', formatter:
+                                          function (value, row, index) {
+                                              UserID = row.ID;
+                                              if (value == 0) {
+                                                  return '<a href="#" onclick="test( &quot;停用&quot;)">停用</a>'
+                                              } else if (value == 1) {
+                                                  return '<a href="#" onclick="test(2)">启用</a>'
+                                              }
+                                          }
+                                    }
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '增加用户',
+                    handler: function () {
+                        OpenUserDialog('增加人员');
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除用户',
+                    handler: function () {
+                        Del();
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    UserID = data.ID;
+                }),
+                onDblClickRow: (function (index, row) {
+                    $('#UserRoledlg').dialog('open');
+                    $('#labUserId').html(row.UserID);
+                    $("#Ul1").tree({
+                        url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
+                        onClick: function (node) {
+                            if (node.attributes) {
+                                loadUserDG(node.attributes.ID);
+                            }
+                        }
+                    });
+                })
+            });
+
+
+            $('#user_dg1').datagrid({
+                url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                queryParams: { DepartmentId: Id },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '菜单列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'UserRolesID', title: '用户角色', width: 150, align: 'center' },
+                                    { field: 'UserDepartment', title: '所属组织', width: 150, align: 'center' },
+                                    { field: 'UserID', title: '登陆ID', width: 150, align: 'center' },
+                                    {
+                                        field: 'IsEnable', title: '是否启用', width: 150, align: 'center', formatter:
+                                          function (value, row, index) {
+                                              UserID = row.ID;
+                                              if (value == 0) {
+                                                  return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                              } else if (value == 1) {
+                                                  return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                              }
+                                          }
+                                    }
+                ]]
+            });
+        }
+
+
+        function test(str) {
+            alert(str);
+        }
+    </script>
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div style="height: 98%; padding: 5px;">
+            <div class="easyui-layout" data-options="fit:true">
+                <div data-options="region:'west',split:true" title="系统用户" style="width: 200px;" maxwidth="200px">
+                    <ul id="UserTree"></ul>
+                </div>
+                <div data-options="region:'center'" title="">
+                    <table id="user_dg"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="UserRoledlg" class="easyui-dialog" title="菜单权限分配" style="text-align: center;
+        width: 600px; height: 500px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#UserRoledlg-buttons'
+            ">
+        <div style="margin-bottom: 20px">
+            <h3>
+                <label>
+                    所选用户：<label id="labUserId"></label>
+                </label>
+            </h3>
+        </div>
+        <div>
+            <table id="user_dg1"></table>
+        </div>
+    </div>
+    <div id="UserRoledlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="EditUserPwd()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#UserRoledlg').dialog('close')">
+            关闭
+        </a>
+    </div>
+</body>
+</html>
