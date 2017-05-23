@@ -183,8 +183,10 @@
     <Content Include="HighCharts\code\themes\sand-signika.js" />
     <Content Include="HighCharts\code\themes\skies.js" />
     <Content Include="HighCharts\jquery-1.9.1.min.js" />
+    <Content Include="HtmlPage\EnterpriseInfo.htm" />
     <Content Include="HtmlPage\HomeMaintain.htm" />
     <Content Include="HtmlPage\PublishRZ.htm" />
+    <Content Include="HtmlPage\RZExamineApprove.htm" />
     <Content Include="HtmlPage\SystemMaintain.htm" />
     <Content Include="HtmlPage\SystemUserMaintain.htm" />
     <Content Include="images\htbanner.jpg" />
@@ -1018,6 +1020,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="HtmlPage\json1.json" />
     <None Include="jquery-easyui-1.5.1\demo\accordion\datagrid_data1.json" />
     <None Include="jquery-easyui-1.5.1\demo\combobox\combobox_data1.json" />
     <None Include="jquery-easyui-1.5.1\demo\combobox\combobox_data2.json" />

@@ -51,7 +51,6 @@
                     title: NavMenu[i].MenuName
                 });
             }
-            $('#NavMenu').tabs('select', toptitle);
             loadclick();
         }
         function loadclick() {

@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>融资审批</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#RZ_dg').datagrid({
+                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '融资列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'UserRolesID', title: '企业名称', width: 150, align: 'center' },
+                                    { field: 'UserDepartment', title: '融资额度', width: 150, align: 'center' },
+                                    { field: 'UserID', title: '发布日期', width: 150, align: 'center' },
+                                    {
+                                        field: 'IsEnable', title: '审核', width: 150, align: 'center', formatter:
+                                          function (value, row, index) {
+                                              UserID = row.ID;
+                                              if (value == 0) {
+                                                  return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                              } else if (value == 1) {
+                                                  return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                              }
+                                          }
+                                    }
+                ]]
+            });
+        });
+    </script>
+
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div>
+            <table id="RZ_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#RZ_dg-buttons'
+            "></table>
+        </div>
+
+        <div class="easyui-panel" title="详细信息" style="width:100%;height:420px;padding:10px;">
+            <div class="easyui-layout" data-options="fit:true">
+                <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
+                    <h2> 企业信息</h2>
+                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%;">
+                        <div data-options="region:'center'" style="width:33%;padding:10px">
+                            <h3> 基本信息</h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">企业名称:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">信用代码:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">登记注册类型:</td>
+                                    <td style=" text-align:center;"></td>
+                                </tr>
+                                <tr>
+
+                                    <td style=" text-align:right;">行业分类:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">企业类型:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">注册地:</td>
+                                    <td style=" text-align:center;"></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">环评结果:</td>
+                                    <td style=" text-align:center;"</td>
+                                    <td style=" text-align:right;">注册资金额度:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">币种:</td>
+                                    <td style=" text-align:center;"></td>
+                                </tr>
+
+                                <tr>
+
+                                    <td style=" text-align:right;">企业营业范围:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">主要产品:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">*企业成立时间:</td>
+                                    <td style=" text-align:center;"></td>
+                                </tr>
+
+
+                                <tr>
+                                    <td style=" text-align:right;">企业法人代表:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">联系人姓名:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">联系人电话:</td>
+                                    <td style=" text-align:center;"></td>
+
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">企业简介:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;">营业执照:</td>
+                                    <td style=" text-align:center;"></td>
+                                    <td style=" text-align:right;"></td>
+                                    <td style=" text-align:center;"></td>
+                                </tr>
+
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div data-options="region:'center'" style="padding:10px">
+                    <h2>财务信息</h2>
+                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:99%;">
+                        <div data-options="region:'west'" style="width:33%;padding:10px">
+                            <h3> 2015年</h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">资产总额:</td>
+                                    <td style=" text-align:right;">200&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">负债总额:</td>
+                                    <td style=" text-align:right;">50&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">所有者权益:</td>
+                                    <td style=" text-align:right;">150&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">销售收入:</td>
+                                    <td style=" text-align:right;">800&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">应收账款:</td>
+                                    <td style=" text-align:right;">200&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">净利润:</td>
+                                    <td style=" text-align:right;">50&nbsp万</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div data-options="region:'east'" style="width:33%;padding:10px">
+                            <h3> 最近一个月</h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">资产总额:</td>
+                                    <td style=" text-align:right;">200&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">负债总额:</td>
+                                    <td style=" text-align:right;">50&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">所有者权益:</td>
+                                    <td style=" text-align:right;">150&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">销售收入:</td>
+                                    <td style=" text-align:right;">800&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">应收账款:</td>
+                                    <td style=" text-align:right;">200&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">净利润:</td>
+                                    <td style=" text-align:right;">50&nbsp万</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div data-options="region:'center'" style="width:33%;padding:10px">
+                            <h3> 2016年</h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">资产总额:</td>
+                                    <td style=" text-align:right;">200&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">负债总额:</td>
+                                    <td style=" text-align:right;">50&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">所有者权益:</td>
+                                    <td style=" text-align:right;">150&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">销售收入:</td>
+                                    <td style=" text-align:right;">800&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">应收账款:</td>
+                                    <td style=" text-align:right;">200&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">净利润:</td>
+                                    <td style=" text-align:right;">50&nbsp万</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div data-options="region:'east'" style="width:30%;padding:10px">
+                    <h2> 融资需求</h2>
+                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%;">
+                        <div data-options="region:'center'" style="width:33%;padding:10px">
+                            <h3> 需求信息</h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">融资额度:</td>
+                                    <td style=" text-align:right;">200&nbsp万</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">所选银行:</td>
+                                    <td style=" text-align:right;">
+                                        中国银行、建设银行、农村商业银行
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">融资期限:</td>
+                                    <td style=" text-align:right;">6个月（含）以内</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">融资用途:</td>
+                                    <td style=" text-align:right;">流动资金</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">抵押物:</td>
+                                    <td style=" text-align:right;">马萨拉蒂</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
