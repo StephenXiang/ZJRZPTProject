@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>金融产品发布</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <link rel="stylesheet" href="../kindeditor-4.1.7/themes/default/default.css" />
+    <link rel="stylesheet" href="../kindeditor-4.1.7/plugins/code/prettify.css" />
+    <script charset="utf-8" src="../kindeditor-4.1.7/kindeditor.js"></script>
+    <script charset="utf-8" src="../kindeditor-4.1.7/lang/zh_CN.js"></script>
+    <script charset="utf-8" src="../kindeditor-4.1.7/plugins/code/prettify.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('#FPdlg').dialog('close');
+            var editor;
+            window.editor = KindEditor.create('#content', {
+                resizeType: 1,
+                urlType: 'domain', // 带有域名的绝对路径
+            });
+
+            $('#FP_dg').datagrid({
+                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '金融产品列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                                    { field: 'BankName', title: '产品名称', width: '450', align: 'center' },
+                                    { field: 'Address', title: '产品LOG', width: '450', align: 'center' },
+                                    { field: 'User', title: '发布时间', width: '250', align: 'center' },
+                                    { field: 'Telephone', title: '审核状态', width: '250', align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '发布金融产品',
+                    handler: function () {
+                        $('#FPdlg').dialog('open');
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除金融产品',
+                    handler: function () {
+
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    //UserID = data.ID;
+                }),
+                onDblClickRow: (function (index, row) {
+                    //$('#UserRoledlg').dialog('open');
+                    //$('#labUserId').html(row.UserID);
+                    //$("#Ul1").tree({
+                    //    url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
+                    //    onClick: function (node) {
+                    //        if (node.attributes) {
+                    //            loadUserDG(node.attributes.ID);
+                    //        }
+                    //    }
+                    //});
+                })
+            });
+        });
+    </script>
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div>
+            <table id="FP_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#RZ_dg-buttons'
+            "></table>
+        </div>
+        <div id="FPdlg" class="easyui-dialog" title="金融产品编辑" style="text-align: center;
+        width: 800px; height: 500px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#FPdlg-buttons'
+            ">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">产品名称:</td>
+                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">产品LOG:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;" /></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">详细内容:</td>
+                    <td style=" text-align:left;"><textarea id="content" name="content" style="width:100%; height:300px;"></textarea></td>
+                </tr>
+
+        </div>
+        <div id="FPdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#FPdlg').dialog('close')">
+                关闭
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>银行信息</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#Bank_dg').datagrid({
+                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '银行信息列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                                    { field: 'BankName', title: '银行名称', width: '450', align: 'center' },
+                                    { field: 'Address', title: '地址', width: '450', align: 'center' },
+                                    { field: 'User', title: '联系人', width: '250', align: 'center' },
+                                    { field: 'Telephone', title: '电话', width: '250', align: 'center' }
+                ]]
+            });
+        });
+    </script>
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div>
+            <table id="Bank_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#RZ_dg-buttons'
+            "></table>
+        </div>
+        <div id="Bankdlg" class="easyui-dialog" title="编辑银行信息" style="text-align: center;
+        width: 400px; height: 250px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#ZZDdlg-buttons'
+            ">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">银行名称:</td>
+                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">银行地址:</td>
+                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">联系人:</td>
+                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">电话:</td>
+                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+                </tr>
+
+        </div>
+        <div id="ZZDdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#Bankdlg').dialog('close')">
+                关闭
+            </a>
+        </div>
+    </div>
+</body>
+</html>
