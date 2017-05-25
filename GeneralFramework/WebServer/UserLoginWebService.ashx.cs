@@ -65,27 +65,34 @@ namespace GeneralFramework.WebServer
         {
             HttpFileCollection files = Request.Files;
             HttpPostedFile file = files[0];
-             
+
         }
 
         public void Login()
         {
             string UserName = Request.Form["UserName"].ToString();
             string Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"].ToString(), "MD5").ToLower();
-            bool isLogin = sum.Islogin(UserName, Pwd);
-            if (isLogin)
+            var loginInfo = sum.Login(UserName, Pwd);
+            if (loginInfo != null)
             {
-
                 Session["UserName"] = UserName;
                 Session.Timeout = 60;
-
             }
-            Response.Write(isLogin);
+            Response.Write(new
+            {
+                status = loginInfo != null,
+                role = loginInfo?.RoleId ?? 0
+            });
         }
 
         public void GetLoginUserInfo()
         {
             Response.Write(Session["UserName"].ToString());
+        }
+
+        public void GetLoginUserRole()
+        {
+            Response.Write(Session["Role"].ToString());
         }
 
         public void GetUserTBJson()

@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -193,6 +194,7 @@
     <Content Include="HtmlPage\RZExamineApprove.htm" />
     <Content Include="HtmlPage\SystemMaintain.htm" />
     <Content Include="HtmlPage\SystemUserMaintain.htm" />
+    <Content Include="HtmlPage\PublishZCGG.htm" />
     <Content Include="HtmlPage\ZZDExamineApprove.htm" />
     <Content Include="images\htbanner.jpg" />
     <Content Include="images\timg.jpg" />
@@ -1277,6 +1279,10 @@
     <Folder Include="kindeditor-4.1.7\attached\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GeneralFrameworkBLLModel\GeneralFrameworkBLLModel.csproj">
+      <Project>{6e2d1cc2-52f5-44c8-a0fa-4d66493295f0}</Project>
+      <Name>GeneralFrameworkBLLModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GeneralFrameworkBLL\GeneralFrameworkBLL.csproj">
       <Project>{735A45FB-8293-4D76-A03F-9A57B300234C}</Project>
       <Name>GeneralFrameworkBLL</Name>

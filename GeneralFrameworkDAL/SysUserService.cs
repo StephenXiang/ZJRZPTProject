@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using GeneralFrameworkBLLModel;
 
 namespace GeneralFrameworkDAL
 {
@@ -15,6 +16,23 @@ namespace GeneralFrameworkDAL
             DataTable dt = DBHelper.GetDataSet(sql);
             i = dt.Rows.Count;
             return i;
+        }
+
+        public SysUser GetSysUserInfo(string userName, string pwd)
+        {
+            var sql =
+                $@"select u.ID as userId,u.RolesID,u.DepartmentID,d.DepartmentName,d.DepartmentDec,r.RolesName,r.RolesDec
+from SysUser u,SysDepartment d,SysRoles r where u.DepartmentID=d.ID and u.RolesID=r.ID
+and u.UserName='{userName}' and u.UserPassWord='{pwd}' and u.IsEnable=0";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            if (dt == null || dt.Rows.Count == 0) return null;
+            return new SysUser
+            {
+                UserName = userName,
+                Id = dt.Rows[0].Field<int>("userId"),
+                RoleId = dt.Rows[0].Field<int>("RolesID"),
+                DepartId = dt.Rows[0].Field<int>("DepartmentID"),
+            };
         }
 
 

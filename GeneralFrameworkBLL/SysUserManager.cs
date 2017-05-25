@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GeneralFrameworkDAL;
 using System.Data;
+using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
 
 namespace GeneralFrameworkBLL
@@ -19,7 +20,11 @@ namespace GeneralFrameworkBLL
                 islogin = true;
             }
             return islogin;
+        }
 
+        public SysUser Login(string username, string pwd)
+        {
+            return Sus.GetSysUserInfo(username, pwd);
         }
 
         public DataTable GetUserDT()

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GeneralFrameworkBLLModel
+﻿namespace GeneralFrameworkBLLModel
 {
     /// <summary>
     /// 导航菜单实体

@@ -1,58 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GeneralFrameworkBLLModel
+﻿namespace GeneralFrameworkBLLModel
 {
     public class SysUser
     {
-        private int id;
+        public int Id { get; set; }
 
-        public int Id
-        {
-            get { return id; }
-            set { id = value; }
-        }
+        public int RoleId { get; set; }
 
-        private SysRoles sysRols;
+        public int DepartId { get; set; }
 
-        internal SysRoles SysRols
-        {
-            get { return sysRols; }
-            set { sysRols = value; }
-        }
+        public SysRoles SysRols { get; set; }
 
-        private SysDepartment sysDepatment;
+        public SysDepartment SysDepatment { get; set; }
 
-        internal SysDepartment SysDepatment
-        {
-            get { return sysDepatment; }
-            set { sysDepatment = value; }
-        }
+        public string UserName { get; set; }
 
-        private string userName;
+        public string UserPassWord { get; set; }
 
-        public string UserName
-        {
-            get { return userName; }
-            set { userName = value; }
-        }
-
-        private string userPassWord;
-
-        public string UserPassWord
-        {
-            get { return userPassWord; }
-            set { userPassWord = value; }
-        }
-
-        private int isEnable;
-
-        public int IsEnable
-        {
-            get { return isEnable; }
-            set { isEnable = value; }
-        }
+        public int IsEnable { get; set; }
     }
 }
