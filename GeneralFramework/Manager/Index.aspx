@@ -123,7 +123,7 @@
     <form id="form1" runat="server">
         <div style="margin: 20px 0;">
         </div>
-        <div data-options="region:'north'" style="margin-left: 10px; height: 100px; text-align: center; line-height: 99px; font-size: 40px; color: White; background: url(../../images/htbanner.jpg) repeat fixed!important; overflow: hidden;">
+        <div data-options="region:'north'" style="height: 100px; text-align: center; line-height: 99px; font-size: 40px; color: White; background: url(../../images/htbanner.jpg) repeat fixed!important; overflow: hidden;">
             镇江市965808企业融资服务平台
         </div>
         <div data-options="region:'south',split:true" maxheight="30px" style="height: 30px;">
