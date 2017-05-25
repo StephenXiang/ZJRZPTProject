@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.SessionState;
 using System.Reflection;
 using GeneralFrameworkBLL;
+using GeneralFrameworkDAL.JSON;
 
 namespace GeneralFramework.WebServer
 {
@@ -78,11 +79,11 @@ namespace GeneralFramework.WebServer
                 Session["UserName"] = UserName;
                 Session.Timeout = 60;
             }
-            Response.Write(new
+            Response.Write(JsonHelper.SerializeObject(new
             {
                 status = loginInfo != null,
                 role = loginInfo != null ? loginInfo.RoleId : 0
-            });
+            }));
         }
 
         public void GetLoginUserInfo()

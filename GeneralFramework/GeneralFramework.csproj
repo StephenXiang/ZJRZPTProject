@@ -1287,6 +1287,10 @@
       <Project>{735A45FB-8293-4D76-A03F-9A57B300234C}</Project>
       <Name>GeneralFrameworkBLL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GeneralFrameworkDAL\GeneralFrameworkDAL.csproj">
+      <Project>{276B7E5F-F04C-4E93-A86C-781AFFD61794}</Project>
+      <Name>GeneralFrameworkDAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="HtmlPage\json1.json" />
