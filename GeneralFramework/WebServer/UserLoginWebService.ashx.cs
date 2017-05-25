@@ -81,7 +81,7 @@ namespace GeneralFramework.WebServer
             Response.Write(new
             {
                 status = loginInfo != null,
-                role = loginInfo?.RoleId ?? 0
+                role = loginInfo != null ? loginInfo.RoleId : 0
             });
         }
 

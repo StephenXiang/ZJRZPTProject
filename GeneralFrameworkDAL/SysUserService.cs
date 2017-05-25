@@ -20,10 +20,10 @@ namespace GeneralFrameworkDAL
 
         public SysUser GetSysUserInfo(string userName, string pwd)
         {
-            var sql =
-                $@"select u.ID as userId,u.RolesID,u.DepartmentID,d.DepartmentName,d.DepartmentDec,r.RolesName,r.RolesDec
+            var sql = string.Format(
+                @"select u.ID as userId,u.RolesID,u.DepartmentID,d.DepartmentName,d.DepartmentDec,r.RolesName,r.RolesDec
 from SysUser u,SysDepartment d,SysRoles r where u.DepartmentID=d.ID and u.RolesID=r.ID
-and u.UserName='{userName}' and u.UserPassWord='{pwd}' and u.IsEnable=0";
+and u.UserName='{0}' and u.UserPassWord='{1}' and u.IsEnable=0", userName, pwd);
             DataTable dt = DBHelper.GetDataSet(sql);
             if (dt == null || dt.Rows.Count == 0) return null;
             return new SysUser
