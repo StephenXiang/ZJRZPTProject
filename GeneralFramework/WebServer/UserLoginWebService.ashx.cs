@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.SessionState;
@@ -40,8 +41,8 @@ namespace GeneralFramework.WebServer
             Server = context.Server;
 
 
-            string method = Request["method"].ToString();
-            MethodInfo methodInfo = this.GetType().GetMethod(method);
+            var method = Request["method"];
+            var methodInfo = this.GetType().GetMethod(method);
             try
             {
                 methodInfo.Invoke(this, null);
@@ -63,42 +64,10 @@ namespace GeneralFramework.WebServer
             }
         }
 
-        public void SaveEnterpriseInfo()
-        {
-            HttpFileCollection files = Request.Files;
-            HttpPostedFile file = files[0];
-            Enterprise enterprise = new Enterprise
-            {
-                Name = Request.Form["EnterpriseName"].ToString(),
-                Code = Request.Form["Code"].ToString(),
-                //BusinessLicense= new byte[], 自己转流，上面的file就是文件，自己调试看看，shit
-                RegistTypeId = (int)Request.Form["RegistTypeCmb"].ToString(),
-                ProfessionId = (int)Request.Form["ProfessionCmb"].ToString(),
-                EnterpriseTypeId = (int)Request.Form["EnterpriseTypeCmb"].ToString(),
-                RegistRegionId = (int)Request.Form["RegistRegionCmb"].ToString(),
-                HuanpingId = (int)Request.Form["HuanpingCmb"].ToString(),
-                RegFinance = (int)Request.Form["RegFinanceCmb"].ToString(),
-                RegFinanceMt = (int)Request.Form["RegFinanceMtCmb"].ToString(),
-                Business = (int)Request.Form["BusinessCmb"].ToString(),
-                MainProduction = Request.Form["MainProduction"].ToString(),
-                CreateTime = Request.Form["CreateTime"].ToString(),
-                JuridicalPerson = Request.Form["JuridicalPerson"].ToString(),
-                ConectionPerson = Request.Form["ConectionPerson"].ToString(),
-                ConnectionTelephone = Request.Form["ConnectionTelephone"].ToString(),
-                Desc = Request.Form["EnterpriseDesc"].ToString()
-
-
-
-            };
-
-
-
-        }
-
         public void Login()
         {
-            string UserName = Request.Form["UserName"].ToString();
-            string Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"].ToString(), "MD5").ToLower();
+            var UserName = Request.Form["UserName"];
+            var Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"], "MD5").ToLower();
             var loginInfo = sum.Login(UserName, Pwd);
             if (loginInfo != null)
             {
@@ -125,14 +94,14 @@ namespace GeneralFramework.WebServer
 
         public void GetUserTBJson()
         {
-            int DepartmentId = int.Parse(Request["DepartmentId"].ToString());
+            var DepartmentId = int.Parse(Request["DepartmentId"]);
             Response.Write(sum.GetUserTBJsonForDepartmentId(DepartmentId));
         }
 
         public void EditUserPwd()
         {
-            string UserName = Request.Form["UserName"].ToString();
-            string Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"].ToString(), "MD5").ToLower();
+            var UserName = Request.Form["UserName"];
+            var Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"], "MD5").ToLower();
             Response.Write(sum.EditUserPwd(UserName, Pwd));
         }
     }

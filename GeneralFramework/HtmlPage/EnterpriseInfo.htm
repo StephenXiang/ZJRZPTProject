@@ -37,21 +37,21 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
-                                    { field: 'UserRolesID', title: '企业名称', width: 150, align: 'center' },
-                                    { field: 'UserDepartment', title: '融资额度', width: 150, align: 'center' },
-                                    { field: 'UserID', title: '发布日期', width: 150, align: 'center' },
-                                    {
-                                        field: 'IsEnable', title: '审核', width: 150, align: 'center', formatter:
-                                          function (value, row, index) {
-                                              UserID = row.ID;
-                                              if (value == 0) {
-                                                  return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
-                                              } else if (value == 1) {
-                                                  return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
-                                              }
-                                          }
-                                    }
+                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                    { field: 'UserRolesID', title: '企业名称', width: 150, align: 'center' },
+                    { field: 'UserDepartment', title: '融资额度', width: 150, align: 'center' },
+                    { field: 'UserID', title: '发布日期', width: 150, align: 'center' },
+                    {
+                        field: 'IsEnable', title: '审核', width: 150, align: 'center', formatter:
+                        function (value, row, index) {
+                            UserID = row.ID;
+                            if (value == 0) {
+                                return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                            } else if (value == 1) {
+                                return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                            }
+                        }
+                    }
                 ]]
             });
         });
@@ -105,22 +105,19 @@
                 valueField: 'ID',
                 textField: 'TypeName'
             });
-
-
-
             $('#Enterprisedlg').dialog('open');
         }
 
         function SaveEnterprisrInfo() {
             var formData = new FormData($("#ff")[0]);
             $.ajax({
-                url: "../../WebServer/UserLoginWebService.ashx?Method=SaveEnterpriseInfo",
+                url: "../../WebServer/EnterpriseService.ashx?Method=SaveEnterpriseInfo",
                 type: 'POST',
                 data: formData,
                 async: false,
                 cache: false,
                 contentType: false,
-                processData: false,
+                processData: false
             });
         }
     </script>
@@ -360,7 +357,9 @@
                 <tr>
                     <td style=" text-align:right;">*企业成立时间:</td>
                     <td></td>
-                    <td style=" text-align:left;"><input id="CreateTime" name="CreateTime" class="f1 easyui-textbox" style="width:95%;" /></td>
+                    <td style=" text-align:left;">
+                        <input class="easyui-datebox" id="CreateTime" name="CreateTime" labelposition="top" style="width:95%;">
+                    </td>
                     <td style=" text-align:right;">企业法人代表:</td>
                     <td style=" text-align:left;"><input id="JuridicalPerson" name="JuridicalPerson" class="f1 easyui-textbox" style="width:95%;" /></td>
                 </tr>

@@ -31,7 +31,7 @@ namespace GeneralFrameworkDAL
             }
             var sql = @"insert into Enterprise([Name],BusinessLicense,Code,RegistTypeId,ProfessionId,EnterpriseTypeId,RegistRegionId,HuanpingId,RegFinance,RegFinanceMt
 ,Business,MainProduction,CreateTime,JuridicalPerson,ConectionPerson,ConnectionTelephone,[Desc],Outside)
-values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@mp,@ct,@jp,@cp,@ct,@desc,@os)";
+values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@mp,@ct,@jp,@cp,@ctp,@desc,@os)";
 
             return DBHelper.Execute(sql,
                        new SqlParameter("@name", ins.Name),
@@ -49,7 +49,7 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
                        new SqlParameter("@ct", ins.CreateTime),
                        new SqlParameter("@jp", ins.JuridicalPerson),
                        new SqlParameter("@cp", ins.ConectionPerson),
-                       new SqlParameter("@ct", ins.ConnectionTelephone),
+                       new SqlParameter("@ctp", ins.ConnectionTelephone),
                        new SqlParameter("@desc", ins.Desc),
                        new SqlParameter("@os", false)) > 0;
         }

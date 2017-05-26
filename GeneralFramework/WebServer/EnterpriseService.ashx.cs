@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Web;
 using System.Web.SessionState;
@@ -103,6 +104,42 @@ namespace GeneralFramework.WebServer
         public void GetRZUsageType()
         {
             Response.Write(em.LookUp("融资用途"));
+        }
+
+        public void SaveEnterpriseInfo()
+        {
+            var fs = Request.Files;
+            var file = fs[0];
+            var enterprise = new Enterprise
+            {
+                Name = Request.Form["EnterpriseName"],
+                Code = Request.Form["Code"],
+                BusinessLicense = StreamToBytes(file.InputStream),
+                RegistTypeId = Convert.ToInt32(Request.Form["RegistTypeCmb"]),
+                ProfessionId = Convert.ToInt32(Request.Form["ProfessionCmb"]),
+                EnterpriseTypeId = Convert.ToInt32(Request.Form["EnterpriseTypeCmb"]),
+                RegistRegionId = Convert.ToInt32(Request.Form["RegistRegionCmb"]),
+                HuanpingId = Convert.ToInt32(Request.Form["HuanpingCmb"]),
+                RegFinance = Convert.ToInt32(Request.Form["RegFinanceCmb"]),
+                RegFinanceMt = Request.Form["RegFinanceMtCmb"],
+                Business = Convert.ToInt32(Request.Form["BusinessCmb"]),
+                MainProduction = Request.Form["MainProduction"],
+                CreateTime = DateTime.Parse(Request.Form["CreateTime"]),
+                JuridicalPerson = Request.Form["JuridicalPerson"],
+                ConectionPerson = Request.Form["ConectionPerson"],
+                ConnectionTelephone = Request.Form["ConnectionTelephone"],
+                Desc = Request.Form["EnterpriseDesc"]
+            };
+            string err;
+            em.Save(enterprise, out err);
+        }
+
+        private static byte[] StreamToBytes(Stream stream)
+        {
+            var bytes = new byte[stream.Length];
+            stream.Read(bytes, 0, bytes.Length);
+            stream.Seek(0, SeekOrigin.Begin);
+            return bytes;
         }
 
         public bool SaveInfo()
