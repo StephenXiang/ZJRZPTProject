@@ -13,7 +13,7 @@
     <script type="text/javascript" src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         var NavMenu;
-        var UserName;
+        var UserInfo;
         $(function () {
             $('#dlg').dialog('close');
             $.ajax({
@@ -28,17 +28,9 @@
                     }
                 }
             });
+            UserInfo = JSON.parse($.cookie('UserInfo'));
+            $('#user_msg').html('镇江市965808企业融资服务平台欢迎您：' + UserInfo['name']);
 
-            $.ajax({
-                type: "Get",
-                dataType: "text",
-                async: false,
-                url: "../../WebServer/UserLoginWebService.ashx?Method=GetLoginUserInfo",
-                success: function (text) {
-                    UserName = text;
-                    $('#user_msg').html('镇江市965808企业融资服务平台欢迎您：' + UserName);
-                }
-            });
         })
 
         function CreateNav() {
@@ -88,7 +80,7 @@
             return url;
         }
         function OpenUserDialog() {
-            $('#textUserName').textbox("setValue", UserName);
+            $('#textUserName').textbox("setValue", UserInfo["name"]);
             $('#NewPWD').val('');
             $('#QRNewPWD').val('');
             $('#dlg').dialog('open');

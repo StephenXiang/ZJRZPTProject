@@ -66,7 +66,7 @@ namespace GeneralFramework.WebServer
         {
             HttpFileCollection files = Request.Files;
             HttpPostedFile file = files[0];
-
+            string Enterprise = Request.Form["EnterpriseName"].ToString();
         }
 
         public void Login()
@@ -81,6 +81,7 @@ namespace GeneralFramework.WebServer
             }
             Response.Write(JsonHelper.SerializeObject(new
             {
+                name = UserName,
                 status = loginInfo != null,
                 role = loginInfo != null ? loginInfo.RoleId : 0
             }));

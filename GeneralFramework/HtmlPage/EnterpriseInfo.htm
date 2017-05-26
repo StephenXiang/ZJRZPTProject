@@ -9,9 +9,20 @@
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         $(function () {
-            $('#Enterprise_div').show();
+            $('#Enterprisedlg').dialog('close');
+            var UserInfo = JSON.parse($.cookie('UserInfo'));
+            if (UserInfo["role"] == 4) {
+                $('#Enterprise_div').hide();
+                $('#editEnterprisrInfo').show();
+                $('#EnterpriseFinanceInfoBtn').show();
+            } else {
+                $('#Enterprise_div').show();
+                $('#EnterpriseFinanceInfoBtn').hide();
+                $('#EnterpriseFinanceInfoBtn').hide();
+            }
             $('#Enterprise_dg').datagrid({
                 // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
                 rownumbers: true,
@@ -44,6 +55,23 @@
                 ]]
             });
         });
+
+        function OpenEnterprisrdlg() {
+            $('#Enterprisedlg').dialog('open');
+        }
+
+        function SaveEnterprisrInfo() {
+            var formData = new FormData($("#ff")[0]);
+            $.ajax({
+                url: "../../WebServer/UserLoginWebService.ashx?Method=testUpload",
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+            });
+        }
     </script>
 
 </head>
@@ -58,74 +86,78 @@
         <div class="easyui-layout" data-options="fit:true">
             <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
                 <h2> 企业信息</h2>
-                <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%;">
+                <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%; padding-bottom:5px;">
                     <div data-options="region:'center'" style="width:33%;padding:10px">
                         <h3> 基本信息</h3>
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
                                 <td style=" text-align:right;">企业名称:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labEnterpriseName" />123</td>
                                 <td style=" text-align:right;">信用代码:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labCode" />123</td>
                                 <td style=" text-align:right;">登记注册类型:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labRegistType" />123</td>
                             </tr>
                             <tr>
 
                                 <td style=" text-align:right;">行业分类:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labProfession" />123</td>
                                 <td style=" text-align:right;">企业类型:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labEnterpriseType" />123</td>
                                 <td style=" text-align:right;">注册地:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labRegistRegion" />123</td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">环评结果:</td>
-                                <td style=" text-align:center;"</td>
+                                <td style=" text-align:center;"><label id="labHuanping" />123</td>
                                 <td style=" text-align:right;">注册资金额度:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labRegFinance" />123</td>
                                 <td style=" text-align:right;">币种:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labRegFinanceMt" />123</td>
                             </tr>
 
                             <tr>
 
                                 <td style=" text-align:right;">企业营业范围:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labBusiness" />123</td>
                                 <td style=" text-align:right;">主要产品:</td>
-                                <td style=" text-align:center;"></td>
-                                <td style=" text-align:right;">*企业成立时间:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labMainProduction" />123</td>
+                                <td style=" text-align:right;">企业成立时间:</td>
+                                <td style=" text-align:center;"><label id="labCreateTime" />123</td>
                             </tr>
 
 
                             <tr>
                                 <td style=" text-align:right;">企业法人代表:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labJuridicalPerson" />123</td>
                                 <td style=" text-align:right;">联系人姓名:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labConectionPerson" />123</td>
                                 <td style=" text-align:right;">联系人电话:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:center;"><label id="labConectionTelephone" />123</td>
 
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">企业简介:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:left;" colspan="5"><label id="labDesc" />123</td>
+
+                            </tr>
+                            <tr>
                                 <td style=" text-align:right;">营业执照:</td>
                                 <td style=" text-align:center;"></td>
-                                <td style=" text-align:right;"></td>
-                                <td style=" text-align:center;"></td>
-                            </tr>
 
+                            </tr>
 
 
                         </table>
                     </div>
                 </div>
+
+                <a href="#" id="editEnterprisrInfoBtn" class="easyui-linkbutton" onclick="OpenEnterprisrdlg()">编辑基本信息</a>
+
             </div>
             <div data-options="region:'center'" style="padding:10px">
                 <h2>财务信息</h2>
-                <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:99%;">
+                <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:99%;padding-bottom:5px;">
                     <div data-options="region:'west'" style="width:33%;padding:10px">
                         <h3> 2015年</h3>
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
@@ -214,10 +246,96 @@
                         </table>
                     </div>
                 </div>
-
+                <a href="#" id="EnterpriseFinanceInfoBtn" class="easyui-linkbutton">编辑财务信息</a>
             </div>
-
         </div>
+    </div>
+
+    <div id="Enterprisedlg" class="easyui-dialog" title="企业信息编辑" style="text-align: center;
+        width: 600px; height:480px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#Enterprisedlg-buttons'
+            ">
+        <form id="ff" method="post">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">*企业名称:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="EnterpriseName" name="EnterpriseName" class="f1 easyui-textbox" style="width:95%;" /></td>
+
+                    <td style=" text-align:right;">*信用代码:</td>
+                    <td style=" text-align:left;"><input id="Code" name="Code" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">*营业执照:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="BusinessLicenseFile" name="BusinessLicenseFile" class="f1 easyui-filebox" style="width:95%;" /></td>
+                    <td style=" text-align:right;">登记注册类型:</td>
+                    <td style=" text-align:left;"><select id="RegistTypeCmb" class=" easyui-combobox" name="RegistTypeCmb" label="" style="width:95%"></select></td>
+                </tr>
+                <tr>
+
+                    <td style=" text-align:right;">*行业分类:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="ProfessionCmb" class="easyui-combobox" name="ProfessionCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">*企业类型:</td>
+                    <td style=" text-align:left;"><select id="EnterpriseTypeCmb" class="easyui-combobox" name="EnterpriseTypeCmb" label="" style="width:95%"></select></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">*注册地:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="RegistRegionCmb" class="easyui-combobox" name="RegistRegionCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">*环评结果:</td>
+                    <td style=" text-align:left;"><select id="HuanpingCmb" class="easyui-combobox" name="HuanpingCmb" label="" style="width:95%"></select></td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td style=" text-align:right;">注册资金额度:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="RegFinanceCmb" class="easyui-combobox" name="RegFinanceCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">币种:</td>
+                    <td style=" text-align:left;"><select id="RegFinanceMtCmb" class="easyui-combobox" name="RegFinanceMtCmb" label="" style="width:95%"></select></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">企业营业范围:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="BusinessCmb" class="easyui-combobox" name="BusinessCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">主要产品:</td>
+                    <td style=" text-align:left;"><input id="MainProduction" name="MainProduction" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">*企业成立时间:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="CreateTime" name="CreateTime" class="f1 easyui-textbox" style="width:95%;" /></td>
+                    <td style=" text-align:right;">企业法人代表:</td>
+                    <td style=" text-align:left;"><input id="JuridicalPerson" name="JuridicalPerson" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">*联系人姓名:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="ConectionPerson" name="ConectionPerson" class="f1 easyui-textbox" style="width:95%;" /></td>
+                    <td style=" text-align:right;">*联系人电话:</td>
+                    <td style=" text-align:left;"><input id="ConnectionTelephone" name="ConnectionTelephone" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">企业简介:</td>
+                    <td></td>
+                    <td style=" text-align:left;" colspan="3"><input id="EnterpriseDesc" name="EnterpriseDesc" class="easyui-textbox" style="width:98%;height:100px" data-options="multiline:true" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+
+    <div id="Enterprisedlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveEnterprisrInfo()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#Enterprisedlg').dialog('close')">
+            关闭
+        </a>
     </div>
 </body>
 </html>
