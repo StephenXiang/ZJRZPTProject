@@ -6,6 +6,7 @@ using System.Web.SessionState;
 using System.Reflection;
 using GeneralFrameworkBLL;
 using GeneralFrameworkDAL.JSON;
+using GeneralFrameworkBLLModel;
 
 namespace GeneralFramework.WebServer
 {
@@ -62,11 +63,36 @@ namespace GeneralFramework.WebServer
             }
         }
 
-        public void testUpload()
+        public void SaveEnterpriseInfo()
         {
             HttpFileCollection files = Request.Files;
             HttpPostedFile file = files[0];
-            string Enterprise = Request.Form["EnterpriseName"].ToString();
+            Enterprise enterprise = new Enterprise
+            {
+                Name = Request.Form["EnterpriseName"].ToString(),
+                Code = Request.Form["Code"].ToString(),
+                //BusinessLicense= new byte[], 自己转流，上面的file就是文件，自己调试看看，shit
+                RegistTypeId = (int)Request.Form["RegistTypeCmb"].ToString(),
+                ProfessionId = (int)Request.Form["ProfessionCmb"].ToString(),
+                EnterpriseTypeId = (int)Request.Form["EnterpriseTypeCmb"].ToString(),
+                RegistRegionId = (int)Request.Form["RegistRegionCmb"].ToString(),
+                HuanpingId = (int)Request.Form["HuanpingCmb"].ToString(),
+                RegFinance = (int)Request.Form["RegFinanceCmb"].ToString(),
+                RegFinanceMt = (int)Request.Form["RegFinanceMtCmb"].ToString(),
+                Business = (int)Request.Form["BusinessCmb"].ToString(),
+                MainProduction = Request.Form["MainProduction"].ToString(),
+                CreateTime = Request.Form["CreateTime"].ToString(),
+                JuridicalPerson = Request.Form["JuridicalPerson"].ToString(),
+                ConectionPerson = Request.Form["ConectionPerson"].ToString(),
+                ConnectionTelephone = Request.Form["ConnectionTelephone"].ToString(),
+                Desc = Request.Form["EnterpriseDesc"].ToString()
+
+
+
+            };
+
+
+
         }
 
         public void Login()

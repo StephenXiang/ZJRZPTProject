@@ -57,13 +57,64 @@
         });
 
         function OpenEnterprisrdlg() {
+            $('#RegistTypeCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegistType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#ProfessionCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetProfessionType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#EnterpriseTypeCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#RegistRegionCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#HuanpingCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetHuanPingType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#RegFinanceCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetMoneyType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#RegFinanceMtCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetMoneyType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#BusinessCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetBusinessType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+
+
+
             $('#Enterprisedlg').dialog('open');
         }
 
         function SaveEnterprisrInfo() {
             var formData = new FormData($("#ff")[0]);
             $.ajax({
-                url: "../../WebServer/UserLoginWebService.ashx?Method=testUpload",
+                url: "../../WebServer/UserLoginWebService.ashx?Method=SaveEnterpriseInfo",
                 type: 'POST',
                 data: formData,
                 async: false,
