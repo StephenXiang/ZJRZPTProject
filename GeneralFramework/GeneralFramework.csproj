@@ -1253,6 +1253,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebServer\EnterpriseService.ashx.cs">
+      <DependentUpon>EnterpriseService.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1294,6 +1297,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HtmlPage\json1.json" />
+    <Content Include="WebServer\EnterpriseService.ashx" />
     <None Include="jquery-easyui-1.5.1\demo\accordion\datagrid_data1.json" />
     <None Include="jquery-easyui-1.5.1\demo\combobox\combobox_data1.json" />
     <None Include="jquery-easyui-1.5.1\demo\combobox\combobox_data2.json" />

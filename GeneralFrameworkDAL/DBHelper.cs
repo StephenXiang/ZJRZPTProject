@@ -32,6 +32,15 @@ namespace GeneralFrameworkDAL
             return cmd.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
+        public static int Execute(string sql, params SqlParameter[] param)
+        {
+            SqlConnection conn = new SqlConnection(ConStr);
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.AddRange(param);
+            conn.Open();
+            return cmd.ExecuteNonQuery();
+        }
+
         /// <summary>
         /// 执行单行SQL，返回DataTable
         /// </summary>

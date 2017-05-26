@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBHelper.cs" />
+    <Compile Include="EnterpriseService.cs" />
     <Compile Include="JSON\JsonHelper.cs" />
     <Compile Include="NavMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
