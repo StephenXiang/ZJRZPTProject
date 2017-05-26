@@ -109,5 +109,29 @@ namespace GeneralFrameworkDAL.JSON
             json += "]";
             return json;
         }
+
+        public static string ConvertJosnData(DataTable p_dt)
+        {
+            string str = "[";
+            for (int i = 0; i < p_dt.Rows.Count; i++)
+            {
+                str = str + "{";
+                for (int j = 0; j < p_dt.Columns.Count; j++)
+                {
+                    str = str + "\"" + p_dt.Columns[j].ToString() + "\":\"" + p_dt.Rows[i][p_dt.Columns[j].ToString()].ToString().Trim() + "\"" + ",";
+                }
+                if (str.Length > 0)
+                {
+                    str = str.Substring(0, str.Length - 1);
+                }
+                str = str + "},";
+            }
+            if (p_dt.Rows.Count > 0)
+            {
+                str = str.Substring(0, str.Length - 1);
+            }
+            str = str + "]";
+            return str;
+        }
     }
 }
