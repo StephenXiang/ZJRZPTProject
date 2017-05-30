@@ -186,12 +186,15 @@
     <Content Include="HighCharts\jquery-1.9.1.min.js" />
     <Content Include="HtmlPage\BankInfo.htm" />
     <Content Include="HtmlPage\EnterpriseInfo.htm" />
+    <Content Include="HtmlPage\FinancialProductsApprove.htm" />
+    <Content Include="HtmlPage\HistoricalApprove.htm" />
     <Content Include="HtmlPage\PublishFinancialProducts.htm" />
     <Content Include="HtmlPage\HomeMaintain.htm" />
     <Content Include="HtmlPage\LeavingMessageHandle.htm" />
     <Content Include="HtmlPage\PublishRZ.htm" />
     <Content Include="HtmlPage\PublishZZD.htm" />
     <Content Include="HtmlPage\RZExamineApprove.htm" />
+    <Content Include="HtmlPage\RZZZDInfo.htm" />
     <Content Include="HtmlPage\SystemMaintain.htm" />
     <Content Include="HtmlPage\SystemUserMaintain.htm" />
     <Content Include="HtmlPage\PublishZCGG.htm" />

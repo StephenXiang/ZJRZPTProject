@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>历史审批</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <link rel="stylesheet" href="../kindeditor-4.1.7/themes/default/default.css" />
+    <link rel="stylesheet" href="../kindeditor-4.1.7/plugins/code/prettify.css" />
+    <script charset="utf-8" src="../kindeditor-4.1.7/kindeditor.js"></script>
+    <script charset="utf-8" src="../kindeditor-4.1.7/lang/zh_CN.js"></script>
+    <script charset="utf-8" src="../kindeditor-4.1.7/plugins/code/prettify.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('#ZCdlg').dialog('close');
+            $('#GGdlg').dialog('close');
+            var editor;
+            window.editor = KindEditor.create('#content', {
+                resizeType: 1,
+                urlType: 'domain' // 带有域名的绝对路径
+            });
+
+            var editor1;
+            window.editor = KindEditor.create('#content1', {
+                resizeType: 1,
+                urlType: 'domain' // 带有域名的绝对路径
+            });
+
+            $('#ZC_dg').datagrid({
+                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '历史审批融资列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'BankName', title: '企业名称', width: '400', align: 'center' },
+                    { field: 'Address', title: '融资额度', width: '400', align: 'center' },
+                    { field: 'User', title: '发布时间', width: '400', align: 'center' },
+                    { field: 'Telephone', title: '审核时间', width: '400', align: 'center' },
+                { field: 'Telephone', title: '是否通过', width: '400', align: 'center' }
+                ]],
+                onClickRow: (function (index, data) {
+                }),
+                onDblClickRow: (function (index, row) {
+                })
+            });
+
+            $('#GG_dg').datagrid({
+                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '历史审批周转贷列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'BankName', title: '企业名称', width: '400', align: 'center' },
+                    { field: 'Address', title: '周转贷额度', width: '400', align: 'center' },
+                    { field: 'User', title: '发布时间', width: '400', align: 'center' },
+                    { field: 'Telephone', title: '审核时间', width: '400', align: 'center' },
+                    { field: 'Telephone', title: '是否通过', width: '400', align: 'center' }
+                ]],
+                onClickRow: (function (index, data) {
+                }),
+                onDblClickRow: (function (index, row) {
+                })
+            });
+        });
+    </script>
+
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div>
+            <table id="ZC_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#ZC_dg-buttons'
+            "></table>
+        </div>
+        <div>
+            <table id="GG_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#GG_dg-buttons'
+            "></table>
+        </div>
+        <div id="ZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center;
+                                                                                                                                                                                                                                                                                              width: 800px; height: 500px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#ZCdlg-buttons'
+            ">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">产品名称:</td>
+                    <td style=" text-align:left;"><input name="name" class="f1 easyui-textbox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">产品LOG:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">详细内容:</td>
+                    <td style=" text-align:left;"><textarea id="content" name="content" style="width:100%; height:300px;"></textarea></td>
+                </tr>
+            </table>
+        </div>
+        <div id="GGdlg" class="easyui-dialog" title="公告编辑" style="text-align: center;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               width: 800px; height: 500px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#GGdlg-buttons'
+            ">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">产品名称:</td>
+                    <td style=" text-align:left;"><input name="name" class="f1 easyui-textbox" style="width:80%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">产品LOG:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">详细内容:</td>
+                    <td style=" text-align:left;"><textarea id="content1" name="content1" style="width:100%; height:300px;"></textarea></td>
+                </tr>
+            </table>
+        </div>
+        <div id="ZCdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZCdlg').dialog('close')">
+                关闭
+            </a>
+        </div>
+        <div id="GGdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#GGdlg').dialog('close')">
+                关闭
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -16,11 +16,11 @@
             var UserInfo = JSON.parse($.cookie('UserInfo'));
             if (UserInfo["role"] == 4) {
                 $('#Enterprise_div').hide();
-                $('#editEnterprisrInfo').show();
+                $('#editEnterprisrInfoBtn').show();
                 $('#EnterpriseFinanceInfoBtn').show();
             } else {
                 $('#Enterprise_div').show();
-                $('#EnterpriseFinanceInfoBtn').hide();
+                $('#editEnterprisrInfoBtn').hide();
                 $('#EnterpriseFinanceInfoBtn').hide();
             }
             $('#Enterprise_dg').datagrid({
