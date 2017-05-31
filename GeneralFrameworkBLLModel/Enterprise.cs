@@ -27,7 +27,7 @@ namespace GeneralFrameworkBLLModel
 
         public double RegFinance { get; set; }
 
-        public string RegFinanceMt { get; set; }
+        public int RegFinanceMt { get; set; }
 
         public int Business { get; set; }
 

@@ -106,32 +106,75 @@ namespace GeneralFramework.WebServer
             Response.Write(em.LookUp("融资用途"));
         }
 
+        public void GetRegFinance()
+        {
+            Response.Write(em.LookUp("注册资金额度"));
+        }
+
         public void SaveEnterpriseInfo()
         {
             var fs = Request.Files;
             var file = fs[0];
+            int RegistTypeId = 0, RegFinance = 0, RegFinanceMt = 0, Business = 0;
+            string MainProduction = "", JuridicalPerson = "", Desc = "";
+            string EnterpriseName = Request.Form["EnterpriseName"].Trim();
+            string UserName = Request.Form["UserNametxt"];
+            if (Request.Form["RegistTypeCmb"].Trim() != "" && Request.Form["RegistTypeCmb"] != null)
+            {
+                RegistTypeId = Convert.ToInt32(Request.Form["RegistTypeCmb"]);
+            }
+            if (Request.Form["RegFinanceCmb"].Trim() != "" && Request.Form["RegFinanceCmb"] != null)
+            {
+                RegFinance = Convert.ToInt32(Request.Form["RegFinanceCmb"]);
+            }
+            if (Request.Form["RegFinanceMtCmb"].Trim() != "" && Request.Form["RegFinanceMtCmb"] != null)
+            {
+                RegFinanceMt = Convert.ToInt32(Request.Form["RegFinanceMtCmb"]);
+            }
+            if (Request.Form["BusinessCmb"].Trim() != "" && Request.Form["BusinessCmb"] != null)
+            {
+                Business = Convert.ToInt32(Request.Form["BusinessCmb"]);
+            }
+            if (Request.Form["MainProduction"].Trim() != "" && Request.Form["MainProduction"] != null)
+            {
+                MainProduction = Request.Form["MainProduction"];
+            }
+            if (Request.Form["JuridicalPerson"].Trim() != "" && Request.Form["JuridicalPerson"] != null)
+            {
+                JuridicalPerson = Request.Form["JuridicalPerson"];
+            }
+            if (Request.Form["EnterpriseDesc"].Trim() != "" && Request.Form["EnterpriseDesc"] != null)
+            {
+                Desc = Request.Form["EnterpriseDesc"];
+            }
+
             var enterprise = new Enterprise
             {
-                Name = Request.Form["EnterpriseName"],
-                Code = Request.Form["Code"],
+                Name = Request.Form["EnterpriseName"].Trim(),
+                Code = Request.Form["Code"].Trim(),
                 BusinessLicense = StreamToBytes(file.InputStream),
-                RegistTypeId = Convert.ToInt32(Request.Form["RegistTypeCmb"]),
+                RegistTypeId = RegistTypeId,
                 ProfessionId = Convert.ToInt32(Request.Form["ProfessionCmb"]),
                 EnterpriseTypeId = Convert.ToInt32(Request.Form["EnterpriseTypeCmb"]),
                 RegistRegionId = Convert.ToInt32(Request.Form["RegistRegionCmb"]),
                 HuanpingId = Convert.ToInt32(Request.Form["HuanpingCmb"]),
-                RegFinance = Convert.ToInt32(Request.Form["RegFinanceCmb"]),
-                RegFinanceMt = Request.Form["RegFinanceMtCmb"],
-                Business = Convert.ToInt32(Request.Form["BusinessCmb"]),
-                MainProduction = Request.Form["MainProduction"],
+                RegFinance = RegFinance,
+                RegFinanceMt = RegFinanceMt,
+                Business = Business,
+                MainProduction = MainProduction,
                 CreateTime = DateTime.Parse(Request.Form["CreateTime"]),
-                JuridicalPerson = Request.Form["JuridicalPerson"],
-                ConectionPerson = Request.Form["ConectionPerson"],
+                JuridicalPerson = JuridicalPerson,
+                ConectionPerson = Request.Form["ConectionPerson"].Trim(),
                 ConnectionTelephone = Request.Form["ConnectionTelephone"],
-                Desc = Request.Form["EnterpriseDesc"]
+                Desc = Desc
             };
             string err;
-            em.Save(enterprise, out err);
+            bool isSaveOK = em.Save(enterprise, out err);
+            if (isSaveOK == true)
+            {
+                em.GetEntetpriseForName(EnterpriseName, UserName);
+            }
+            Response.Write(isSaveOK);
         }
 
         private static byte[] StreamToBytes(Stream stream)
@@ -150,6 +193,12 @@ namespace GeneralFramework.WebServer
                 //Business = Request.Form["UserName"]
             };
             return true;
+        }
+
+        public void GetEnterpriseInfoForUserName()
+        {
+            var UserName = Request.Form["UserName"];
+            Response.Write(em.GetEnterpriseInfoForUserName(UserName));
         }
     }
 }

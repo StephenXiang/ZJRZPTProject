@@ -15,5 +15,14 @@ namespace GeneralFrameworkBLL
         {
             return _es.LookUp(key);
         }
+        public int GetEntetpriseForName(string EnterpriseName, string UserName)
+        {
+            return _es.GetEntetpriseIdForName(EnterpriseName, UserName);
+        }
+
+        public string GetEnterpriseInfoForUserName(string UserName)
+        {
+            return _es.GetEnterpriseInfoForUserName(UserName);
+        }
     }
 }
