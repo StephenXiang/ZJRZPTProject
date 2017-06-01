@@ -24,5 +24,10 @@ namespace GeneralFrameworkBLL
         {
             return _es.GetEnterpriseInfoForUserName(UserName);
         }
+
+        public byte[] GetImgForCode(string code)
+        {
+            return _es.GetImgForCode(code);
+        }
     }
 }

@@ -76,14 +76,14 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
                             f.[Desc] as RegistRegion,g.[Desc] as Huanping,h.[Desc] as RegFinance,i.[Desc] as RegFinanceMt,j.[Desc] as Business,
                             a.MainProduction,a.CreateTime,a.JuridicalPerson,a.ConectionPerson,a.ConnectionTelephone,a.[Desc] from Enterprise a 
                             left join SysUser b on a.ID = b.EnterpriseId 
-                            left join (select [Desc],[Type] from Lookup where [Type] = 1) c on a.RegistTypeId = c.Type
-                            left join (select [Desc],[Type] from Lookup where [Type] = 2) d on a.ProfessionId = d.Type
-                            left join (select [Desc],[Type] from Lookup where [Type] = 3) e on a.EnterpriseTypeId = e.Type
-                            left join (select [Desc],[Type] from Lookup where [Type] = 4) f on a.RegistRegionId = f.Type
-                            left join (select [Desc],[Type] from Lookup where [Type] = 5) g on a.HuanpingId = g.Type
-                            left join (select [Desc],[Type] from Lookup where [Type] = 10) h on a.RegFinance = h.Type
-                            left join (select [Desc],[Type] from Lookup where [Type] = 6) i on a.RegFinanceMt = i.Type
-                            left join (select [Desc],[Type] from Lookup where [Type] = 7) j on a.Business = j.Type
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 1) c on a.RegistTypeId = c.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 2) d on a.ProfessionId = d.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 3) e on a.EnterpriseTypeId = e.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 4) f on a.RegistRegionId = f.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 5) g on a.HuanpingId = g.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 10) h on a.RegFinance = h.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 6) i on a.RegFinanceMt = i.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 7) j on a.Business = j.Id
                             where b.UserName = '" + UserName + "'";
             DataTable dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
@@ -121,6 +121,13 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
             return reply;
 
         }
+
+        public byte[] GetImgForCode(string Code)
+        {
+            var sql = "select BusinessLicense from Enterprise where code='" + Code + "' ";
+            return (byte[])DBHelper.GetScalar(sql);
+        }
+
 
     }
 }

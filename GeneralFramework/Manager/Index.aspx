@@ -115,7 +115,7 @@
     <form id="form1" runat="server">
         <div style="margin: 20px 0;">
         </div>
-        <div data-options="region:'north'" style="width: 100%; height: 100px; text-align: center; line-height: 99px; font-size: 40px; color: White; background: url(../../images/htbanner.jpg) no-repeat; overflow: hidden;">
+        <div data-options="region:'north'" style="width: 100%; height: 100px; text-align: center; line-height: 99px; font-size: 40px; color: White; background: url(../../images/htbanner.jpg) no-repeat; background-size: 100%; overflow: hidden;">
             镇江市中小企业融资服务平台
         </div>
         <div data-options="region:'south',split:true" maxheight="30px" style="height: 30px;">

@@ -14,17 +14,16 @@
         var UserInfo;
         var Enterprise;
         $(function () {
+            $('#BusinessLicenseImgTD').hide();
             $('#UserNameTD').hide();
             $('#Enterprisedlg').dialog('close');
             UserInfo = JSON.parse($.cookie('UserInfo'));
             loadEnterpriseInfo();
             if (UserInfo["role"] == 4) {
                 $('#Enterprise_div').hide();
-                $('#editEnterprisrInfoBtn').show();
                 $('#EnterpriseFinanceInfoBtn').show();
             } else {
                 $('#Enterprise_div').show();
-                $('#editEnterprisrInfoBtn').hide();
                 $('#EnterpriseFinanceInfoBtn').hide();
             }
             $('#Enterprise_dg').datagrid({
@@ -110,7 +109,9 @@
                 textField: 'TypeName'
             });
             $('#UserNametxt').textbox("setValue", UserInfo["name"]);
+
             $('#Enterprisedlg').dialog('open');
+
         }
 
         function SaveEnterprisrInfo() {
@@ -146,26 +147,34 @@
             }
             else if ($('#ConnectionTelephone').val() == "") {
                 $.messager.alert('提示', '联系人电话不得为空', 'info');
+            } else if (checkMobile($('#ConnectionTelephone').val()) == false && checkPhone($('#ConnectionTelephone').val()) == false) {
+                $.messager.alert('提示', '联系人电话格式不正确', 'info');
             }
             else {
-                var formData = new FormData($("#ff")[0]);
-                $.ajax({
-                    url: "../../WebServer/EnterpriseService.ashx?Method=SaveEnterpriseInfo",
-                    type: 'POST',
-                    data: formData,
-                    async: false,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        if (data == "True") {
-                            $.messager.alert('提示', '保存成功', 'info');
-                            $('#Enterprisedlg').dialog('close');
-                        } else {
-                            $.messager.alert('提示', '保存失败', 'error');
-                        }
+                $.messager.confirm('提示', '您所填写的企业信息保存后将不再允许编辑，请确认您所填写的信息真实及有效性！是否现在保存？', function (r) {
+                    if (r) {
+                        var formData = new FormData($("#ff")[0]);
+                        $.ajax({
+                            url: "../../WebServer/EnterpriseService.ashx?Method=SaveEnterpriseInfo",
+                            type: 'POST',
+                            data: formData,
+                            async: false,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data == "True") {
+                                    loadEnterpriseInfo();
+                                    $.messager.alert('提示', '保存成功', 'info');
+                                    $('#Enterprisedlg').dialog('close');
+                                } else {
+                                    $.messager.alert('提示', '保存失败', 'error');
+                                }
+                            }
+                        });
                     }
                 });
+
             }
         }
 
@@ -178,14 +187,14 @@
                 url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoForUserName",
                 success: function (json) {
                     Enterprise = json;
-                    if (Enterprise["DataCount"] == 0) {
+                    if (Enterprise["DataCount"] == 0 && UserInfo["role"] == 4) {
                         $.messager.confirm('提示', '您还没有登记企业基本信息，是否现在登记？', function (r) {
                             if (r) {
-                                $('#Enterprisedlg').dialog('open');
+                                OpenEnterprisrdlg();
                             }
                         });
-
                     } else {
+                        var Code = "";
                         $('#labEnterpriseName').html(Enterprise["Name"]);
                         $('#labCode').html(Enterprise["Code"]);
                         $('#labRegistType').html(Enterprise["RegistType"]);
@@ -202,9 +211,35 @@
                         $('#labConectionPerson').html(Enterprise["ConectionPerson"]);
                         $('#labConectionTelephone').html(Enterprise["ConnectionTelephone"]);
                         $('#labDesc').html(Enterprise["Desc"]);
+                        Code = Enterprise["Code"];
+                        if (Code == undefined || Code == "") {
+                            $('#BusinessLicenseImgTD').hide();
+                        } else {
+                            $('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            $('#BusinessLicenseImgTD').show();
+                        }
+
+                        //$('#editEnterprisrInfoBtn').hide();
                     }
                 }
             });
+        }
+
+        function checkMobile(str) {
+            var re = /^1\d{10}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function checkPhone(str) {
+            var re = /^0\d{2,3}-?\d{7,8}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     </script>
 
@@ -218,66 +253,71 @@
     </div>
     <div class="easyui-panel" title="企业信息" style="width:100%;height:420px;padding:10px;">
         <div class="easyui-layout" data-options="fit:true">
-            <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
+            <div data-options="region:'west',split:false" style="width:40%;padding:10px;">
                 <h2> 企业信息</h2>
                 <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%; padding-bottom:5px;">
                     <div data-options="region:'center'" style="width:33%;padding:10px">
                         <h3> 基本信息</h3>
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
-                                <td style=" text-align:right;">企业名称:</td>
-                                <td style=" text-align:left;"><label id="labEnterpriseName" /></td>
-                                <td style=" text-align:right;">信用代码:</td>
-                                <td style=" text-align:left;"><label id="labCode" /></td>
-                                <td style=" text-align:right;">登记注册类型:</td>
-                                <td style=" text-align:left;"><label id="labRegistType" /></td>
-                            </tr>
-                            <tr>
-
-                                <td style=" text-align:right;">行业分类:</td>
-                                <td style=" text-align:left;"><label id="labProfession" /></td>
-                                <td style=" text-align:right;">企业类型:</td>
-                                <td style=" text-align:left;"><label id="labEnterpriseType" /></td>
-                                <td style=" text-align:right;">注册地:</td>
-                                <td style=" text-align:left;"><label id="labRegistRegion" /></td>
-                            </tr>
-                            <tr>
-                                <td style=" text-align:right;">环评结果:</td>
-                                <td style=" text-align:left;"><label id="labHuanping" /></td>
-                                <td style=" text-align:right;">注册资金额度:</td>
-                                <td style=" text-align:left;"><label id="labRegFinance" /></td>
-                                <td style=" text-align:right;">币种:</td>
-                                <td style=" text-align:left;"><label id="labRegFinanceMt" /></td>
-                            </tr>
-
-                            <tr>
-
-                                <td style=" text-align:right;">企业营业范围:</td>
-                                <td style=" text-align:left;"><label id="labBusiness" /></td>
-                                <td style=" text-align:right;">主要产品:</td>
-                                <td style=" text-align:left;"><label id="labMainProduction" /></td>
-                                <td style=" text-align:right;">企业成立时间:</td>
-                                <td style=" text-align:left;"><label id="labCreateTime" /></td>
-                            </tr>
-
-
-                            <tr>
-                                <td style=" text-align:right;">企业法人代表:</td>
-                                <td style=" text-align:left;"><label id="labJuridicalPerson" /></td>
-                                <td style=" text-align:right;">联系人姓名:</td>
-                                <td style=" text-align:left;"><label id="labConectionPerson" /></td>
-                                <td style=" text-align:right;">联系人电话:</td>
-                                <td style=" text-align:left;"><label id="labConectionTelephone" /></td>
+                                <td style=" text-align:left;  ">企业名称:</td>
+                                <td style=" text-align:left;"><label id="labEnterpriseName" />无</td>
+                                <td style=" text-align:left; ">信用代码:</td>
+                                <td style=" text-align:left;"><label id="labCode" />无</td>
+                                <td style=" text-align:left; ">环评结果:</td>
+                                <td style=" text-align:left;"><label id="labHuanping" />无</td>
 
                             </tr>
                             <tr>
-                                <td style=" text-align:right;">企业简介:</td>
-                                <td style=" text-align:left;" colspan="5"><label id="labDesc" /></td>
+
+                                <td style=" text-align:left;">行业分类:</td>
+                                <td style=" text-align:left;"><label id="labProfession" />无</td>
+                                <td style=" text-align:left;">企业类型:</td>
+                                <td style=" text-align:left;"><label id="labEnterpriseType" />无</td>
+                                <td style=" text-align:left;">主要产品:</td>
+                                <td style=" text-align:left;"><label id="labMainProduction" />无</td>
 
                             </tr>
                             <tr>
-                                <td style=" text-align:right;">营业执照:</td>
-                                <td style=" text-align:center;"></td>
+                                <td style=" text-align:left;">注册类型:</td>
+                                <td style=" text-align:left;"><label id="labRegistType" />无</td>
+                                <td style=" text-align:left;">注册资金:</td>
+                                <td style=" text-align:left;"><label id="labRegFinance" />无</td>
+                                <td style=" text-align:left;">注册币种:</td>
+                                <td style=" text-align:left;"><label id="labRegFinanceMt" />无</td>
+                            </tr>
+
+                            <tr>
+
+                                <td style=" text-align:left;">营业范围:</td>
+                                <td style=" text-align:left;"><label id="labBusiness" />无</td>
+                                <td style=" text-align:left;">注册地区:</td>
+                                <td style=" text-align:left;"><label id="labRegistRegion" />无</td>
+                                <td style=" text-align:left;">成立时间:</td>
+                                <td style=" text-align:left;"><label id="labCreateTime" />无</td>
+                            </tr>
+
+
+                            <tr>
+                                <td style=" text-align:left;">法人代表:</td>
+                                <td style=" text-align:left;"><label id="labJuridicalPerson" />无</td>
+                                <td style=" text-align:left;">联系人姓名:</td>
+                                <td style=" text-align:left;"><label id="labConectionPerson" />无</td>
+                                <td style=" text-align:left;">联系人电话:</td>
+                                <td style=" text-align:left;"><label id="labConectionTelephone" />无</td>
+
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left;">企业简介:</td>
+                                <td style=" text-align:left;" colspan="5"><label id="labDesc" />无</td>
+
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left;">营业执照:</td>
+                                <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
+                                    <a id="BusinessLicenseImg" name="BusinessLicenseImg" target="_blank" href="">点击查看</a>
+                                    <!--<img id="BusinessLicenseImg" name="BusinessLicenseImg" width="300" height="150" />-->
+                                </td>
 
                             </tr>
 
@@ -286,7 +326,7 @@
                     </div>
                 </div>
 
-                <a href="#" id="editEnterprisrInfoBtn" class="easyui-linkbutton" onclick="OpenEnterprisrdlg()">编辑基本信息</a>
+                <!--<a href="#" id="editEnterprisrInfoBtn" class="easyui-linkbutton" onclick="OpenEnterprisrdlg()">编辑基本信息</a>-->
 
             </div>
             <div data-options="region:'center'" style="padding:10px">

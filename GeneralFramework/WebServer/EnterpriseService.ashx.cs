@@ -200,5 +200,14 @@ namespace GeneralFramework.WebServer
             var UserName = Request.Form["UserName"];
             Response.Write(em.GetEnterpriseInfoForUserName(UserName));
         }
+
+        public void LoadBusinessLicenseImg()
+        {
+            var Code = Request.QueryString["Code"].ToString();
+            var bytes = em.GetImgForCode(Code);
+            Response.BinaryWrite(bytes);
+            Response.Flush();
+            Response.End();
+        }
     }
 }
