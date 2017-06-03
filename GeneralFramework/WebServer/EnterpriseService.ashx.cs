@@ -209,5 +209,19 @@ namespace GeneralFramework.WebServer
             Response.Flush();
             Response.End();
         }
+
+        public void SaveEnterpriseFinanceInfo()
+        {
+            var data = Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+            //参考http://www.cnblogs.com/jaxu/p/3698404.html
+        }
+
+        public void GetEnterpriseFinanceInfoForUserName()
+        {
+            //返回一个json数组给前端
+            //例：[{"year":"2015" "zzze":"125" , "fzze":"50" },{"year":"2016" "zzze":"125" , "fzze":"50" },{"year":"2017" "zzze":"125" , "fzze":"50" }]
+        }
     }
 }

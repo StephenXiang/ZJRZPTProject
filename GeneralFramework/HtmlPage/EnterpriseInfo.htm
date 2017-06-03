@@ -13,10 +13,17 @@
     <script type="text/javascript">
         var UserInfo;
         var Enterprise;
+        var thisMonthLab = "";
+        var lastYearLab = "";
+        var lastLastYearLab = "";
+        var thisDate = new Date;
+        var thisMonth = thisDate.getMonth();
+        var thisYear = thisDate.getFullYear();
         $(function () {
             $('#BusinessLicenseImgTD').hide();
             $('#UserNameTD').hide();
             $('#Enterprisedlg').dialog('close');
+            $('#EnterpriseFinanceInfodlg').dialog('close');
             UserInfo = JSON.parse($.cookie('UserInfo'));
             loadEnterpriseInfo();
             if (UserInfo["role"] == 4) {
@@ -58,6 +65,19 @@
                 ]]
             });
         });
+        function OPenEnterpriseFinanceInfodlg() {
+            if (thisMonth == 0) {
+                thisMonthLab = (thisYear - 1) + "年" + "12月";
+            } else {
+                thisMonthLab = (thisYear) + "年" + thisMonth + "月";
+            }
+            lastYearLab = thisYear - 1;
+            lastLastYearLab = thisYear - 2;
+            $('#ThisMonth').html(thisMonthLab);
+            $('#LastYear').html(lastYearLab + "年");
+            $('#LastLastYear').html(lastLastYearLab + "年");
+            $('#EnterpriseFinanceInfodlg').dialog('open');
+        }
 
         function OpenEnterprisrdlg() {
             $('#RegistTypeCmb').combobox({
@@ -112,6 +132,91 @@
 
             $('#Enterprisedlg').dialog('open');
 
+        }
+
+        function SaveEnterpriseFinanceInfo() {
+            if ($('#llzczetext').val().trim() == "" || $('#lzczetext').val().trim() == "" || $('#thiszczetext').val().trim() == "") {
+                $.messager.alert('提示', '资产总额不得为空', 'info');
+            }
+            else if (checkNum('llzczetext') == false || checkNum('lzczetext') == false || checkNum('thiszczetext') == false) {
+                $.messager.alert('提示', '资产总额必须输入数字且只能存在一位小数点', 'info');
+            }
+            else if ($('#llfzzetext').val().trim() == "" || $('#lfzzetext').val().trim() == "" || $('#thisfzzetext').val().trim() == "") {
+                $.messager.alert('提示', '负债总额不得为空', 'info');
+            }
+            else if (checkNum('llfzzetext') == false || checkNum('lfzzetext') == false || checkNum('thisfzzetext') == false) {
+                $.messager.alert('提示', '负债总额必须输入数字且只能存在一位小数点', 'info');
+            }
+            else if ($('#llxssrtext').val().trim() == "" || $('#lxssrtext').val().trim() == "" || $('#thisxssrtext').val().trim() == "") {
+                $.messager.alert('提示', '销售收入不得为空', 'info');
+            }
+            else if (checkNum('llxssrtext') == false || checkNum('lxssrtext') == false || checkNum('thisxssrtext') == false) {
+                $.messager.alert('提示', '销售收入必须输入数字且只能存在一位小数点', 'info');
+            }
+            else if ($('#llyszktext').val().trim() == "" || $('#lyszktext').val().trim() == "" || $('#thisyszktext').val().trim() == "") {
+                $.messager.alert('提示', '应收账款不得为空', 'info');
+            }
+            else if (checkNum('llyszktext') == false || checkNum('lyszktext') == false || checkNum('thisyszktext') == false) {
+                $.messager.alert('提示', '应收账款必须输入数字且只能存在一位小数点', 'info');
+            }
+            else if ($('#lljlrtext').val().trim() == "" || $('#ljlrtext').val().trim() == "" || $('#thisjlrtext').val().trim() == "") {
+                $.messager.alert('提示', '净利润不得为空', 'info');
+            }
+            else if (checkNum('lljlrtext') == false || checkNum('ljlrtext') == false || checkNum('thisjlrtext') == false) {
+                $.messager.alert('提示', '净利润必须输入数字且只能存在一位小数点', 'info');
+            }
+            else if ($('#llsyzqytext').val().trim() == "" || $('#lsyzqytext').val().trim() == "" || $('#thissyzqytext').val().trim() == "") {
+                $.messager.alert('提示', '所有者权益不得为空', 'info');
+            }
+            else if (checkNum('llsyzqytext') == false || checkNum('lsyzqytext') == false || checkNum('thissyzqytext') == false) {
+                $.messager.alert('提示', '所有者权益必须输入数字且只能存在一位小数点', 'info');
+            }
+            else {
+                $.messager.confirm('提示', '请确认您所填写的企业财务信息真实及有效性！是否现在保存？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../../WebServer/EnterpriseService.ashx?Method=SaveEnterpriseFinanceInfo",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(GetJsonData()),
+                            dataType: "json",
+                            success: function (message) {
+                                if (message > 0) {
+                                    alert("请求已提交！我们会尽快与您取得联系");
+                                }
+                            },
+                            error: function (message) {
+                                $("#request-process-patent").html("提交数据失败！");
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        function GetJsonData() {
+            var EnterpriseFinanceInfoJson =
+                {
+                    "llzcze": $('#llzczetext').val().trim(),
+                    "lzcze": $('#lzczetext').val().trim(),
+                    "thiszcze": $('#thiszczetext').val().trim(),
+                    "llfzze": $('#llfzzetext').val().trim(),
+                    "lfzze": $('#lfzzetext').val().trim(),
+                    "thisfzze": $('#thisfzzetext').val().trim(),
+                    "llxssr": $('#llxssrtext').val().trim(),
+                    "lxssr": $('#lxssrtext').val().trim(),
+                    "thisxssr": $('#thisxssrtext').val().trim(),
+                    "llyszk": $('#llyszktext').val().trim(),
+                    "lyszk": $('#lyszktext').val().trim(),
+                    "thisyszk": $('#thisyszktext').val().trim(),
+                    "lljlr": $('#lljlrtext').val().trim(),
+                    "ljlr": $('#ljlrtext').val().trim(),
+                    "thisjlr": $('#thisjlrtext').val().trim(),
+                    "llsyzqy": $('#llsyzqytext').val().trim(),
+                    "lsyzqy": $('#lsyzqytext').val().trim(),
+                    "thissyzqy": $('#thissyzqytext').val().trim()
+                };
+            return EnterpriseFinanceInfoJson;
         }
 
         function SaveEnterprisrInfo() {
@@ -241,6 +346,15 @@
                 return false;
             }
         }
+
+        function checkNum(id) {
+            var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
+            var obj = document.getElementById(id);
+            if (!reg.test(obj.value)) {
+                return false
+            }
+            return true;
+        }
     </script>
 
 </head>
@@ -257,69 +371,66 @@
                 <h2> 企业信息</h2>
                 <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%; padding-bottom:5px;">
                     <div data-options="region:'center'" style="width:33%;padding:10px">
-                        <h3> 基本信息</h3>
+
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
                                 <td style=" text-align:left;  ">企业名称:</td>
                                 <td style=" text-align:left;"><label id="labEnterpriseName" />无</td>
                                 <td style=" text-align:left; ">信用代码:</td>
                                 <td style=" text-align:left;"><label id="labCode" />无</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left;">企业类型:</td>
+                                <td style=" text-align:left;"><label id="labEnterpriseType" />无</td>
+                                <td style=" text-align:left;">行业分类:</td>
+                                <td style=" text-align:left;"><label id="labProfession" />无</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left;">主要产品:</td>
+                                <td style=" text-align:left;"><label id="labMainProduction" />无</td>
                                 <td style=" text-align:left; ">环评结果:</td>
                                 <td style=" text-align:left;"><label id="labHuanping" />无</td>
 
                             </tr>
                             <tr>
-
-                                <td style=" text-align:left;">行业分类:</td>
-                                <td style=" text-align:left;"><label id="labProfession" />无</td>
-                                <td style=" text-align:left;">企业类型:</td>
-                                <td style=" text-align:left;"><label id="labEnterpriseType" />无</td>
-                                <td style=" text-align:left;">主要产品:</td>
-                                <td style=" text-align:left;"><label id="labMainProduction" />无</td>
-
-                            </tr>
-                            <tr>
                                 <td style=" text-align:left;">注册类型:</td>
                                 <td style=" text-align:left;"><label id="labRegistType" />无</td>
+                                <td style=" text-align:left;">注册地区:</td>
+                                <td style=" text-align:left;"><label id="labRegistRegion" />无</td>
+                            </tr>
+                            <tr>
                                 <td style=" text-align:left;">注册资金:</td>
                                 <td style=" text-align:left;"><label id="labRegFinance" />无</td>
                                 <td style=" text-align:left;">注册币种:</td>
                                 <td style=" text-align:left;"><label id="labRegFinanceMt" />无</td>
                             </tr>
-
                             <tr>
 
                                 <td style=" text-align:left;">营业范围:</td>
                                 <td style=" text-align:left;"><label id="labBusiness" />无</td>
-                                <td style=" text-align:left;">注册地区:</td>
-                                <td style=" text-align:left;"><label id="labRegistRegion" />无</td>
                                 <td style=" text-align:left;">成立时间:</td>
                                 <td style=" text-align:left;"><label id="labCreateTime" />无</td>
                             </tr>
-
-
                             <tr>
                                 <td style=" text-align:left;">法人代表:</td>
                                 <td style=" text-align:left;"><label id="labJuridicalPerson" />无</td>
+                                <td style=" text-align:left;">营业执照:</td>
+                                <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
+                                    <a id="BusinessLicenseImg" name="BusinessLicenseImg" target="_blank" href="">点击查看</a>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td style=" text-align:left;">联系人姓名:</td>
                                 <td style=" text-align:left;"><label id="labConectionPerson" />无</td>
                                 <td style=" text-align:left;">联系人电话:</td>
                                 <td style=" text-align:left;"><label id="labConectionTelephone" />无</td>
-
                             </tr>
                             <tr>
                                 <td style=" text-align:left;">企业简介:</td>
                                 <td style=" text-align:left;" colspan="5"><label id="labDesc" />无</td>
 
                             </tr>
-                            <tr>
-                                <td style=" text-align:left;">营业执照:</td>
-                                <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
-                                    <a id="BusinessLicenseImg" name="BusinessLicenseImg" target="_blank" href="">点击查看</a>
-                                    <!--<img id="BusinessLicenseImg" name="BusinessLicenseImg" width="300" height="150" />-->
-                                </td>
-
-                            </tr>
+                            <tr></tr>
 
 
                         </table>
@@ -337,27 +448,27 @@
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
                                 <td style=" text-align:right;">资产总额:</td>
-                                <td style=" text-align:right;">200&nbsp万</td>
+                                <td style=" text-align:right;"><label id="llzczeLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">负债总额:</td>
-                                <td style=" text-align:right;">50&nbsp万</td>
+                                <td style=" text-align:right;"><label id="llfzzeLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">所有者权益:</td>
-                                <td style=" text-align:right;">150&nbsp万</td>
+                                <td style=" text-align:right;"><label id="llsyzqyLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">销售收入:</td>
-                                <td style=" text-align:right;">800&nbsp万</td>
+                                <td style=" text-align:right;"><label id="llxssrLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">应收账款:</td>
-                                <td style=" text-align:right;">200&nbsp万</td>
+                                <td style=" text-align:right;"><label id="llyszkLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">净利润:</td>
-                                <td style=" text-align:right;">50&nbsp万</td>
+                                <td style=" text-align:right;"><label id="lljlrLab">无</label></td>
                             </tr>
                         </table>
                     </div>
@@ -366,27 +477,27 @@
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
                                 <td style=" text-align:right;">资产总额:</td>
-                                <td style=" text-align:right;">200&nbsp万</td>
+                                <td style=" text-align:right;"><label id="lzczeLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">负债总额:</td>
-                                <td style=" text-align:right;">50&nbsp万</td>
+                                <td style=" text-align:right;"><label id="lfzzeLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">所有者权益:</td>
-                                <td style=" text-align:right;">150&nbsp万</td>
+                                <td style=" text-align:right;"><label id="lsyzqyLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">销售收入:</td>
-                                <td style=" text-align:right;">800&nbsp万</td>
+                                <td style=" text-align:right;"><label id="lxssrLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">应收账款:</td>
-                                <td style=" text-align:right;">200&nbsp万</td>
+                                <td style=" text-align:right;"><label id="lyszkLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">净利润:</td>
-                                <td style=" text-align:right;">50&nbsp万</td>
+                                <td style=" text-align:right;"><label id="ljlrLab">无</label></td>
                             </tr>
                         </table>
                     </div>
@@ -395,32 +506,32 @@
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
                                 <td style=" text-align:right;">资产总额:</td>
-                                <td style=" text-align:right;">200&nbsp万</td>
+                                <td style=" text-align:right;"><label id="thiszczeLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">负债总额:</td>
-                                <td style=" text-align:right;">50&nbsp万</td>
+                                <td style=" text-align:right;"><label id="thisfzzeLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">所有者权益:</td>
-                                <td style=" text-align:right;">150&nbsp万</td>
+                                <td style=" text-align:right;"><label id="thissyzqyLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">销售收入:</td>
-                                <td style=" text-align:right;">800&nbsp万</td>
+                                <td style=" text-align:right;"><label id="thisxssrLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">应收账款:</td>
-                                <td style=" text-align:right;">200&nbsp万</td>
+                                <td style=" text-align:right;"><label id="thisyszkLab">无</label></td>
                             </tr>
                             <tr>
                                 <td style=" text-align:right;">净利润:</td>
-                                <td style=" text-align:right;">50&nbsp万</td>
+                                <td style=" text-align:right;"><label id="thisjlrLab">无</label>/td>
                             </tr>
                         </table>
                     </div>
                 </div>
-                <a href="#" id="EnterpriseFinanceInfoBtn" class="easyui-linkbutton">编辑财务信息</a>
+                <a href="#" id="EnterpriseFinanceInfoBtn" class="easyui-linkbutton" onclick="OPenEnterpriseFinanceInfodlg()">编辑财务信息</a>
             </div>
         </div>
     </div>
@@ -513,11 +624,91 @@
             </table>
         </form>
     </div>
-
-
     <div id="Enterprisedlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveEnterprisrInfo()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#Enterprisedlg').dialog('close')">
+            关闭
+        </a>
+    </div>
+
+    <div id="EnterpriseFinanceInfodlg" class="easyui-dialog" title="企业财务信息编辑" style="text-align: center;
+        width: 800px; height:450px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#EnterpriseFinanceInfodlg-buttons'
+            ">
+        <div class="easyui-panel" style="width:100%;height:100%;padding:0px;">
+            <div class="easyui-layout" data-options="fit:true">
+                <div data-options="region:'west'" style=" width:33%;padding:5px">
+                    <h3><label id="LastLastYear">前年</label></h3>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="llzczetext" name="llzczetext" style="width:80%" data-options="label:'资产总额:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="llfzzetext" name="llfzzetext" style="width:80%" data-options="label:'负债总额:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="llxssrtext" name="llxssrtext" style="width:80%" data-options="label:'销售收入:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="llyszktext" name="llyszktext" style="width:80%" data-options="label:'应收账款:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="lljlrtext" name="lljlrtext" style="width:80%" data-options="label:'净利润:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="llsyzqytext" name="llsyzqytext" style="width:80%" data-options="label:'所有者权益:'">&nbsp;&nbsp;万
+                    </div>
+                </div>
+                <div data-options="region:'center'" style="padding:5px">
+                    <h3><label id="LastYear">去年</label></h3>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="lzczetext" name="lzczetext" style="width:80%" data-options="label:'资产总额:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="lfzzetext" name="lfzzetext" style="width:80%" data-options="label:'负债总额:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="lxssrtext" name="lxssrtext" style="width:80%" data-options="label:'销售收入:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="lyszktext" name="lyszktext" style="width:80%" data-options="label:'应收账款:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="ljlrtext" name="ljlrtext" style="width:80%" data-options="label:'净利润:'">&nbsp;&nbsp;万
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input class="easyui-textbox" id="lsyzqytext" name="lsyzqytext" style="width:80%" data-options="label:'所有者权益:'">&nbsp;&nbsp;万
+                    </div>
+                </div>
+                <div data-options="region:'east'" style="width:33%;padding:5px">
+                    <h3><label id="ThisMonth">最近一个月</label></h3>
+                    <div data-options="region:'center'">
+                        <div style="margin-bottom:20px">
+                            <input class="easyui-textbox" id="thiszczetext" name="thiszczetext" style="width:80%" data-options="label:'资产总额:'">&nbsp;&nbsp;万
+                        </div>
+                        <div style="margin-bottom:20px">
+                            <input class="easyui-textbox" id="thisfzzetext" name="thisfzzetext" style="width:80%" data-options="label:'负债总额:'">&nbsp;&nbsp;万
+                        </div>
+                        <div style="margin-bottom:20px">
+                            <input class="easyui-textbox" id="thisxssrtext" name="thisxssrtext" style="width:80%" data-options="label:'销售收入:'">&nbsp;&nbsp;万
+                        </div>
+                        <div style="margin-bottom:20px">
+                            <input class="easyui-textbox" id="thisyszktext" name="thisyszktext" style="width:80%" data-options="label:'应收账款:'">&nbsp;&nbsp;万
+                        </div>
+                        <div style="margin-bottom:20px">
+                            <input class="easyui-textbox" id="thisjlrtext" name="thisjlrtext" style="width:80%" data-options="label:'净利润:'">&nbsp;&nbsp;万
+                        </div>
+                        <div style="margin-bottom:20px">
+                            <input class="easyui-textbox" id="thissyzqytext" name="thissyzqytext" style="width:80%" data-options="label:'所有者权益:'">&nbsp;&nbsp;万
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="EnterpriseFinanceInfodlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveEnterpriseFinanceInfo()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#EnterpriseFinanceInfodlg').dialog('close')">
             关闭
         </a>
     </div>
