@@ -1273,6 +1273,9 @@
     <Compile Include="WebServer\NavMenuWebService.ashx.cs">
       <DependentUpon>NavMenuWebService.ashx</DependentUpon>
     </Compile>
+    <Compile Include="WebServer\PublishRZWebService.ashx.cs">
+      <DependentUpon>PublishRZWebService.ashx</DependentUpon>
+    </Compile>
     <Compile Include="WebServer\SysDepartmentWebService.ashx.cs">
       <DependentUpon>SysDepartmentWebService.ashx</DependentUpon>
     </Compile>
@@ -1336,6 +1339,7 @@
     <Content Include="kindeditor-4.1.7\php\file_manager_json.php" />
     <Content Include="kindeditor-4.1.7\php\JSON.php" />
     <Content Include="kindeditor-4.1.7\php\upload_json.php" />
+    <Content Include="WebServer\PublishRZWebService.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

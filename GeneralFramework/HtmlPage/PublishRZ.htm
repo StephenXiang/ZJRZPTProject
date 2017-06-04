@@ -9,9 +9,13 @@
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
-
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
+        var UserInfo;
+        UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
+            $('#DywTR').hide();
+            $('#PulishRZdlg').dialog('close');
             $('#RZ_dg').datagrid({
                 // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
                 rownumbers: true,
@@ -42,174 +46,208 @@
                                               }
                                           }
                                     }
-                ]]
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '发布融资',
+                    handler: function () {
+                        openPublishRZdlg();
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除融资',
+                    handler: function () {
+
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    //UserID = data.ID;
+                }),
+                onDblClickRow: (function (index, row) {
+                    //$('#UserRoledlg').dialog('open');
+                    //$('#labUserId').html(row.UserID);
+                    //$("#Ul1").tree({
+                    //    url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
+                    //    onClick: function (node) {
+                    //        if (node.attributes) {
+                    //            loadUserDG(node.attributes.ID);
+                    //        }
+                    //    }
+                    //});
+                })
             });
         });
+
+        function openPublishRZdlg() {
+            $('#RZYHcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#RZQXcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#RZYTcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#PulishRZdlg').dialog('open');
+        }
+
+        function dywchange() {
+            var isdyw = $('input:radio[name="isDyw"]:checked').val();
+            if (isdyw == 0) {
+                $('#DywTR').hide();
+            } else {
+                $('#DywTR').show();
+            }
+        }
+
+        function SaveRZInfo() {
+            var rzed = $('#RZEDtext').val().trim();
+            var isdyw = $('input:radio[name="isDyw"]:checked').val();
+            if (rzed == "") {
+                $.messager.alert('提示', '融资额度不能为空', 'info');
+            }
+            else if (checkNum("RZEDtext") == false) {
+                $.messager.alert('提示', '融资额度只能输入数字', 'info');
+            }
+            else if ($('#RZYHcmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '融资银行必须选择', 'info');
+            }
+            else if ($('#RZQXcmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '融资期限必须选择', 'info');
+            }
+            else if ($('#RZYTcmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '融资用途必须选择', 'info');
+            } else {
+                if (isdyw == 1) {
+                    if ($('#dywtext').val().trim() == "") {
+                        $.messager.alert('提示', '请填写抵押物描述', 'info');
+                    }
+                    else {
+                        $.messager.confirm('提示', '请确认您所填写的融资需求信息真实及有效性！是否现在发布？', function (r) {
+                            if (r) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "../../WebServer/PublishRZWebService.ashx?Method=SaveRZInfo",
+                                    contentType: "application/json; charset=utf-8",
+                                    data: JSON.stringify(GetJsonData()),
+                                    dataType: "json",
+                                    success: function (message) {
+                                        if (message > 0) {
+                                            alert("请求已提交！我们会尽快与您取得联系");
+                                        }
+                                    },
+                                    error: function (message) {
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+                else {
+                    $.messager.confirm('提示', '请确认您所填写的融资需求信息真实及有效性！是否现在发布？', function (r) {
+                        if (r) {
+                            $.ajax({
+                                type: "POST",
+                                url: "../../WebServer/PublishRZWebService.ashx?Method=SaveRZInfo",
+                                contentType: "application/json; charset=utf-8",
+                                data: JSON.stringify(GetJsonData()),
+                                dataType: "json",
+                                success: function (message) {
+                                    if (message > 0) {
+                                        alert("请求已提交！我们会尽快与您取得联系");
+                                    }
+                                },
+                                error: function (message) {
+
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+        function GetJsonData() {
+            var RZInfoJson =
+                {
+                    "UserName": UserInfo["name"],
+                    "RZED": $('#RZEDtext').val().trim(),
+                    "RZYH": $('#RZYHcmb').combobox('getValue'),
+                    "RZQX": $('#RZQXcmb').combobox('getValue'),
+                    "RZQT": $('#RZYTcmb').combobox('getValue'),
+                    "dywdesc": $('#dywtext').val(),
+                };
+            return RZInfoJson;
+        }
+        function checkNum(id) {
+            var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
+            var obj = document.getElementById(id);
+            if (!reg.test(obj.value)) {
+                return false
+            }
+            return true;
+        }
     </script>
 </head>
 <body class="easyui-layout">
     <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
-        <div class="easyui-panel" title="发布融资" style="width:100%;height:420px;padding:10px;">
-            <div class="easyui-layout" data-options="fit:true">
-                <div data-options="region:'west',split:false" style="width:50%;padding:10px;">
-                    <h2>财务信息</h2>
-                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:99%;">
-                        <div data-options="region:'west'" style="width:33%;padding:10px">
-                            <h3> 2015年</h3>
-                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                                <tr>
-                                    <td style=" text-align:right;">资产总额:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">负债总额:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">所有者权益:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">销售收入:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">应收账款:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">净利润:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div data-options="region:'east'" style="width:33%;padding:10px">
-                            <h3> 最近一个月</h3>
-                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                                <tr>
-                                    <td style=" text-align:right;">资产总额:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">负债总额:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">所有者权益:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">销售收入:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">应收账款:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">净利润:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div data-options="region:'center'" style="width:33%;padding:10px">
-                            <h3> 2016年</h3>
-                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                                <tr>
-                                    <td style=" text-align:right;">资产总额:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">负债总额:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">所有者权益:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">销售收入:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">应收账款:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">净利润:</td>
-                                    <td style=" text-align:center;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div style=" padding-top:4px;">
-                        <a href="#" class="easyui-linkbutton">保存</a>
-                        <a href="#" class="easyui-linkbutton">清空</a>
-                    </div>
-                </div>
-                <div data-options="region:'center'" style="padding:10px">
-                    <h2> 融资需求</h2>
-                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%;">
-                        <div data-options="region:'center'" style="width:33%;padding:10px">
-                            <h3> 需求信息</h3>
-                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                                <tr>
-                                    <td style=" text-align:right;">融资额度:</td>
-                                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>&nbsp万</td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">融资银行:</td>
-                                    <td style=" text-align:left;">
-                                        <input class="easyui-combobox" name="language[]" style="width:80%;" data-options="
-                    url:'../HtmlPage/json1.json',
-                    method:'get',
-                    valueField:'id',
-                    textField:'text',
-                    value:[1,3],
-                    multiple:true,
-                    panelHeight:'auto',
-                    labelPosition: 'top'
-                    ">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">融资期限:</td>
-                                    <td style=" text-align:left;"><select class="easyui-combobox" name="language" label="" style="width:80%"></select></td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">融资用途:</td>
-                                    <td style=" text-align:left;"><select class="easyui-combobox" name="language" label="" style="width:80%"></select></td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">是否有抵押物:</td>
-                                    <td style=" text-align:left;">
-                                        <span class="radioSpan">
-                                            <input type="radio" name="adminFlag" value="0">否</input>
-                                            <input type="radio" name="adminFlag" value="1">是</input>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style=" text-align:right;">抵押物:</td>
-                                    <td style=" text-align:left;"><input class="easyui-textbox" name="message" style="width:80%;height:40px" data-options="label:'',multiline:true" /></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div style=" padding-top:4px;">
-                        <a href="#" class="easyui-linkbutton">保存</a>
-                        <a href="#" class="easyui-linkbutton">清空</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <div>
             <table id="RZ_dg" data-options="
                 iconCls: 'icon-save',
                 buttons: '#RZ_dg-buttons'
             "></table>
+        </div>
+        <div id="PulishRZdlg" class="easyui-dialog" title="发布融资" style="text-align: center;
+        width: 450px; height:320px; padding: 10px;" data-options="
+                iconCls: 'icon-save',
+                buttons: '#PulishRZdlg-buttons'
+            ">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">融资额度:</td>
+                    <td style=" text-align:left;"><input id="RZEDtext" name="RZEDtext" class="f1 easyui-textbox" style="width:80%;" />&nbsp万</td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">融资银行:</td>
+                    <td style=" text-align:left;"><select id="RZYHcmb" name="RZYHcmb" class="easyui-combobox" label="" style="width:80%"></select></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">融资期限:</td>
+                    <td style=" text-align:left;"><select id="RZQXcmb" name="RZQXcmb" class="easyui-combobox" style="width:80%"></select></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">融资用途:</td>
+                    <td style=" text-align:left;"><select id="RZYTcmb" name="RZYTcmb" class="easyui-combobox" style="width:80%"></select></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">是否有抵押物:</td>
+                    <td style=" text-align:left;">
+                        <span class="radioSpan">
+                            <input type="radio" name="isDyw" value="0" checked="checked" onchange="dywchange()">否</input>
+                            <input type="radio" name="isDyw" value="1" onchange="dywchange()">是</input>
+                        </span>
+                    </td>
+                </tr>
+                <tr id="DywTR">
+                    <td style=" text-align:right;">抵押物:</td>
+                    <td style=" text-align:left;"><input class="easyui-textbox" id="dywtext" name="dywtext" style="width:80%;height:40px" data-options="label:'',multiline:true" /></td>
+                </tr>
+            </table>
+        </div>
+        <div id="PulishRZdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveRZInfo()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#PulishRZdlg').dialog('close')">
+                关闭
+            </a>
         </div>
     </div>
 
