@@ -29,5 +29,15 @@ namespace GeneralFrameworkBLL
         {
             return _es.GetImgForCode(code);
         }
+
+        public bool SaveEnterpriseFianceInfo(EnterpriseFinanceInfo efi)
+        {
+            return _es.SaveEnterpriseFianceInfo(efi);
+        }
+
+        public string GetEnterpriseFianceInfoByUserName(string username)
+        {
+            return _es.GetEnterpriseFinanceInfoByUserName(username);
+        }
     }
 }

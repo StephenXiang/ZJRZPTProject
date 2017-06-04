@@ -90,26 +90,26 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
             {
                 DataRow dr = dt.Rows[0];
                 reply = JsonHelper.SerializeObject(new
-                 {
-                     DataCount = dt.Rows.Count.ToString(),
-                     Name = dr["Name"].ToString(),
-                     BusinessLicense = dr["BusinessLicense"].ToString(),
-                     Code = dr["Code"].ToString(),
-                     RegistType = dr["RegistType"].ToString(),
-                     Profession = dr["Profession"].ToString(),
-                     EnterpriseType = dr["EnterpriseType"].ToString(),
-                     RegistRegion = dr["RegistRegion"].ToString(),
-                     Huanping = dr["Huanping"].ToString(),
-                     RegFinance = dr["RegFinance"].ToString(),
-                     RegFinanceMt = dr["RegFinanceMt"].ToString(),
-                     Business = dr["Business"].ToString(),
-                     MainProduction = dr["MainProduction"].ToString(),
-                     CreateTime = dr["CreateTime"].ToString(),
-                     JuridicalPerson = dr["JuridicalPerson"].ToString(),
-                     ConectionPerson = dr["ConectionPerson"].ToString(),
-                     ConnectionTelephone = dr["ConnectionTelephone"].ToString(),
-                     Desc = dr["Desc"].ToString()
-                 });
+                {
+                    DataCount = dt.Rows.Count.ToString(),
+                    Name = dr["Name"].ToString(),
+                    BusinessLicense = dr["BusinessLicense"].ToString(),
+                    Code = dr["Code"].ToString(),
+                    RegistType = dr["RegistType"].ToString(),
+                    Profession = dr["Profession"].ToString(),
+                    EnterpriseType = dr["EnterpriseType"].ToString(),
+                    RegistRegion = dr["RegistRegion"].ToString(),
+                    Huanping = dr["Huanping"].ToString(),
+                    RegFinance = dr["RegFinance"].ToString(),
+                    RegFinanceMt = dr["RegFinanceMt"].ToString(),
+                    Business = dr["Business"].ToString(),
+                    MainProduction = dr["MainProduction"].ToString(),
+                    CreateTime = dr["CreateTime"].ToString(),
+                    JuridicalPerson = dr["JuridicalPerson"].ToString(),
+                    ConectionPerson = dr["ConectionPerson"].ToString(),
+                    ConnectionTelephone = dr["ConnectionTelephone"].ToString(),
+                    Desc = dr["Desc"].ToString()
+                });
             }
             else
             {
@@ -128,6 +128,103 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
             return (byte[])DBHelper.GetScalar(sql);
         }
 
+        public string GetEnterpriseFinanceInfoByUserName(string userName)
+        {
+            string reply = null;
+            var sql = string.Format(@"select
+ty.Total as thiszcze,ty.Liabilities as thisfzze,ty.SaleIncome as thisxssr,ty.Receivable as thisyszk,ty.RetainedProfits as thissyzqy,ty.[Year] as thisyear,ty.Jinlirun as thisjlr,
+ly.Total as lzcze,ly.Liabilities as lfzze,ly.SaleIncome as lxssr,ly.Receivable as lyszk,ly.RetainedProfits as lsyzqy,ly.[Year] as lyear,ly.Jinlirun as ljlr,
+lly.Total as llzcze,lly.Liabilities as llfzze,lly.SaleIncome as llxssr,lly.Receivable as llyszk,lly.RetainedProfits as llsyzqy,lly.[Year] as llyear,lly.Jinlirun as lljlr
+from RZFinance rzf
+join SysUser u on u.EnterpriseId=rzf.EnterpriseId
+left join RZFinanceYear ty on ty.Id=rzf.Finance
+left join RZFinanceYear ly on ly.Id=rzf.Finance
+left join RZFinanceYear lly on lly.Id=rzf.Finance
+where u.UserName='{0}'", userName.Trim());
+            var dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count > 0)
+            {
+                var dr = dt.Rows[0];
+                var efi = new EnterpriseFinanceInfo
+                {
+                    llzcze = dr["llzcze"].ToString().Trim(),
+                    lzcze = dr["lzcze"].ToString().Trim(),
+                    thiszcze = dr["thiszcze"].ToString().Trim(),
+                    llfzze = dr["llfzze"].ToString().Trim(),
+                    lfzze = dr["lfzze"].ToString().Trim(),
+                    thisfzze = dr["thisfzze"].ToString().Trim(),
+                    llxssr = dr["llxssr"].ToString().Trim(),
+                    lxssr = dr["lxssr"].ToString().Trim(),
+                    thisxssr = dr["thisxssr"].ToString().Trim(),
+                    llyszk = dr["llyszk"].ToString().Trim(),
+                    lyszk = dr["lyszk"].ToString().Trim(),
+                    thisyszk = dr["thisyszk"].ToString().Trim(),
+                    lljlr = dr["lljlr"].ToString().Trim(),
+                    ljlr = dr["ljlr"].ToString().Trim(),
+                    thisjlr = dr["thisjlr"].ToString().Trim(),
+                    llsyzqy = dr["llsyzqy"].ToString().Trim(),
+                    lsyzqy = dr["lsyzqy"].ToString().Trim(),
+                    thissyzqy = dr["thissyzqy"].ToString().Trim(),
+                    llyear = dr["llyear"].ToString().Trim(),
+                    lyear = dr["lyear"].ToString().Trim(),
+                    thisyear = dr["thisyear"].ToString().Trim()
+                };
+                reply = JsonHelper.SerializeObject(efi);
+            }
+            else
+            {
+                reply = "";
+            }
+            return reply;
+        }
 
+        public bool SaveEnterpriseFianceInfo(EnterpriseFinanceInfo efi)
+        {
+            var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", efi.username.Trim());
+            var ent = DBHelper.GetScalar(sql) as int?;
+            if (ent == null) return false;
+            sql = @"
+insert into RZFinanceYear(EnterpriseId,Total,Liabilities,SaleIncome,Receivable,RetainedProfits,[Year],Jinlirun)
+values (@eid,@tt,@lia,@sal,@rec,@ret,@yr,@jlr)
+SELECT @@IDENTITY";
+            var thisid = DBHelper.GetScalar(sql,
+                new SqlParameter("@eid", ent),
+                new SqlParameter("@tt", efi.thiszcze.Trim()),
+                new SqlParameter("@lia", efi.thisfzze.Trim()),
+                new SqlParameter("@sal", efi.thisxssr.Trim()),
+                new SqlParameter("@rec", efi.thisyszk.Trim()),
+                new SqlParameter("@ret", efi.thissyzqy.Trim()),
+                new SqlParameter("@yr", efi.thisyear.Trim()),
+                new SqlParameter("@jlr", efi.thisjlr.Trim()));
+            if (thisid == null) return false;
+            var lid = DBHelper.GetScalar(sql,
+                new SqlParameter("@eid", ent),
+                new SqlParameter("@tt", efi.lzcze.Trim()),
+                new SqlParameter("@lia", efi.lfzze.Trim()),
+                new SqlParameter("@sal", efi.lxssr.Trim()),
+                new SqlParameter("@rec", efi.lyszk.Trim()),
+                new SqlParameter("@ret", efi.lsyzqy.Trim()),
+                new SqlParameter("@yr", efi.lyear.Trim()),
+                new SqlParameter("@jlr", efi.ljlr.Trim()));
+            if (lid == null) return false;
+            var llid = DBHelper.GetScalar(sql,
+                new SqlParameter("@eid", ent),
+                new SqlParameter("@tt", efi.llzcze.Trim()),
+                new SqlParameter("@lia", efi.llfzze.Trim()),
+                new SqlParameter("@sal", efi.llxssr.Trim()),
+                new SqlParameter("@rec", efi.llyszk.Trim()),
+                new SqlParameter("@ret", efi.llsyzqy.Trim()),
+                new SqlParameter("@yr", efi.llyear.Trim()),
+                new SqlParameter("@jlr", efi.lljlr.Trim()));
+            if (llid == null) return false;
+            sql = @"insert into RZFinance(EnterpriseId,FinanceYear,Finance,FinanceLY,FinanceLLY)
+values(@eid,@fy,@fn,@fnl,@fnll)";
+            var id = DBHelper.Execute(sql, new SqlParameter("@eid", ent),
+                new SqlParameter("@fy", efi.thisyear.Trim()),
+                new SqlParameter("@fn", thisid),
+                new SqlParameter("@fnl", lid),
+                new SqlParameter("@fnll", llid));
+            return id > 0;
+        }
     }
 }
