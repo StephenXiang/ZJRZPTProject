@@ -224,7 +224,7 @@ namespace GeneralFramework.WebServer
 
         public void GetEnterpriseFinanceInfoForUserName()
         {
-            var userName = _request.Form["UserName"];
+            var userName = _request["UserName"].ToString();
             _response.Write(_em.GetEnterpriseFianceInfoByUserName(userName));
             //返回一个json数组给前端
             //例：[{"year":"2015" "zzze":"125" , "fzze":"50" },{"year":"2016" "zzze":"125" , "fzze":"50" },{"year":"2017" "zzze":"125" , "fzze":"50" }]

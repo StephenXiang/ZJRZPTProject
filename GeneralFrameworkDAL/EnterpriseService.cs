@@ -138,8 +138,8 @@ lly.Total as llzcze,lly.Liabilities as llfzze,lly.SaleIncome as llxssr,lly.Recei
 from RZFinance rzf
 join SysUser u on u.EnterpriseId=rzf.EnterpriseId
 left join RZFinanceYear ty on ty.Id=rzf.Finance
-left join RZFinanceYear ly on ly.Id=rzf.Finance
-left join RZFinanceYear lly on lly.Id=rzf.Finance
+left join RZFinanceYear ly on ly.Id=rzf.FinanceLY
+left join RZFinanceYear lly on lly.Id=rzf.FinanceLLY
 where u.UserName='{0}'", userName.Trim());
             var dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
@@ -147,27 +147,27 @@ where u.UserName='{0}'", userName.Trim());
                 var dr = dt.Rows[0];
                 var efi = new EnterpriseFinanceInfo
                 {
-                    llzcze = dr["llzcze"].ToString().Trim(),
-                    lzcze = dr["lzcze"].ToString().Trim(),
-                    thiszcze = dr["thiszcze"].ToString().Trim(),
-                    llfzze = dr["llfzze"].ToString().Trim(),
-                    lfzze = dr["lfzze"].ToString().Trim(),
-                    thisfzze = dr["thisfzze"].ToString().Trim(),
-                    llxssr = dr["llxssr"].ToString().Trim(),
-                    lxssr = dr["lxssr"].ToString().Trim(),
-                    thisxssr = dr["thisxssr"].ToString().Trim(),
-                    llyszk = dr["llyszk"].ToString().Trim(),
-                    lyszk = dr["lyszk"].ToString().Trim(),
-                    thisyszk = dr["thisyszk"].ToString().Trim(),
-                    lljlr = dr["lljlr"].ToString().Trim(),
-                    ljlr = dr["ljlr"].ToString().Trim(),
-                    thisjlr = dr["thisjlr"].ToString().Trim(),
-                    llsyzqy = dr["llsyzqy"].ToString().Trim(),
-                    lsyzqy = dr["lsyzqy"].ToString().Trim(),
-                    thissyzqy = dr["thissyzqy"].ToString().Trim(),
-                    llyear = dr["llyear"].ToString().Trim(),
-                    lyear = dr["lyear"].ToString().Trim(),
-                    thisyear = dr["thisyear"].ToString().Trim()
+                    llzcze = dr["llzcze"].ToString(),
+                    lzcze = dr["lzcze"].ToString(),
+                    thiszcze = dr["thiszcze"].ToString(),
+                    llfzze = dr["llfzze"].ToString(),
+                    lfzze = dr["lfzze"].ToString(),
+                    thisfzze = dr["thisfzze"].ToString(),
+                    llxssr = dr["llxssr"].ToString(),
+                    lxssr = dr["lxssr"].ToString(),
+                    thisxssr = dr["thisxssr"].ToString(),
+                    llyszk = dr["llyszk"].ToString(),
+                    lyszk = dr["lyszk"].ToString(),
+                    thisyszk = dr["thisyszk"].ToString(),
+                    lljlr = dr["lljlr"].ToString(),
+                    ljlr = dr["ljlr"].ToString(),
+                    thisjlr = dr["thisjlr"].ToString(),
+                    llsyzqy = dr["llsyzqy"].ToString(),
+                    lsyzqy = dr["lsyzqy"].ToString(),
+                    thissyzqy = dr["thissyzqy"].ToString(),
+                    llyear = dr["llyear"].ToString(),
+                    lyear = dr["lyear"].ToString(),
+                    thisyear = dr["thisyear"].ToString()
                 };
                 reply = JsonHelper.SerializeObject(efi);
             }
