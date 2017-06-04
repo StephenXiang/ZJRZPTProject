@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.SessionState;
 using GeneralFrameworkBLL;
 using GeneralFrameworkBLLModel;
@@ -14,14 +15,14 @@ namespace GeneralFramework.WebServer
     public class EnterpriseService : IHttpHandler
     {
 
-        HttpRequest Request;
-        HttpResponse Response;
-        HttpSessionState Session;
-        HttpServerUtility Server;
-        HttpCookie Cookie;
-        HttpContext context;
-        HttpFileCollection files;
-        EnterpriseManager em = new EnterpriseManager();
+        HttpRequest _request;
+        HttpResponse _response;
+        HttpSessionState _session;
+        HttpServerUtility _server;
+        HttpCookie _cookie;
+        HttpContext _context;
+        HttpFileCollection _files;
+        EnterpriseManager _em = new EnterpriseManager();
         public void ProcessRequest(HttpContext context)
         {
             context.Response.Buffer = true;
@@ -31,14 +32,14 @@ namespace GeneralFramework.WebServer
             context.Response.CacheControl = "no-cache";
             context.Response.ContentType = "text/plain";
 
-            files = context.Request.Files;
-            Request = context.Request;
-            Response = context.Response;
-            Session = context.Session;
-            Server = context.Server;
+            _files = context.Request.Files;
+            _request = context.Request;
+            _response = context.Response;
+            _session = context.Session;
+            _server = context.Server;
 
 
-            string method = Request["method"].ToString();
+            string method = _request["method"].ToString();
             MethodInfo methodInfo = this.GetType().GetMethod(method);
             try
             {
@@ -63,118 +64,118 @@ namespace GeneralFramework.WebServer
 
         public void GetRegistType()
         {
-            Response.Write(em.LookUp("注册类型"));
+            _response.Write(_em.LookUp("注册类型"));
         }
 
         public void GetProfessionType()
         {
-            Response.Write(em.LookUp("行业分类"));
+            _response.Write(_em.LookUp("行业分类"));
         }
 
         public void GetEnterpriseType()
         {
-            Response.Write(em.LookUp("企业类型"));
+            _response.Write(_em.LookUp("企业类型"));
         }
 
         public void GetRegionType()
         {
-            Response.Write(em.LookUp("注册地"));
+            _response.Write(_em.LookUp("注册地"));
         }
 
         public void GetHuanPingType()
         {
-            Response.Write(em.LookUp("环评结果"));
+            _response.Write(_em.LookUp("环评结果"));
         }
 
         public void GetMoneyType()
         {
-            Response.Write(em.LookUp("币种"));
+            _response.Write(_em.LookUp("币种"));
         }
 
         public void GetBusinessType()
         {
-            Response.Write(em.LookUp("营业范围"));
+            _response.Write(_em.LookUp("营业范围"));
         }
 
-        public void GetRZQixianType()
+        public void GetRzQixianType()
         {
-            Response.Write(em.LookUp("融资期限"));
+            _response.Write(_em.LookUp("融资期限"));
         }
 
-        public void GetRZUsageType()
+        public void GetRzUsageType()
         {
-            Response.Write(em.LookUp("融资用途"));
+            _response.Write(_em.LookUp("融资用途"));
         }
 
         public void GetRegFinance()
         {
-            Response.Write(em.LookUp("注册资金额度"));
+            _response.Write(_em.LookUp("注册资金额度"));
         }
 
         public void SaveEnterpriseInfo()
         {
-            var fs = Request.Files;
+            var fs = _request.Files;
             var file = fs[0];
-            int RegistTypeId = 0, RegFinance = 0, RegFinanceMt = 0, Business = 0;
-            string MainProduction = "", JuridicalPerson = "", Desc = "";
-            string EnterpriseName = Request.Form["EnterpriseName"].Trim();
-            string UserName = Request.Form["UserNametxt"];
-            if (Request.Form["RegistTypeCmb"].Trim() != "" && Request.Form["RegistTypeCmb"] != null)
+            int registTypeId = 0, regFinance = 0, regFinanceMt = 0, business = 0;
+            string mainProduction = "", juridicalPerson = "", desc = "";
+            string enterpriseName = _request.Form["EnterpriseName"].Trim();
+            string userName = _request.Form["UserNametxt"];
+            if (_request.Form["RegistTypeCmb"].Trim() != "" && _request.Form["RegistTypeCmb"] != null)
             {
-                RegistTypeId = Convert.ToInt32(Request.Form["RegistTypeCmb"]);
+                registTypeId = Convert.ToInt32(_request.Form["RegistTypeCmb"]);
             }
-            if (Request.Form["RegFinanceCmb"].Trim() != "" && Request.Form["RegFinanceCmb"] != null)
+            if (_request.Form["RegFinanceCmb"].Trim() != "" && _request.Form["RegFinanceCmb"] != null)
             {
-                RegFinance = Convert.ToInt32(Request.Form["RegFinanceCmb"]);
+                regFinance = Convert.ToInt32(_request.Form["RegFinanceCmb"]);
             }
-            if (Request.Form["RegFinanceMtCmb"].Trim() != "" && Request.Form["RegFinanceMtCmb"] != null)
+            if (_request.Form["RegFinanceMtCmb"].Trim() != "" && _request.Form["RegFinanceMtCmb"] != null)
             {
-                RegFinanceMt = Convert.ToInt32(Request.Form["RegFinanceMtCmb"]);
+                regFinanceMt = Convert.ToInt32(_request.Form["RegFinanceMtCmb"]);
             }
-            if (Request.Form["BusinessCmb"].Trim() != "" && Request.Form["BusinessCmb"] != null)
+            if (_request.Form["BusinessCmb"].Trim() != "" && _request.Form["BusinessCmb"] != null)
             {
-                Business = Convert.ToInt32(Request.Form["BusinessCmb"]);
+                business = Convert.ToInt32(_request.Form["BusinessCmb"]);
             }
-            if (Request.Form["MainProduction"].Trim() != "" && Request.Form["MainProduction"] != null)
+            if (_request.Form["MainProduction"].Trim() != "" && _request.Form["MainProduction"] != null)
             {
-                MainProduction = Request.Form["MainProduction"];
+                mainProduction = _request.Form["MainProduction"];
             }
-            if (Request.Form["JuridicalPerson"].Trim() != "" && Request.Form["JuridicalPerson"] != null)
+            if (_request.Form["JuridicalPerson"].Trim() != "" && _request.Form["JuridicalPerson"] != null)
             {
-                JuridicalPerson = Request.Form["JuridicalPerson"];
+                juridicalPerson = _request.Form["JuridicalPerson"];
             }
-            if (Request.Form["EnterpriseDesc"].Trim() != "" && Request.Form["EnterpriseDesc"] != null)
+            if (_request.Form["EnterpriseDesc"].Trim() != "" && _request.Form["EnterpriseDesc"] != null)
             {
-                Desc = Request.Form["EnterpriseDesc"];
+                desc = _request.Form["EnterpriseDesc"];
             }
 
             var enterprise = new Enterprise
             {
-                Name = Request.Form["EnterpriseName"].Trim(),
-                Code = Request.Form["Code"].Trim(),
+                Name = _request.Form["EnterpriseName"].Trim(),
+                Code = _request.Form["Code"].Trim(),
                 BusinessLicense = StreamToBytes(file.InputStream),
-                RegistTypeId = RegistTypeId,
-                ProfessionId = Convert.ToInt32(Request.Form["ProfessionCmb"]),
-                EnterpriseTypeId = Convert.ToInt32(Request.Form["EnterpriseTypeCmb"]),
-                RegistRegionId = Convert.ToInt32(Request.Form["RegistRegionCmb"]),
-                HuanpingId = Convert.ToInt32(Request.Form["HuanpingCmb"]),
-                RegFinance = RegFinance,
-                RegFinanceMt = RegFinanceMt,
-                Business = Business,
-                MainProduction = MainProduction,
-                CreateTime = DateTime.Parse(Request.Form["CreateTime"]),
-                JuridicalPerson = JuridicalPerson,
-                ConectionPerson = Request.Form["ConectionPerson"].Trim(),
-                ConnectionTelephone = Request.Form["ConnectionTelephone"],
-                Desc = Desc
+                RegistTypeId = registTypeId,
+                ProfessionId = Convert.ToInt32(_request.Form["ProfessionCmb"]),
+                EnterpriseTypeId = Convert.ToInt32(_request.Form["EnterpriseTypeCmb"]),
+                RegistRegionId = Convert.ToInt32(_request.Form["RegistRegionCmb"]),
+                HuanpingId = Convert.ToInt32(_request.Form["HuanpingCmb"]),
+                RegFinance = regFinance,
+                RegFinanceMt = regFinanceMt,
+                Business = business,
+                MainProduction = mainProduction,
+                CreateTime = DateTime.Parse(_request.Form["CreateTime"]),
+                JuridicalPerson = juridicalPerson,
+                ConectionPerson = _request.Form["ConectionPerson"].Trim(),
+                ConnectionTelephone = _request.Form["ConnectionTelephone"],
+                Desc = desc
             };
             string err;
-            bool isSaveOK = em.Save(enterprise, out err);
-            if (isSaveOK == true)
+            bool isSaveOk = _em.Save(enterprise, out err);
+            if (isSaveOk == true)
             {
-                em.GetEntetpriseForName(EnterpriseName, UserName);
+                _em.GetEntetpriseForName(enterpriseName, userName);
             }
-            Response.Write(isSaveOK);
+            _response.Write(isSaveOk);
         }
 
         private static byte[] StreamToBytes(Stream stream)
@@ -187,7 +188,7 @@ namespace GeneralFramework.WebServer
 
         public bool SaveInfo()
         {
-            var s = Request.Form["UserName"];
+            var s = _request.Form["UserName"];
             var ins = new Enterprise
             {
                 //Business = Request.Form["UserName"]
@@ -197,29 +198,34 @@ namespace GeneralFramework.WebServer
 
         public void GetEnterpriseInfoForUserName()
         {
-            var UserName = Request.Form["UserName"];
-            Response.Write(em.GetEnterpriseInfoForUserName(UserName));
+            var userName = _request.Form["UserName"];
+            _response.Write(_em.GetEnterpriseInfoForUserName(userName));
         }
 
         public void LoadBusinessLicenseImg()
         {
-            var Code = Request.QueryString["Code"].ToString();
-            var bytes = em.GetImgForCode(Code);
-            Response.BinaryWrite(bytes);
-            Response.Flush();
-            Response.End();
+            var code = _request.QueryString["Code"].ToString();
+            var bytes = _em.GetImgForCode(code);
+            _response.BinaryWrite(bytes);
+            _response.Flush();
+            _response.End();
         }
 
         public void SaveEnterpriseFinanceInfo()
         {
-            var data = Request;
+            var data = _request;
             var sr = new StreamReader(data.InputStream);
             var stream = sr.ReadToEnd();
+            var javaScriptSerializer = new JavaScriptSerializer();
+            var efi = javaScriptSerializer.Deserialize<EnterpriseFinanceInfo>(stream);
+            _response.Write(_em.SaveEnterpriseFianceInfo(efi));
             //参考http://www.cnblogs.com/jaxu/p/3698404.html
         }
 
         public void GetEnterpriseFinanceInfoForUserName()
         {
+            var userName = _request.Form["UserName"];
+            _response.Write(_em.GetEnterpriseFianceInfoByUserName(userName));
             //返回一个json数组给前端
             //例：[{"year":"2015" "zzze":"125" , "fzze":"50" },{"year":"2016" "zzze":"125" , "fzze":"50" },{"year":"2017" "zzze":"125" , "fzze":"50" }]
         }
