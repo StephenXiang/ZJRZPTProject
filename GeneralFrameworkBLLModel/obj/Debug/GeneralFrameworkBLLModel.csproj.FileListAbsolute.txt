@@ -1,9 +1,0 @@
-E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\bin\Debug\GeneralFrameworkBLLModel.dll
-E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\bin\Debug\GeneralFrameworkBLLModel.pdb
-E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\obj\Debug\GeneralFrameworkBLLModel.dll
-E:\users\stephenxiang\documents\visual studio 2010\Projects\GeneralFramework\GeneralFrameworkBLLModel\obj\Debug\GeneralFrameworkBLLModel.pdb
-D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLLModel\bin\Debug\GeneralFrameworkBLLModel.dll
-D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLLModel\bin\Debug\GeneralFrameworkBLLModel.pdb
-D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLLModel\obj\Debug\GeneralFrameworkBLLModel.csprojResolveAssemblyReference.cache
-D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLLModel\obj\Debug\GeneralFrameworkBLLModel.dll
-D:\中小企业局融资平台\中小企业局融资平台\GeneralFramework\GeneralFramework\ZJRZPTProject\GeneralFrameworkBLLModel\obj\Debug\GeneralFrameworkBLLModel.pdb
