@@ -59,12 +59,53 @@
                 })
             });
         });
-
         function OpenFpdlg() {
-            $('#dkqxstart').combobox({
-                multiple: true
-            });
+            var data;
+            for (var i = 1; i < 37; i++) {
+                if (i == 36) {
 
+                }
+            }
+            var options = [
+                { "text": "1个月", "value": 1 },
+                { "text": "2个月", "value": 2 },
+                { "text": "3个月", "value": 3 },
+                { "text": "4个月", "value": 4 },
+                { "text": "5个月", "value": 5 },
+                { "text": "6个月", "value": 6 },
+                { "text": "7个月", "value": 7 },
+                { "text": "8个月", "value": 8 },
+                { "text": "9个月", "value": 9 },
+                { "text": "10个月", "value": 10 },
+                { "text": "11个月", "value": 11 },
+                { "text": "12个月", "value": 12 },
+                { "text": "13个月", "value": 13 },
+                { "text": "14个月", "value": 14 },
+                { "text": "15个月", "value": 15 },
+                { "text": "16个月", "value": 16 },
+                { "text": "17个月", "value": 17 },
+                { "text": "18个月", "value": 18 },
+                { "text": "19个月", "value": 19 },
+                { "text": "20个月", "value": 20 },
+                { "text": "21个月", "value": 21 },
+                { "text": "22个月", "value": 22 },
+                { "text": "23个月", "value": 23 },
+                { "text": "24个月", "value": 24 },
+                { "text": "25个月", "value": 25 },
+                { "text": "26个月", "value": 26 },
+                { "text": "27个月", "value": 27 },
+                { "text": "28个月", "value": 28 },
+                { "text": "29个月", "value": 29 },
+                { "text": "30个月", "value": 30 },
+                { "text": "31个月", "value": 31 },
+                { "text": "32个月", "value": 32 },
+                { "text": "33个月", "value": 33 },
+                { "text": "34个月", "value": 34 },
+                { "text": "35个月", "value": 35 },
+                { "text": "36个月", "value": 36 }
+            ];
+            $("#dkqxstart").combobox('loadData', options);
+            $("#dkqxend").combobox('loadData', options);
             $('#FPdlg').dialog('open');
         }
 
@@ -80,82 +121,57 @@
             "></table>
         </div>
         <div id="FPdlg" class="easyui-dialog" title="金融产品编辑" style="text-align: center;
-        width: 800px; height: 500px; padding: 10px" data-options="
+        width: 600px; height: 700px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#FPdlg-buttons'
             ">
             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                 <tr>
                     <td style=" text-align:right;">产品标题:</td>
-                    <td style=" text-align:left;"><input name=" name" class="f1 easyui-textbox" style="width:50%;"></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input name=" name" class="f1 easyui-textbox" style="width:80%;"></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">贷款期限:</td>
                     <td style=" text-align:left;">
-                        <select id="dkqxstart" name="dkqxstart" class="easyui-combobox" style="width:24%">
-                            <option value="1">1个月</option>
-                            <option value="2">2个月</option>
-                            <option value="3">3个月</option>
-                            <option value="4">4个月</option>
-                            <option value="5">5个月</option>
-                            <option value="6">6个月</option>
-                            <option value="7">7个月</option>
-                            <option value="8">8个月</option>
-                            <option value="9">9个月</option>
-                            <option value="10">10个月</option>
-                            <option value="11">11个月</option>
-                            <option value="12">12个月</option>
-                        </select>至<select id="dkqxend" name="dkqxstart" class="easyui-combobox" style="width:24%">
-                            <option value="1">1个月</option>
-                            <option value="2">2个月</option>
-                            <option value="3">3个月</option>
-                            <option value="4">4个月</option>
-                            <option value="5">5个月</option>
-                            <option value="6">6个月</option>
-                            <option value="7">7个月</option>
-                            <option value="8">8个月</option>
-                            <option value="9">9个月</option>
-                            <option value="10">10个月</option>
-                            <option value="11">11个月</option>
-                            <option value="12">12个月</option>
-                        </select>
+                        &nbsp;
+                        <select id="dkqxstart" name="dkqxstart" class="easyui-combobox" style="width:38%"></select>至<select id="dkqxend" name="dkqxstart" class="easyui-combobox" style="width:38%"></select>
                     </td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">担保方式:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<select id="dkqxstart" name="dkqxstart" class="easyui-combobox" style="width:80%"></select></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">贷款额度:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="dkedstart" name="dkedstart" class="f1 easyui-textbox" style="width:31%;">万元&nbsp;至&nbsp;<input id="dkedend" name="dkedend" class="f1 easyui-textbox" style="width:31%;">万元</td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">利率范围:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="dkedstart" name="llfwstart" class="f1 easyui-textbox" style="width:31%;">%&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;<input id="llfwend" name="dkedend" class="f1 easyui-textbox" style="width:31%;">%</td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">联系电话:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;"></input></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">产品简介:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">产品特点:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">适用客户:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">申请条件:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">企业所需提交材料:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%; height:70px;" data-options="multiline:true"></input></td>
                 </tr>
 
             </table>
