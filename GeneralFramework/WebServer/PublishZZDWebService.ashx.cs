@@ -4,7 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.SessionState;
+using GeneralFrameworkBLL;
+using GeneralFrameworkBLLModel;
 
 namespace GeneralFramework.WebServer
 {
@@ -21,6 +24,8 @@ namespace GeneralFramework.WebServer
         HttpCookie Cookie;
         HttpContext context;
         HttpFileCollection files;
+        EnterpriseManager _em = new EnterpriseManager();
+        PublishZzdManager _zm = new PublishZzdManager();
         public void ProcessRequest(HttpContext context)
         {
             context.Response.Buffer = true;
@@ -65,6 +70,9 @@ namespace GeneralFramework.WebServer
             var data = Request;
             var sr = new StreamReader(data.InputStream);
             var stream = sr.ReadToEnd();
+            var javaScriptSerializer = new JavaScriptSerializer();
+            var zi = javaScriptSerializer.Deserialize<ZzdInfo>(stream);
+            Response.Write(_zm.Save(zi));
         }
     }
 }

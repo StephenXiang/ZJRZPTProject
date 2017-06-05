@@ -55,6 +55,7 @@
     <Compile Include="NavMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishRzService.cs" />
+    <Compile Include="PublishZzdService.cs" />
     <Compile Include="SysDepartmentService.cs" />
     <Compile Include="SysRolesService.cs" />
     <Compile Include="SysUserService.cs" />
