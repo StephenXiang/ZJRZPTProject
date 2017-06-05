@@ -60,19 +60,10 @@
                     }
                 }],
                 onClickRow: (function (index, data) {
-                    //UserID = data.ID;
+
                 }),
                 onDblClickRow: (function (index, row) {
-                    //$('#UserRoledlg').dialog('open');
-                    //$('#labUserId').html(row.UserID);
-                    //$("#Ul1").tree({
-                    //    url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
-                    //    onClick: function (node) {
-                    //        if (node.attributes) {
-                    //            loadUserDG(node.attributes.ID);
-                    //        }
-                    //    }
-                    //});
+
                 })
             });
         });
@@ -80,20 +71,20 @@
         function openPublishRZdlg() {
             $('#RZYHcmb').combobox({
                 //width: 145,
-                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzBanks',
                 valueField: 'ID',
                 textField: 'TypeName',
                 multiple: true
             });
             $('#RZQXcmb').combobox({
                 //width: 145,
-                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzqxType',
                 valueField: 'ID',
                 textField: 'TypeName'
             });
             $('#RZYTcmb').combobox({
                 //width: 145,
-                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzytType',
                 valueField: 'ID',
                 textField: 'TypeName'
             });
@@ -141,7 +132,9 @@
                                     data: JSON.stringify(GetJsonData()),
                                     dataType: "text",
                                     success: function (text) {
+                                        alert(text);
                                         if (text == "True") {
+                                            $('#PulishRZdlg').dialog('close');
                                             $.messager.alert('提示', '融资信息发布成功！我们会尽快与您取得联系', 'info');
                                         }
                                         else {
@@ -149,7 +142,7 @@
                                         }
                                     },
                                     error: function (message) {
-
+                                        $.messager.alert('提示', '融资信息发布失败，请重试', 'error');
                                     }
                                 });
                             }
@@ -164,14 +157,17 @@
                                 url: "../../WebServer/PublishRZWebService.ashx?Method=SaveRZInfo",
                                 contentType: "application/json; charset=utf-8",
                                 data: JSON.stringify(GetJsonData()),
-                                dataType: "json",
-                                success: function (message) {
-                                    if (message > 0) {
-                                        alert("请求已提交！我们会尽快与您取得联系");
+                                dataType: "text",
+                                success: function (text) {
+                                    if (text == "True") {
+                                        $('#PulishRZdlg').dialog('close');
+                                        $.messager.alert('提示', '融资信息发布成功！我们会尽快与您取得联系', 'info');
+                                    } else {
+                                        $.messager.alert('提示', '融资信息发布失败，请重试', 'error');
                                     }
                                 },
                                 error: function (message) {
-
+                                    $.messager.alert('提示', '融资信息发布失败，请重试', 'error');
                                 }
                             });
                         }

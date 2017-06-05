@@ -69,13 +69,13 @@
         function OpenZZDDlg() {
             $('#ydkyhcmb').combobox({
                 //width: 145,
-                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                url: '../../WebServer/PublishZZDWebService.ashx?Method=GetZzdMastBanks',
                 valueField: 'ID',
                 textField: 'TypeName'
             });
             $('#zbhcmb').combobox({
                 //width: 145,
-                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                url: '../../WebServer/PublishZZDWebService.ashx?Method=GetZzdBanks',
                 valueField: 'ID',
                 textField: 'TypeName'
             });
@@ -124,6 +124,7 @@
                             dataType: "text",
                             success: function (text) {
                                 if (text == "True") {
+                                    $('#ZZDdlg').dialog('close');
                                     $.messager.alert('提示', '周转贷信息发布成功！我们会尽快与您取得联系', 'info');
                                 }
                                 else {
@@ -131,7 +132,7 @@
                                 }
                             },
                             error: function (message) {
-
+                                $.messager.alert('提示', '周转贷信息发布失败，请重试', 'error');
                             }
                         });
                     }
