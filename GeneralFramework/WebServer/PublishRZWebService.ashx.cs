@@ -4,7 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.SessionState;
+using GeneralFrameworkBLL;
+using GeneralFrameworkBLLModel;
 
 namespace GeneralFramework.WebServer
 {
@@ -21,6 +24,8 @@ namespace GeneralFramework.WebServer
         HttpCookie Cookie;
         HttpContext context;
         HttpFileCollection files;
+        EnterpriseManager _em = new EnterpriseManager();
+        PublishRzManager _pm = new PublishRzManager();
         public void ProcessRequest(HttpContext context)
         {
             context.Response.Buffer = true;
@@ -60,11 +65,29 @@ namespace GeneralFramework.WebServer
             }
         }
 
+        public void GetRzqxType()
+        {
+            Response.Write(_em.LookUp("融资期限"));
+        }
+
+        public void GetRzytType()
+        {
+            Response.Write(_em.LookUp("融资用途"));
+        }
+
+        public void GetRzBanks()
+        {
+            Response.Write(_pm.GetRzBanks());
+        }
+
         public void SaveRZInfo()
         {
             var data = Request;
             var sr = new StreamReader(data.InputStream);
             var stream = sr.ReadToEnd();
+            var javaScriptSerializer = new JavaScriptSerializer();
+            var rzi = javaScriptSerializer.Deserialize<RzInfo>(stream);
+            Response.Write(_pm.SaveRzInfo(rzi));
         }
     }
 }

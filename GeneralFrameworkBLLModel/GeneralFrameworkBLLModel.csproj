@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseFinanceInfo.cs" />
+    <Compile Include="RzInfo.cs" />
     <Compile Include="SysChildMenu.cs" />
     <Compile Include="SysDepartment.cs" />
     <Compile Include="SysNavMenu.cs" />
