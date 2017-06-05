@@ -65,6 +65,16 @@ namespace GeneralFramework.WebServer
             }
         }
 
+        public void GetZzdBanks()
+        {
+            Response.Write(_zm.GetBanks());
+        }
+
+        public void GetZzdMastBanks()
+        {
+            Response.Write(_zm.GetMastBanks());
+        }
+
         public void SaveZZDInfo()
         {
             var data = Request;

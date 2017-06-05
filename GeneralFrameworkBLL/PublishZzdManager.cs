@@ -14,5 +14,15 @@ namespace GeneralFrameworkBLL
         {
             return _zs.Save(zi);
         }
+
+        public string GetBanks()
+        {
+            return _zs.GetBanks();
+        }
+
+        public string GetMastBanks()
+        {
+            return _zs.GetMastBanks();
+        }
     }
 }

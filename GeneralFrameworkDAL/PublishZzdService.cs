@@ -1,10 +1,25 @@
 ﻿using System.Data.SqlClient;
 using GeneralFrameworkBLLModel;
+using GeneralFrameworkDAL.JSON;
 
 namespace GeneralFrameworkDAL
 {
     public class PublishZzdService
     {
+        public string GetBanks()
+        {
+            var sql = "select Id as ID,[Name] as TypeName from [Bank]";
+            var dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.ConvertJosnData(dt);
+        }
+
+        public string GetMastBanks()
+        {
+            var sql = "select Id as ID,[Name] as TypeName from [Bank]";
+            var dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.ConvertJosnData(dt);
+        }
+
         public bool Save(ZzdInfo zi)
         {
             var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", zi.UserName.Trim());
