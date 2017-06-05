@@ -19,12 +19,6 @@
 
         $(function () {
             $('#FPdlg').dialog('close');
-            var editor;
-            window.editor = KindEditor.create('#content', {
-                resizeType: 1,
-                urlType: 'domain', // 带有域名的绝对路径
-            });
-
             $('#FP_dg').datagrid({
                 // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
                 rownumbers: true,
@@ -48,7 +42,7 @@
                     iconCls: 'icon-add',
                     text: '发布金融产品',
                     handler: function () {
-                        $('#FPdlg').dialog('open');
+                        OpenFpdlg();
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -58,22 +52,23 @@
                     }
                 }],
                 onClickRow: (function (index, data) {
-                    //UserID = data.ID;
+
                 }),
                 onDblClickRow: (function (index, row) {
-                    //$('#UserRoledlg').dialog('open');
-                    //$('#labUserId').html(row.UserID);
-                    //$("#Ul1").tree({
-                    //    url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
-                    //    onClick: function (node) {
-                    //        if (node.attributes) {
-                    //            loadUserDG(node.attributes.ID);
-                    //        }
-                    //    }
-                    //});
+
                 })
             });
         });
+
+        function OpenFpdlg() {
+            $('#dkqxstart').combobox({
+                multiple: true
+            });
+
+            $('#FPdlg').dialog('open');
+        }
+
+
     </script>
 </head>
 <body class="easyui-layout">
@@ -91,17 +86,78 @@
             ">
             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                 <tr>
-                    <td style=" text-align:right;">产品名称:</td>
-                    <td style=" text-align:left;"><input name=" name" class="f1 easyui-textbox" style="width:80%;"></input></td>
+                    <td style=" text-align:right;">产品标题:</td>
+                    <td style=" text-align:left;"><input name=" name" class="f1 easyui-textbox" style="width:50%;"></td>
                 </tr>
                 <tr>
-                    <td style=" text-align:right;">产品LOG:</td>
+                    <td style=" text-align:right;">贷款期限:</td>
+                    <td style=" text-align:left;">
+                        <select id="dkqxstart" name="dkqxstart" class="easyui-combobox" style="width:24%">
+                            <option value="1">1个月</option>
+                            <option value="2">2个月</option>
+                            <option value="3">3个月</option>
+                            <option value="4">4个月</option>
+                            <option value="5">5个月</option>
+                            <option value="6">6个月</option>
+                            <option value="7">7个月</option>
+                            <option value="8">8个月</option>
+                            <option value="9">9个月</option>
+                            <option value="10">10个月</option>
+                            <option value="11">11个月</option>
+                            <option value="12">12个月</option>
+                        </select>至<select id="dkqxend" name="dkqxstart" class="easyui-combobox" style="width:24%">
+                            <option value="1">1个月</option>
+                            <option value="2">2个月</option>
+                            <option value="3">3个月</option>
+                            <option value="4">4个月</option>
+                            <option value="5">5个月</option>
+                            <option value="6">6个月</option>
+                            <option value="7">7个月</option>
+                            <option value="8">8个月</option>
+                            <option value="9">9个月</option>
+                            <option value="10">10个月</option>
+                            <option value="11">11个月</option>
+                            <option value="12">12个月</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">担保方式:</td>
                     <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
                 </tr>
                 <tr>
-                    <td style=" text-align:right;">详细内容:</td>
-                    <td style=" text-align:left;"><textarea id="content" name="content" style="width:100%; height:300px;"></textarea></td>
+                    <td style=" text-align:right;">贷款额度:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
                 </tr>
+                <tr>
+                    <td style=" text-align:right;">利率范围:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">联系电话:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">产品简介:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">产品特点:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">适用客户:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">申请条件:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">企业所需提交材料:</td>
+                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                </tr>
+
             </table>
         </div>
         <div id="FPdlg-buttons">
