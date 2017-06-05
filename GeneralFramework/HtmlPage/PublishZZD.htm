@@ -9,8 +9,10 @@
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
-
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
+        var UserInfo;
+        UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZZDdlg').dialog('close');
             $('#ZZD_dg').datagrid({
@@ -37,7 +39,7 @@
                     iconCls: 'icon-add',
                     text: '发布周转贷',
                     handler: function () {
-                        $('#ZZDdlg').dialog('open');
+                        OpenZZDDlg();
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -63,6 +65,112 @@
                 })
             });
         });
+
+        function OpenZZDDlg() {
+            $('#ydkyhcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#zbhcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#ZZDdlg').dialog('open');
+        }
+
+        function SaveZZDInfo() {
+            if ($('#ydkyhcmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '原贷款银行必须选择', 'info');
+            }
+            else if ($('#khjlxm').val().trim() == "") {
+                $.messager.alert('提示', '客户经理姓名不能为空', 'info');
+            }
+            else if ($('#khjllxdh').val().trim() == "") {
+                $.messager.alert('提示', '客户经理联系电话不能为空', 'info');
+            }
+            else if (checkMobile($('#khjllxdh').val().trim()) == false) {
+                $.messager.alert('提示', '客户经理电话格式不正确', 'info');
+            }
+            else if ($('#ydkje').val().trim() == "") {
+                $.messager.alert('提示', '原贷款金额不能为空', 'info');
+            }
+            else if (checkNum("ydkje") == false) {
+                $.messager.alert('提示', '原贷款金额只能输入数字', 'info');
+            }
+            else if ($('#dkdqsj').val().trim() == "") {
+                $.messager.alert('提示', '贷款到期时间必须选择', 'info');
+            }
+            else if ($('#zbhcmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '主办行(经办行)必须选择', 'info');
+            }
+            else if ($('#bcdkje').val().trim() == "") {
+                $.messager.alert('提示', '本次贷款金额必须填写', 'info');
+            }
+            else if (checkNum("bcdkje") == false) {
+                $.messager.alert('提示', '本次贷款金额只能输入数字', 'info');
+            }
+            else {
+                $.messager.confirm('提示', '请确认您所填写的周转贷需求信息真实及有效性！是否现在发布？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../../WebServer/PublishZZDWebService.ashx?Method=SaveZZDInfo",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(GetJsonData()),
+                            dataType: "text",
+                            success: function (text) {
+                                if (text == "True") {
+                                    $.messager.alert('提示', '周转贷信息发布成功！我们会尽快与您取得联系', 'info');
+                                }
+                                else {
+                                    $.messager.alert('提示', '周转贷信息发布失败，请重试', 'error');
+                                }
+                            },
+                            error: function (message) {
+
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        function GetJsonData() {
+            var ZZDInfoJson =
+              {
+                  "UserName": UserInfo["name"],
+                  "ydkyh": $('#ydkyhcmb').combobox('getValue'),
+                  "khjllxdh": $('#khjlxm').val().trim(),
+                  "khjllxdh": $('#khjllxdh').val().trim(),
+                  "ydkje": $('#ydkje').val().trim(),
+                  "dkdqsj": $('#dkdqsj').val().trim(),
+                  "zbh": $('#zbhcmb').combobox('getValue'),
+                  "bcdkje": $('#bcdkje').val()
+              };
+            return ZZDInfoJson;
+        }
+
+        function checkMobile(str) {
+            var re = /^1\d{10}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function checkNum(id) {
+            var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
+            var obj = document.getElementById(id);
+            if (!reg.test(obj.value)) {
+                return false
+            }
+            return true;
+        }
     </script>
 </head>
 <body class="easyui-layout">
@@ -82,45 +190,37 @@
         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
             <tr>
                 <td style=" text-align:right;">原贷款银行:</td>
-                <td style=" text-align:left;"><select class="easyui-combobox" name="language" label="" style="width:80%"></select></td>
+                <td style=" text-align:left;"><select id="ydkyhcmb" name="ydkyhcmb" class="easyui-combobox" label="" style="width:80%"></select></td>
+            </tr>
+            <tr>
+                <td style=" text-align:right;">客户经理姓名:</td>
+                <td style=" text-align:left;"><input id="khjlxm" name=" khjlxm" class="f1 easyui-textbox" style="width:80%;" /></td>
+            </tr>
+            <tr>
+                <td style=" text-align:right;">客户经理联系电话:</td>
+                <td style=" text-align:left;"><input id="khjllxdh" name=" khjllxdh" class="f1 easyui-textbox" style="width:80%;" /></td>
             </tr>
             <tr>
                 <td style=" text-align:right;">原贷款金额:</td>
-                <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input>万</td>
+                <td style=" text-align:left;"><input id="ydkje" name=" ydkje" class="f1 easyui-textbox" style="width:79%;" />万</td>
 
             </tr>
             <tr>
                 <td style=" text-align:right;">贷款到期时间:</td>
-                <td style=" text-align:left;"><input class="easyui-datebox" style="width:80%;"></td>
+                <td style=" text-align:left;"><input id="dkdqsj" name=" dkdqsj" class="easyui-datebox" style="width:80%;"></td>
             </tr>
             <tr>
-                <td style=" text-align:right;">协办行:</td>
-                <td style=" text-align:left;"><select class="easyui-combobox" name="language" label="" style="width:80%"></select></td>
-            </tr>
-            <tr>
-                <td style=" text-align:right;">主办行:</td>
-                <td style=" text-align:left;"><select class="easyui-combobox" name="language" label="" style="width:80%"></select></td>
+                <td style=" text-align:right;">主办行(经办行):</td>
+                <td style=" text-align:left;"><select id="zbhcmb" name="zbhcmb" class="easyui-combobox" name="language" label="" style="width:80%"></select></td>
             </tr>
             <tr>
                 <td style=" text-align:right;">本次贷款申请金额:</td>
-                <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input>万</td>
+                <td style=" text-align:left;"><input id="bcdkje" name=" bcdkje" class="f1 easyui-textbox" style="width:80%;" />万</td>
             </tr>
-            <tr>
-                <td style=" text-align:right;">客户经理姓名:</td>
-                <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input></td>
-            </tr>
-            <tr>
-                <td style=" text-align:right;">客户经理联系电话:</td>
-                <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:80%;" /></input></td>
-            </tr>
-            <tr>
-                <td style=" text-align:right;">续贷函:</td>
-                <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;" /></input></td>
-            </tr>
-
+        </table>
     </div>
     <div id="ZZDdlg-buttons">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveZZDInfo()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZZDdlg').dialog('close')">
             关闭
         </a>

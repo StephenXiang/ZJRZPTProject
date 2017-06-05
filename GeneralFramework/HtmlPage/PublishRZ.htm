@@ -138,10 +138,13 @@
                                     url: "../../WebServer/PublishRZWebService.ashx?Method=SaveRZInfo",
                                     contentType: "application/json; charset=utf-8",
                                     data: JSON.stringify(GetJsonData()),
-                                    dataType: "json",
-                                    success: function (message) {
-                                        if (message > 0) {
-                                            alert("请求已提交！我们会尽快与您取得联系");
+                                    dataType: "text",
+                                    success: function (text) {
+                                        if (text == "True") {
+                                            $.messager.alert('提示', '融资信息发布成功！我们会尽快与您取得联系', 'info');
+                                        }
+                                        else {
+                                            $.messager.alert('提示', '融资信息发布失败，请重试', 'error');
                                         }
                                     },
                                     error: function (message) {
@@ -184,7 +187,7 @@
                     "RZYH": $('#RZYHcmb').combobox('getValue'),
                     "RZQX": $('#RZQXcmb').combobox('getValue'),
                     "RZQT": $('#RZYTcmb').combobox('getValue'),
-                    "dywdesc": $('#dywtext').val(),
+                    "dywdesc": $('#dywtext').val()
                 };
             return RZInfoJson;
         }

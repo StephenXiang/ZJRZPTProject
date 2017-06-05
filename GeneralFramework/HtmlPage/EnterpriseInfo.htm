@@ -196,7 +196,8 @@
                                     loadEnterpriseFiancialInfo();
                                     $('#EnterpriseFinanceInfodlg').dialog('close');
                                     $.messager.alert('提示', '财务信息保存成功', 'info');
-
+                                } else {
+                                    $.messager.alert('提示', '财务信息保存失败，请重试', 'error');
                                 }
                             },
                             error: function (text) {
