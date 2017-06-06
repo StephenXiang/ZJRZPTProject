@@ -24,5 +24,10 @@ namespace GeneralFrameworkBLL
         {
             return _zs.GetMastBanks();
         }
+
+        public string GetZZDLBJson(string user)
+        {
+            return _zs.GetZZDLBJson(user);
+        }
     }
 }
