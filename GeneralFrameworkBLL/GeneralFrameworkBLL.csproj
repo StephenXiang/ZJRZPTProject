@@ -43,6 +43,7 @@
     <Compile Include="EnterpriseManager.cs" />
     <Compile Include="NavMenuManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishJRCPManager.cs" />
     <Compile Include="PublishRzManager.cs" />
     <Compile Include="PublishZzdManager.cs" />
     <Compile Include="SysDepartmentManager.cs" />

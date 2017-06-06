@@ -14,11 +14,16 @@
     <script charset="utf-8" src="../kindeditor-4.1.7/kindeditor.js"></script>
     <script charset="utf-8" src="../kindeditor-4.1.7/lang/zh_CN.js"></script>
     <script charset="utf-8" src="../kindeditor-4.1.7/plugins/code/prettify.js"></script>
-
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
-
+        var UserInfo;
+        UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#FPdlg').dialog('close');
+            LoadJRCPDG();
+        });
+
+        function LoadJRCPDG() {
             $('#FP_dg').datagrid({
                 // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
                 rownumbers: true,
@@ -33,11 +38,11 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'BankName', title: '产品名称', width: '450', align: 'center' },
-                                    { field: 'Address', title: '产品LOG', width: '450', align: 'center' },
-                                    { field: 'User', title: '发布时间', width: '250', align: 'center' },
-                                    { field: 'Telephone', title: '审核状态', width: '250', align: 'center' }
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'BankName', title: '产品名称', width: '450', align: 'center' },
+                    { field: 'Address', title: '产品LOG', width: '450', align: 'center' },
+                    { field: 'User', title: '发布时间', width: '250', align: 'center' },
+                    { field: 'Telephone', title: '审核状态', width: '250', align: 'center' }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布金融产品',
@@ -58,7 +63,101 @@
 
                 })
             });
-        });
+        }
+
+        function SaveJRCP() {
+            if ("" === $('#jrname').val().trim()) {
+                $.messager.alert('提示', '标题不能为空', 'info');
+            }
+            else if ("" === $('#dkqxstart').combobox('getValue')) {
+                $.messager.alert('提示', '贷款期限不能为空', 'info');
+            }
+            else if ("" === $('#dkqxend').combobox('getValue')) {
+                $.messager.alert('提示', '贷款期限不能为空', 'info');
+            }
+            else if (parseInt($('#dkqxend').combobox('getValue')) <= parseInt($('#dkqxstart').combobox('getValue'))) {
+                $.messager.alert('提示', '贷款期限范围设置有误', 'info');
+            }
+            else if ("" === $('#jrdanbao').combobox('getValue')) {
+                $.messager.alert('提示', '担保方式不能为空', 'info');
+            }
+            else if (!checkNum("dkedstart") || !checkNum("dkedend")) {
+                $.messager.alert('提示', '贷款额度只能输入数字', 'info');
+            }
+            else if (parseFloat($('#dkedstart').val().trim()) >= parseFloat($('#dkedend').val().trim())) {
+                $.messager.alert('提示', '贷款额度范围输入有误', 'info');
+            }
+            else if (!checkNum("llfwstart") || !checkNum("llfwend")) {
+                $.messager.alert('提示', '利率范围只能输入数字', 'info');
+            }
+            else if (parseFloat($('#llfwstart').val().trim()) >= parseFloat($('#llfwend').val().trim())) {
+                $.messager.alert('提示', '利率范围输入有误', 'info');
+            }
+            else if (!checkMobile($('#jrlxdh').val().trim())) {
+                $.messager.alert('提示', '联系电话格式不正确', 'info');
+            }
+            else if ("" === $('#jrcpjj').val().trim()) {
+                $.messager.alert('提示', '请填写产品简介', 'info');
+            }
+            else if ("" === $('#jrcptd').val().trim()) {
+                $.messager.alert('提示', '请填写产品特点', 'info');
+            }
+            else if ("" === $('#jrsykh').val().trim()) {
+                $.messager.alert('提示', '请填写产品使用客户', 'info');
+            }
+            else if ("" === $('#jrsqtj').val().trim()) {
+                $.messager.alert('提示', '请填写产品申请条件', 'info');
+            }
+            else if ("" === $('#jrcailiao').val().trim()) {
+                $.messager.alert('提示', '请填写企业所需提交材料', 'info');
+            }
+            else {
+                $.messager.confirm('提示', '请确认您所填写的金融产品信息真实及有效性！是否现在发布？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=SaveJRCPInfo",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(GetJsonData()),
+                            dataType: "text",
+                            success: function (text) {
+                                if (text == "True") {
+                                    $('#FPdlg').dialog('close');
+                                    LoadJRCPDG();
+                                    $.messager.alert('提示', '金融产品信息发布成功！我们会尽快与您取得联系', 'info');
+                                } else {
+                                    $.messager.alert('提示', '金融产品信息发布失败，请重试', 'error');
+                                }
+                            },
+                            error: function (message) {
+                                $.messager.alert('提示', '金融产品信息发布失败，请重试', 'error');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        function GetJsonData() {
+            return {
+                "UserName": UserInfo["name"],
+                "jrname": $('#jrname').val().trim(),
+                "dkqxstart": $('#dkqxstart').combobox('getValue'),
+                "dkqxend": $('#dkqxend').combobox('getValue'),
+                "jrdanbao": $('#jrdanbao').combobox('getValue'),
+                "dkedstart": $('#dkedstart').val().trim(),
+                "dkedend": $('#dkedend').val().trim(),
+                "llfwstart": $('#llfwstart').val().trim(),
+                "llfwend": $('#llfwend').val().trim(),
+                "jrlxdh": $('#jrlxdh').val().trim(),
+                "jrcpjj": $('#jrcpjj').val().trim(),
+                "jrcptd": $('#jrcptd').val().trim(),
+                "jrsykh": $('#jrsykh').val().trim(),
+                "jrsqtj": $('#jrsqtj').val().trim(),
+                "jrcailiao": $('#jrcailiao').val().trim()
+            };
+        }
+
         function OpenFpdlg() {
             var data;
             for (var i = 1; i < 37; i++) {
@@ -107,9 +206,31 @@
             $("#dkqxstart").combobox('loadData', options);
             $("#dkqxend").combobox('loadData', options);
             $('#FPdlg').dialog('open');
+            $('#jrdanbao').combobox({
+                //width: 145,
+                url: '../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetDanbaoType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
         }
 
+        function checkNum(id) {
+            var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
+            var obj = document.getElementById(id);
+            if (!reg.test(obj.value)) {
+                return false;
+            }
+            return true;
+        }
 
+        function checkMobile(str) {
+            var re = /^1\d{10}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     </script>
 </head>
 <body class="easyui-layout">
@@ -128,18 +249,18 @@
             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                 <tr>
                     <td style=" text-align:right;">产品标题:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input name=" name" class="f1 easyui-textbox" style="width:80%;"></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="jrname" name=" name" class="f1 easyui-textbox" style="width:80%;"></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">贷款期限:</td>
                     <td style=" text-align:left;">
                         &nbsp;
-                        <select id="dkqxstart" name="dkqxstart" class="easyui-combobox" style="width:38%"></select>至<select id="dkqxend" name="dkqxstart" class="easyui-combobox" style="width:38%"></select>
+                        <select id="dkqxstart" name="dkqxstart" class="easyui-combobox" style="width:38%"></select>至<select id="dkqxend" name="dkqxend" class="easyui-combobox" style="width:38%"></select>
                     </td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">担保方式:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<select id="dkqxstart" name="dkqxstart" class="easyui-combobox" style="width:80%"></select></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<select id="jrdanbao" name="jrdanbao" class="easyui-combobox" style="width:80%"></select></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">贷款额度:</td>
@@ -147,38 +268,38 @@
                 </tr>
                 <tr>
                     <td style=" text-align:right;">利率范围:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="dkedstart" name="llfwstart" class="f1 easyui-textbox" style="width:31%;">%&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;<input id="llfwend" name="dkedend" class="f1 easyui-textbox" style="width:31%;">%</td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="llfwstart" name="llfwstart" class="f1 easyui-textbox" style="width:31%;">%&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;<input id="llfwend" name="dkedend" class="f1 easyui-textbox" style="width:31%;">%</td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">联系电话:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="jrlxdh" name="file" class="f1 easyui-textbox" style="width: 80%;" /></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">产品简介:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="jrcpjj" name="file" class="f1 easyui-textbox" style="width: 80%; height: 70px;" data-options="multiline:true" /></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">产品特点:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="jrcptd" name="file" class="f1 easyui-textbox" style="width: 80%; height: 70px;" data-options="multiline:true" /></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">适用客户:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="jrsykh" name="file" class="f1 easyui-textbox" style="width: 80%; height: 70px;" data-options="multiline:true" /></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">申请条件:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%;height:70px;" data-options="multiline:true"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="jrsqtj" name="file" class="f1 easyui-textbox" style="width: 80%; height: 70px;" data-options="multiline:true" /></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">企业所需提交材料:</td>
-                    <td style=" text-align:left;">&nbsp;&nbsp;<input name="file" class="f1 easyui-textbox" style="width:80%; height:70px;" data-options="multiline:true"></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;<input id="jrcailiao" name="file" class="f1 easyui-textbox" style="width: 80%; height: 70px;" data-options="multiline:true" /></td>
                 </tr>
 
             </table>
         </div>
         <div id="FPdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#FPdlg').dialog('close')">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveJRCP()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#FPdlg').dialog('close');">
                 关闭
             </a>
         </div>
