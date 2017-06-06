@@ -89,5 +89,17 @@ namespace GeneralFramework.WebServer
             var rzi = javaScriptSerializer.Deserialize<RzInfo>(stream);
             Response.Write(_pm.SaveRzInfo(rzi));
         }
+
+        public void GetRZLBJson()
+        {
+            string UserName = Request["UserName"];
+            Response.Write(_pm.GetRZLBJson(UserName));
+        }
+
+        public void GetRZBankstr()
+        {
+            string BankIds = Request["BankIds"];
+            Response.Write(_pm.GetRZBankstr(BankIds));
+        }
     }
 }

@@ -16,8 +16,12 @@
         $(function () {
             $('#DywTR').hide();
             $('#PulishRZdlg').dialog('close');
+            LoadRZDG();
+        });
+        function LoadRZDG() {
             $('#RZ_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRZLBJson',
+                queryParams: { UserName: UserInfo["name"] },
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -31,18 +35,51 @@
                 pageList: [10, 20, 30],
                 columns: [[
                                     { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'UserRolesID', title: '融资额度', width: '300', align: 'center' },
-                                    { field: 'UserDepartment', title: '融资期限', width: '300', align: 'center' },
-                                    { field: 'UserID', title: '所选银行', width: '300', align: 'center' },
-                                    { field: 'UserID', title: '发布时间', width: '300', align: 'center' },
+                                    { field: 'RZED', title: '融资额度(单位：万元)', width: '300', align: 'center' },
+                                    { field: 'RZQX', title: '融资期限', width: '300', align: 'center' },
                                     {
-                                        field: 'IsEnable', title: '审批状态', width: 150, align: 'center', formatter:
+                                        field: 'SXYH', title: '所选银行', width: '300', align: 'center', formatter:
+                                            function (value, row, index) {
+                                                if (value != "") {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        async: false,
+                                                        dataType: "text",
+                                                        url: "../../WebServer/PublishRZWebService.ashx?Method=GetRZBankstr",
+                                                        data: { 'BankIds': value },
+                                                        success: function (text) {
+                                                            value = text;
+                                                        }
+                                                    });
+                                                    return value;
+                                                } else {
+                                                    return "无";
+                                                }
+                                            }
+                                    },
+                                    { field: 'RZYT', title: '融资用途', width: '300', align: 'center' },
+                                    {
+                                        field: 'DYW', title: '抵押物', width: '300', align: 'center', formatter:
+                                           function (value, row, index) {
+                                               if (value == "") {
+                                                   return "无";
+                                               }
+                                           }
+                                    },
+                                    {
+                                        field: 'PublishDate', title: '发布时间', width: '300', align: 'center', formatter:
+                                         function (value, row, index) {
+                                             return jsonDateFormat(value);
+                                         }
+                                    },
+                                    {
+                                        field: 'Status', title: '授信状态', width: 150, align: 'center', formatter:
                                           function (value, row, index) {
                                               UserID = row.ID;
                                               if (value == 0) {
-                                                  return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                                  return '待授信'
                                               } else if (value == 1) {
-                                                  return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                                  return '已授信'
                                               }
                                           }
                                     }
@@ -66,8 +103,21 @@
 
                 })
             });
-        });
-
+        }
+        function jsonDateFormat(jsonDate) {
+            try {
+                var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var seconds = date.getSeconds();
+                var milliseconds = date.getMilliseconds();
+                return date.getFullYear() + "-" + month + "-" + day;
+            } catch (ex) {
+                return "";
+            }
+        }
         function openPublishRZdlg() {
             $('#RZYHcmb').combobox({
                 //width: 145,
@@ -135,6 +185,7 @@
                                         alert(text);
                                         if (text == "True") {
                                             $('#PulishRZdlg').dialog('close');
+                                            LoadRZDG();
                                             $.messager.alert('提示', '融资信息发布成功！我们会尽快与您取得联系', 'info');
                                         }
                                         else {
@@ -177,11 +228,24 @@
         }
 
         function GetJsonData() {
+            var RZYHstr = "";
+            var RZYHArr = $('#RZYHcmb').combobox('getValues');
+            if (RZYHArr.length > 1) {
+                for (var i = 0; i < RZYHArr.length; i++) {
+                    if (i == 0) {
+                        RZYHstr = RZYHArr[i];
+                    } else {
+                        RZYHstr = RZYHstr + "," + RZYHArr[i];
+                    }
+                }
+            } else {
+                RZYHstr = RZYHArr[0];
+            }
             var RZInfoJson =
                 {
                     "UserName": UserInfo["name"],
                     "RZED": $('#RZEDtext').val().trim(),
-                    "RZYH": $('#RZYHcmb').combobox('getValue'),
+                    "RZYH": RZYHstr,
                     "RZQX": $('#RZQXcmb').combobox('getValue'),
                     "RZQT": $('#RZYTcmb').combobox('getValue'),
                     "dywdesc": $('#dywtext').val()
