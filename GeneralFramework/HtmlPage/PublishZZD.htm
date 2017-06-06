@@ -15,8 +15,13 @@
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZZDdlg').dialog('close');
+            LoadZZDDG();
+        });
+
+        function LoadZZDDG() {
             $('#ZZD_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                url: '../../WebServer/PublishZZDWebService.ashx?Method=GetZZDLBJson',
+                queryParams: { UserName: UserInfo["name"] },
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -29,12 +34,35 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'UserRolesID', title: '协办行', width: '300', align: 'center' },
-                                    { field: 'UserDepartment', title: '主办行', width: '300', align: 'center' },
-                                    { field: 'UserID', title: '贷款申请金额', width: '300', align: 'center' },
-                                    { field: 'UserID', title: '发布时间', width: '300', align: 'center' },
-                                    { field: 'IsEnable', title: '审批状态', width: '300', align: 'center' }
+                    { field: 'ZZDID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'ZZDBk', title: '原贷款银行', width: '200', align: 'center' },
+                    { field: 'ZZDManager', title: '客户经理姓名', width: '200', align: 'center' },
+                    { field: 'ZZDManagerPhone', title: '客户经理联系电话', width: '200', align: 'center' },
+                    { field: 'ZZDOriginalQuota', title: '原贷款金额(单位:万元)', width: '200', align: 'center' },
+                    {
+                        field: 'ZZDExpirationDate', title: '贷款到期时间', width: '200', align: 'center', formatter:
+                        function (value, row, index) {
+                            return jsonDateFormat(value);
+                        }
+                    },
+                    { field: 'ZZDMBK', title: '主办行(经办行)', width: '200', align: 'center' },
+                    { field: 'ZZDThisQuota', title: '本次贷款金额(单位:万元)', width: '200', align: 'center' },
+                    {
+                        field: 'ZZDPublishDate', title: '发布时间', width: '200', align: 'center', formatter:
+                            function (value, row, index) {
+                                return jsonDateFormat(value);
+                            }
+                    },
+                    {
+                        field: 'ZZDStatus', title: '授信状态', width: 150, align: 'center', formatter:
+                        function (value, row, index) {
+                            if (value === 0) {
+                                return '待授信';
+                            } else if (value === 1) {
+                                return '已授信';
+                            }
+                        }
+                    }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布周转贷',
@@ -49,22 +77,28 @@
                     }
                 }],
                 onClickRow: (function (index, data) {
-                    //UserID = data.ID;
+
                 }),
                 onDblClickRow: (function (index, row) {
-                    //$('#UserRoledlg').dialog('open');
-                    //$('#labUserId').html(row.UserID);
-                    //$("#Ul1").tree({
-                    //    url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
-                    //    onClick: function (node) {
-                    //        if (node.attributes) {
-                    //            loadUserDG(node.attributes.ID);
-                    //        }
-                    //    }
-                    //});
+
                 })
             });
-        });
+        }
+
+        function jsonDateFormat(jsonDate) {
+            try {
+                var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var seconds = date.getSeconds();
+                var milliseconds = date.getMilliseconds();
+                return date.getFullYear() + "-" + month + "-" + day;
+            } catch (ex) {
+                return "";
+            }
+        }
 
         function OpenZZDDlg() {
             $('#ydkyhcmb').combobox({
@@ -125,6 +159,7 @@
                             success: function (text) {
                                 if (text == "True") {
                                     $('#ZZDdlg').dialog('close');
+                                    LoadZZDDG();
                                     $.messager.alert('提示', '周转贷信息发布成功！我们会尽快与您取得联系', 'info');
                                 }
                                 else {
@@ -142,16 +177,16 @@
 
         function GetJsonData() {
             var ZZDInfoJson =
-              {
-                  "UserName": UserInfo["name"],
-                  "ydkyh": $('#ydkyhcmb').combobox('getValue'),
-                  "khjlxm": $('#khjlxm').val().trim(),
-                  "khjllxdh": $('#khjllxdh').val().trim(),
-                  "ydkje": $('#ydkje').val().trim(),
-                  "dkdqsj": $('#dkdqsj').val().trim(),
-                  "zbh": $('#zbhcmb').combobox('getValue'),
-                  "bcdkje": $('#bcdkje').val()
-              };
+                {
+                    "UserName": UserInfo["name"],
+                    "ydkyh": $('#ydkyhcmb').combobox('getValue'),
+                    "khjlxm": $('#khjlxm').val().trim(),
+                    "khjllxdh": $('#khjllxdh').val().trim(),
+                    "ydkje": $('#ydkje').val().trim(),
+                    "dkdqsj": $('#dkdqsj').val().trim(),
+                    "zbh": $('#zbhcmb').combobox('getValue'),
+                    "bcdkje": $('#bcdkje').val()
+                };
             return ZZDInfoJson;
         }
 
@@ -168,7 +203,7 @@
             var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
             var obj = document.getElementById(id);
             if (!reg.test(obj.value)) {
-                return false
+                return false;
             }
             return true;
         }
@@ -222,7 +257,7 @@
     </div>
     <div id="ZZDdlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveZZDInfo()">保存</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZZDdlg').dialog('close')">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZZDdlg').dialog('close');">
             关闭
         </a>
     </div>

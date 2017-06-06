@@ -84,5 +84,11 @@ namespace GeneralFramework.WebServer
             var zi = javaScriptSerializer.Deserialize<ZzdInfo>(stream);
             Response.Write(_zm.Save(zi));
         }
+
+        public void GetZZDLBJson()
+        {
+            var userName = Request["UserName"];
+            Response.Write(_zm.GetZZDLBJson(userName));
+        }
     }
 }

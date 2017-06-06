@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GeneralFrameworkBLLModel;
 using NUnit.Framework;
 
 namespace GeneralFrameworkDAL
@@ -25,6 +26,31 @@ SELECT @@IDENTITY";
             EnterpriseService es = new EnterpriseService();
             var str = es.GetEnterpriseFinanceInfoByUserName("testqy");
             Console.WriteLine(str);
+        }
+
+        [Test]
+        public void TestSaveJRCP()
+        {
+            PublishJRCPService ser = new PublishJRCPService();
+            JRCPInfo ji = new JRCPInfo
+            {
+                UserName = "testyh",
+                jrname="testname",
+                dkqxstart=1,
+                dkqxend = 2,
+                jrdanbao = 10,
+                dkedstart = 1.52,
+                dkedend = 2.5,
+                llfwstart = 1,
+                llfwend = 1.01,
+                jrlxdh = "18261952313",
+                jrcpjj = "简介",
+                jrcptd = "特点",
+                jrsykh = "客户",
+                jrsqtj = "条件",
+                jrcailiao = "材料"
+            };
+            ser.SaveJRCPInfo(ji);
         }
     }
 }

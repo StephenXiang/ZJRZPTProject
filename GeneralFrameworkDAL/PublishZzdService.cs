@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
 
@@ -38,6 +39,27 @@ values(@ent,@bk,@mbk,@ma,@map,@oq,@q,@ed,0)";
                 new SqlParameter("@q", zi.bcdkje),
                 new SqlParameter("@ed", zi.dkdqsj));
             return efc > 0;
+        }
+
+        public string GetZZDLBJson(string UserName)
+        {
+            var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", UserName);
+            var ent = DBHelper.GetScalar(sql) as int?;
+            if (ent == null) return "";
+            sql = string.Format(@"select f.Id as ZZDID,b.Name as ZZDBk,b2.Name as ZZDMBK,
+Manager as ZZDManager,ManagerPhone as ZZDManagerPhone,
+OriginalQuota as ZZDOriginalQuota,
+ThisQuota as ZZDThisQuota,
+ExpirationDate as ZZDExpirationDate,
+[Status] as ZZDStatus,
+PublishDate as ZZDPublishDate
+from ZZDFlow f
+left join Bank b on b.Id=f.BankId
+left join Bank b2 on b2.Id=f.MastBankId
+where f.EnterpriseId={0}", ent);
+            var dt = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.SerializeObject(dt);
+            return reply;
         }
     }
 }

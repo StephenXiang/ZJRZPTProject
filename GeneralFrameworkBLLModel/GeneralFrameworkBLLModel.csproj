@@ -43,6 +43,7 @@
     <Compile Include="Bank.cs" />
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseFinanceInfo.cs" />
+    <Compile Include="JRCPInfo.cs" />
     <Compile Include="RzInfo.cs" />
     <Compile Include="SysChildMenu.cs" />
     <Compile Include="SysDepartment.cs" />
