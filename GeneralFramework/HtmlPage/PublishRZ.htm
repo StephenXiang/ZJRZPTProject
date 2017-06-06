@@ -212,6 +212,7 @@
                                 success: function (text) {
                                     if (text == "True") {
                                         $('#PulishRZdlg').dialog('close');
+                                        LoadRZDG();
                                         $.messager.alert('提示', '融资信息发布成功！我们会尽快与您取得联系', 'info');
                                     } else {
                                         $.messager.alert('提示', '融资信息发布失败，请重试', 'error');
