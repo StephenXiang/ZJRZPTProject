@@ -50,7 +50,7 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
             var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", UserName);
             var ent = DBHelper.GetScalar(sql) as int?;
             if (ent == null) return "";
-            sql = string.Format(@"select a.Quota as RZED,c.[Desc] as RZQX,b.BankIds as SXYH, d.[Desc] as RZYT,a.CollateralDesc as DYW,b.PublishDate,b.[Status] from RZDemandInfo a 
+            sql = string.Format(@"select b.Id as ID,a.Quota as RZED,c.[Desc] as RZQX,b.BankIds as SXYH, d.[Desc] as RZYT,a.CollateralDesc as DYW,b.PublishDate,b.[Status] from RZDemandInfo a 
 left join RZFlow b on a.Id = b.DemandId
 left join (select * from Lookup where Type = 8) c on a.TermId = c.Id
 left join (select * from Lookup where Type = 9) d on a.PurposeId = d.Id

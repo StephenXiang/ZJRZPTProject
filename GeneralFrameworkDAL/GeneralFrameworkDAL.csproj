@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BankInfoService.cs" />
+    <Compile Include="MainBankInfoService.cs" />
     <Compile Include="DalTester.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="EnterpriseService.cs" />

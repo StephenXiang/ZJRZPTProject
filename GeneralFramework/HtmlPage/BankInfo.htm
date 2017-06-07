@@ -9,10 +9,31 @@
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
+        var UserInfo;
+        UserInfo = JSON.parse($.cookie('UserInfo'));
+        var BankInfoID;
         $(function () {
+            $('#Bankdlg').dialog('close');
+            BankInfoID = GetBankId();
+            if (BankInfoID == "") {
+                $.messager.confirm('提示', '您还没有登记银行信息！是否现在登记？', function (r) {
+                    if (r) {
+                        openBankdlg();
+                    }
+                });
+
+            } else {
+                LoadBankDG(BankInfoID);
+            }
+
+        });
+
+        function LoadBankDG(bankId) {
             $('#Bank_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                url: '../../WebServer/BankInfoWebService.ashx?Method=GetBankInfolbForBankId',
+                queryParams: { BankId: bankId },
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -25,14 +46,115 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'BankName', title: '银行名称', width: '450', align: 'center' },
+                                    { field: 'Id', title: 'ID', width: '10', hidden: true, align: 'center' },
+                                    { field: 'Name', title: '银行名称', width: '450', align: 'center' },
                                     { field: 'Address', title: '地址', width: '450', align: 'center' },
-                                    { field: 'User', title: '联系人', width: '250', align: 'center' },
-                                    { field: 'Telephone', title: '电话', width: '250', align: 'center' }
+                                    { field: 'Connector', title: '联系人', width: '250', align: 'center' },
+                                    { field: 'ConnectorPhone', title: '电话', width: '250', align: 'center' },
+                                    { field: 'BankName', title: '归属总行', width: '250', align: 'center' }
                 ]]
             });
-        });
+        }
+        function GetBankId() {
+            var bankid = "";
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankId",
+                data: { 'UserName': UserInfo["name"] },
+                success: function (text) {
+                    bankid = text;
+                }
+            });
+            return bankid;
+
+        }
+        function openBankdlg() {
+            $('#MainBankCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/MainBankInfoWebService.ashx?Method=GetMainBankCmb',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#Bankdlg').dialog('open');
+        }
+
+        function SaveBankInfo() {
+            if ($('#MainBankCmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '归属银行必须选择', 'info');
+            }
+            else if ($('#BankNametext').val() == "") {
+                $.messager.alert('提示', '银行名称不得为空', 'info');
+            }
+            else if ($('#BankAddresstext').val() == "") {
+                $.messager.alert('提示', '银行地址不得为空', 'info');
+            }
+            else if ($('#Connectortext').val() == "") {
+                $.messager.alert('提示', '联系人不得为空', 'info');
+            }
+            else if ($('#ConnectorPhonetext').val() == "") {
+                $.messager.alert('提示', '联系电话不得为空', 'info');
+            }
+            else if (checkMobile($('#ConnectorPhonetext').val()) == false && checkPhone($('#ConnectorPhonetext').val()) == false) {
+                $.messager.alert('提示', '联系电话格式不正确', 'info');
+            }
+            else {
+                $.messager.confirm('提示', '请确认您所填写的银行信息真实有效！是否现在保存？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../../WebServer/BankInfoWebService.ashx?Method=SaveBankInfo",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(GetJsonData()),
+                            dataType: "text",
+                            success: function (text) {
+                                if (text != "") {
+                                    $('#Bankdlg').dialog('close');
+                                    $.messager.alert('提示', '银行信息保存成功', 'info');
+                                    LoadBankDG(text);
+                                } else {
+                                    $.messager.alert('提示', '银行信息保存失败，请重试', 'error');
+                                }
+                            },
+                            error: function (text) {
+                                $.messager.alert('提示', '银行信息保存失败', 'info');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        function GetJsonData() {
+            var BankInfoJson =
+                {
+                    "UserName": UserInfo["name"],
+                    "MainBankId": $('#MainBankCmb').combobox('getValue'),
+                    "Name": $('#BankNametext').val(),
+                    "Address": $('#BankAddresstext').val(),
+                    "Connector": $('#Connectortext').val(),
+                    "ConnectorPhone": $('#ConnectorPhonetext').val()
+                };
+            return BankInfoJson;
+        }
+
+        function checkMobile(str) {
+            var re = /^1\d{10}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function checkPhone(str) {
+            var re = /^0\d{2,3}-?\d{7,8}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     </script>
 </head>
 <body class="easyui-layout">
@@ -44,32 +166,36 @@
             "></table>
         </div>
         <div id="Bankdlg" class="easyui-dialog" title="编辑银行信息" style="text-align: center;
-        width: 400px; height: 250px; padding: 10px" data-options="
+        width: 400px; height: 350px; padding: 10px" data-options="
                 iconCls: 'icon-save',
-                buttons: '#ZZDdlg-buttons'
+                buttons: '#Bankdlg-buttons'
             ">
             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                 <tr>
+                    <td style=" text-align:right;">归属总行:</td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="MainBankCmb" name=" MainBankCmb" class="easyui-combobox" style="width:90%;" /></input></td>
+                </tr>
+                <tr>
                     <td style=" text-align:right;">银行名称:</td>
-                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankNametext" name=" BankNametext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">银行地址:</td>
-                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankAddresstext" name=" BankAddresstext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
 
                 </tr>
                 <tr>
                     <td style=" text-align:right;">联系人:</td>
-                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Connectortext" name=" Connectortext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
                 </tr>
                 <tr>
-                    <td style=" text-align:right;">电话:</td>
-                    <td style=" text-align:left;"><input name=" name" =name" class="f1 easyui-textbox" style="width:79%;" /></input></td>
+                    <td style=" text-align:right;">联系电话:</td>
+                    <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="ConnectorPhonetext" name=" ConnectorPhonetext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
                 </tr>
-
+            </table>
         </div>
-        <div id="ZZDdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
+        <div id="Bankdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveBankInfo()">保存</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#Bankdlg').dialog('close')">
                 关闭
             </a>
