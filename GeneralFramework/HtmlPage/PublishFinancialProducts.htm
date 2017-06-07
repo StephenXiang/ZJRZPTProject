@@ -25,7 +25,8 @@
 
         function LoadJRCPDG() {
             $('#FP_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                url: '../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetJRCPLBJson',
+                queryParams: { UserName: UserInfo["name"] },
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -39,10 +40,15 @@
                 pageList: [10, 20, 30],
                 columns: [[
                     { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                    { field: 'BankName', title: '产品名称', width: '450', align: 'center' },
-                    { field: 'Address', title: '产品LOG', width: '450', align: 'center' },
-                    { field: 'User', title: '发布时间', width: '250', align: 'center' },
-                    { field: 'Telephone', title: '审核状态', width: '250', align: 'center' }
+                    { field: 'Title', title: '产品标题', width: '200', align: 'center' },
+                    { field: 'Qixian', title: '贷款期限', width: '200', align: 'center' },
+                    { field: 'Danbao', title: '担保方式', width: '200', align: 'center' },
+                    { field: 'Edu', title: '贷款额度(单位：万元)', width: '200', align: 'center' },
+                    { field: 'Lilv', title: '利率范围', width: '200', align: 'center' },
+                    { field: 'Dianhua', title: '联系电话', width: '200', align: 'center' },
+                    { field: 'Jianjie', title: '产品简介', width: '500', align: 'center' },
+                    { field: 'PublishDate', title: '发布时间', width: '200', align: 'center' },
+                    { field: 'Status', title: '审核状态', width: '200', align: 'center' }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布金融产品',
@@ -159,12 +165,6 @@
         }
 
         function OpenFpdlg() {
-            var data;
-            for (var i = 1; i < 37; i++) {
-                if (i == 36) {
-
-                }
-            }
             var options = [
                 { "text": "1个月", "value": 1 },
                 { "text": "2个月", "value": 2 },
@@ -207,7 +207,6 @@
             $("#dkqxend").combobox('loadData', options);
             $('#FPdlg').dialog('open');
             $('#jrdanbao').combobox({
-                //width: 145,
                 url: '../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetDanbaoType',
                 valueField: 'ID',
                 textField: 'TypeName'

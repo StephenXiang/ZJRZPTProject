@@ -14,5 +14,10 @@ namespace GeneralFrameworkBLL
         {
             return _js.SaveJRCPInfo(ji);
         }
+
+        public string GetJRCPLBJson(string username)
+        {
+            return _js.GetJRCPJson(username);
+        }
     }
 }

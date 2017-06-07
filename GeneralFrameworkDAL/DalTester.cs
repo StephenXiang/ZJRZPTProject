@@ -61,7 +61,7 @@ SELECT @@IDENTITY";
             var smsRet = JsonConvert.DeserializeObject<SmsReturn>("{\"status\":100,\"count\":1,\"list\":[{\"p\":\"13615274683\",\"mid\":\"dfcaeca3820d5282\"}]}");
             Console.WriteLine("smsRet:{0}", smsRet.Status);
             var sms = new SmsService();
-            sms.Send("");
+            sms.Send("18261952313", "test msg");
         }
     }
 }

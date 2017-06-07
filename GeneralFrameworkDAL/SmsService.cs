@@ -11,24 +11,26 @@ namespace GeneralFrameworkDAL
     public class SmsService
     {
         private const string Url = @"http://api.app2e.com/smsBigSend.api.php";
-        public bool Send(string msg)
+        public bool Send(string phonenum, string msg)
         {
             try
             {
                 var smsuser = ConfigurationManager.AppSettings["smsUser"];
                 var smspwd = ConfigurationManager.AppSettings["smsPwd"];
-                var paras = new Dictionary<string, string>();
-                paras.Add("username", smsuser);
-                paras.Add("pwd", smspwd);
-                paras.Add("p", "18261952313");
-                paras.Add("charSetStr", "utf");
-                paras.Add("extnum", "123");
-                paras.Add("msg", "msg");
+                var paras = new Dictionary<string, string>
+                {
+                    {"username", smsuser},
+                    {"pwd", smspwd},
+                    {"p", phonenum},
+                    {"charSetStr", "utf"},
+                    {"extnum", "1"},
+                    {"msg", msg}
+                };
                 var ret = Post(Url, paras);
                 var smsRet = JsonConvert.DeserializeObject<SmsReturn>(ret);
                 return smsRet.Status == 100;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
