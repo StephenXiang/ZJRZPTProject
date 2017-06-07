@@ -50,5 +50,34 @@ namespace GeneralFrameworkBLL
         {
             return Sus.GetUserInfoForUserName(UserName);
         }
+
+        public bool DelUser(string UserId)
+        {
+            return Sus.DelUser(UserId);
+        }
+        public bool hfUser(string UserId)
+        {
+            return Sus.hfUser(UserId);
+        }
+        public bool chongzhipwd(string UserId, string pwd)
+        {
+            return Sus.chongzhipwd(UserId, pwd);
+        }
+        public string GetSysRolesCmb()
+        {
+            return Sus.GetSysRolesCmb();
+        }
+        public string GetSysRoleId(string Did)
+        {
+            return Sus.GetSysRoleId(Did);
+        }
+        public string GetSysDeparementCmb(string RoleID)
+        {
+            return Sus.GetSysDeparementCmb(RoleID);
+        }
+        public bool AddUserInfo(SysUser user)
+        {
+            return Sus.AddUserInfo(user);
+        }
     }
 }

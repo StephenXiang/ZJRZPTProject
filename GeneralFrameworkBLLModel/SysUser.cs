@@ -17,5 +17,7 @@
         public string UserPassWord { get; set; }
 
         public int IsEnable { get; set; }
+
+        public string Phone { get; set; }
     }
 }

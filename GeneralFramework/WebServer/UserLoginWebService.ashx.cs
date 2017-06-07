@@ -8,6 +8,7 @@ using System.Reflection;
 using GeneralFrameworkBLL;
 using GeneralFrameworkDAL.JSON;
 using GeneralFrameworkBLLModel;
+using System.Web.Script.Serialization;
 
 namespace GeneralFramework.WebServer
 {
@@ -103,6 +104,52 @@ namespace GeneralFramework.WebServer
             var UserName = Request.Form["UserName"];
             var Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"], "MD5").ToLower();
             Response.Write(sum.EditUserPwd(UserName, Pwd));
+        }
+
+        public void DelUser()
+        {
+            string UserId = Request["UserId"];
+            Response.Write(sum.DelUser(UserId));
+        }
+        public void hfUser()
+        {
+            string UserId = Request["UserId"];
+            Response.Write(sum.hfUser(UserId));
+        }
+
+        public void chongzhipwd()
+        {
+            string UserId = Request["UserId"];
+            var Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("888888", "MD5").ToLower();
+            Response.Write(sum.chongzhipwd(UserId, Pwd));
+        }
+
+        public void GetSysRolesCmb()
+        {
+            Response.Write(sum.GetSysRolesCmb());
+        }
+
+        public void GetSysDeparementCmb()
+        {
+            string RoleID = Request.QueryString["RoleID"];
+            Response.Write(sum.GetSysDeparementCmb(RoleID));
+        }
+
+        public void GetSysRoleId()
+        {
+            string Did = Request["Did"];
+            Response.Write(sum.GetSysRoleId(Did));
+        }
+        public void AddUserInfo()
+        {
+            var data = Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+            var javaScriptSerializer = new JavaScriptSerializer();
+            var user = javaScriptSerializer.Deserialize<SysUser>(stream);
+            user.UserPassWord = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("888888", "MD5").ToLower();
+            user.IsEnable = 0;
+            Response.Write(sum.AddUserInfo(user));
         }
     }
 }

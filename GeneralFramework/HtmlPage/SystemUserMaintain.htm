@@ -9,17 +9,22 @@
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript">
+        var roleId;
+        var rid;
         $(function () {
+            $('#PhoneTD').hide();
             $('#UserRoledlg').dialog('close');
             $("#UserTree").tree({
                 url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
                 onClick: function (node) {
                     if (node.attributes) {
+                        roleId = node.attributes.ID;
+                        GetSysRoleId();
                         loadUserDG(node.attributes.ID);
+                        $('#UserRoledlg').dialog('close');
                     }
                 }
             });
-
         });
         function loadUserDG(Id) {
             $('#user_dg').datagrid({
@@ -43,83 +48,237 @@
                                     { field: 'UserID', title: '登陆ID', width: 150, align: 'center' },
                                     {
                                         field: 'IsEnable', title: '是否启用', width: 150, align: 'center', formatter:
+                                            function (value, row, index) {
+                                                if (Id != 1) {
+                                                    if (value == 0) {
+                                                        return '<a href="#" onclick="DelUser(' + Id + ',' + row.ID + ')">停用</a>'
+                                                    } else if (value == 1) {
+                                                        return '<a href="#" onclick="hfUser(' + Id + ',' + row.ID + ')">启用</a>'
+                                                    }
+                                                } else {
+                                                    return '无操作';
+                                                }
+                                            }
+                                    }, {
+                                        field: '密码重置', title: '密码重置', width: 150, align: 'center', formatter:
                                           function (value, row, index) {
-                                              UserID = row.ID;
-                                              if (value == 0) {
-                                                  return '<a href="#" onclick="test( &quot;停用&quot;)">停用</a>'
-                                              } else if (value == 1) {
-                                                  return '<a href="#" onclick="test(2)">启用</a>'
-                                              }
+                                              return '<a href="#" onclick="chongzhipwd(' + Id + ',' + row.ID + ')">密码重置</a>'
                                           }
                                     }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '增加用户',
                     handler: function () {
-                        OpenUserDialog('增加人员');
-                    }
-                }, '-', {
-                    iconCls: 'icon-remove',
-                    text: '删除用户',
-                    handler: function () {
-                        Del();
+                        openUserRoledlg();
                     }
                 }],
                 onClickRow: (function (index, data) {
                     UserID = data.ID;
                 }),
                 onDblClickRow: (function (index, row) {
-                    $('#UserRoledlg').dialog('open');
-                    $('#labUserId').html(row.UserID);
-                    $("#Ul1").tree({
-                        url: "../../WebServer/SysDepartmentWebService.ashx?Method=GetSysDeparementJson",
-                        onClick: function (node) {
-                            if (node.attributes) {
-                                loadUserDG(node.attributes.ID);
-                            }
-                        }
-                    });
+
                 })
-            });
-
-
-            $('#user_dg1').datagrid({
-                url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
-                queryParams: { DepartmentId: Id },
-                rownumbers: true,
-                singleSelect: true,
-                striped: true,
-                title: '菜单列表',
-                fitColumns: true,
-                pagination: true,
-                pagePosition: 'bottom',
-                loadMsg: '正在加载数据...请稍后',
-                pageNumber: 1,
-                pageSize: 10,
-                pageList: [10, 20, 30],
-                columns: [[
-                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
-                                    { field: 'UserRolesID', title: '用户角色', width: 150, align: 'center' },
-                                    { field: 'UserDepartment', title: '所属组织', width: 150, align: 'center' },
-                                    { field: 'UserID', title: '登陆ID', width: 150, align: 'center' },
-                                    {
-                                        field: 'IsEnable', title: '是否启用', width: 150, align: 'center', formatter:
-                                          function (value, row, index) {
-                                              UserID = row.ID;
-                                              if (value == 0) {
-                                                  return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
-                                              } else if (value == 1) {
-                                                  return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
-                                              }
-                                          }
-                                    }
-                ]]
             });
         }
 
 
-        function test(str) {
-            alert(str);
+        function openUserRoledlg() {
+            if (rid == 2) {
+                $('#PhoneTD').show();
+            } else {
+                $('#PhoneTD').hide();
+            }
+            $('#SysRolesCmb').combobox({
+                url: '../../WebServer/UserLoginWebService.ashx?Method=GetSysRolesCmb',
+                valueField: 'ID',
+                textField: 'TypeName',
+                onChange: function (n, o) {
+                    $('#SysRolesCmb').combobox('disable');
+                    $('#SysDepartmentCmb').combobox({
+                        //width: 145,
+                        url: '../../WebServer/UserLoginWebService.ashx?Method=GetSysDeparementCmb&RoleID=' + n,
+                        valueField: 'ID',
+                        textField: 'TypeName'
+                    });
+                }
+            });
+            GetSysRoleId();
+            $('#UserRoledlg').dialog('open');
+        }
+        function GetSysRoleId() {
+            $.ajax({
+                type: "get",
+                async: true,
+                url: "../../WebServer/UserLoginWebService.ashx?Method=GetSysRoleId",
+                data: { Did: roleId, },
+                dataType: "text",
+                success: function (text) {
+                    if (text != "") {
+                        rid = text;
+                        $('#SysRolesCmb').combobox('setValue', text);
+                    }
+                }
+            });
+        }
+
+        function DelUser(id, UserId) {
+            $.messager.confirm('提示', '是否确认停用该用户？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "get",
+                        url: "../../WebServer/UserLoginWebService.ashx?Method=DelUser",
+                        data: { UserId: UserId, },
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                loadUserDG(id);
+                                $.messager.alert('提示', '用户已停用', 'info');
+                            } else {
+                                $.messager.alert('提示', '用户停用失败', 'info');
+                            }
+                        },
+                        error: function (msg) {
+                            $.messager.alert('提示', '用户停用失败', 'info');
+                        }
+                    });
+                }
+            });
+        }
+
+        function hfUser(id, UserId) {
+            $.messager.confirm('提示', '是否确认启用该用户？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "get",
+                        url: "../../WebServer/UserLoginWebService.ashx?Method=hfUser",
+                        data: { UserId: UserId, },
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                loadUserDG(id);
+                                $.messager.alert('提示', '用户已启用', 'info');
+                            } else {
+                                $.messager.alert('提示', '用户启用失败', 'info');
+                            }
+                        },
+                        error: function (msg) {
+                            $.messager.alert('提示', '用户启用失败', 'info');
+                        }
+                    });
+                }
+            });
+        }
+
+        function chongzhipwd(id, UserId) {
+            $.messager.confirm('提示', '密码重置后，该用户的密码将被设置为：888888！是否确认重置该用户的密码？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "get",
+                        url: "../../WebServer/UserLoginWebService.ashx?Method=chongzhipwd",
+                        data: { UserId: UserId },
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                loadUserDG(id);
+                                $.messager.alert('提示', '用户密码已重置', 'info');
+
+                            } else {
+                                $.messager.alert('提示', '用户密码重置失败', 'info');
+                            }
+                        },
+                        error: function (msg) {
+                            $.messager.alert('提示', '用户密码重置失败', 'info');
+                        }
+                    });
+                }
+            });
+        }
+
+        function AddUserInfo() {
+            if ($('#SysRolesCmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '用户类型必须选择', 'info');
+            }
+            else if ($('#SysDepartmentCmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '组织归属必须选择', 'info');
+            }
+            else if ($('#yhmtext').val().trim() == "") {
+                $.messager.alert('提示', '用户名必须填写', 'info');
+            }
+            else if ($('#SysRolesCmb').combobox('getValue') == 2) {
+                if ($('#Phonetext').val().trim() == "") {
+                    $.messager.alert('提示', '联系电话必须填写', 'info');
+                }
+                else if (checkMobile($('#Phonetext').val().trim()) == false) {
+                    $.messager.alert('提示', '联系电话格式不正确', 'info');
+                }
+                else {
+                    $.messager.confirm('提示', '您是否需要添加该用户？', function (r) {
+                        if (r) {
+                            $.ajax({
+                                type: "POST",
+                                url: "../../WebServer/UserLoginWebService.ashx?Method=AddUserInfo",
+                                contentType: "application/json; charset=utf-8",
+                                data: JSON.stringify(GetDataJson()),
+                                dataType: "text",
+                                success: function (text) {
+                                    if (text = "True") {
+                                        loadUserDG(roleId);
+                                        $('#UserRoledlg').dialog('close');
+                                        $.messager.alert('提示', '用户添加成功，初始密码为：888888', 'info');
+                                    } else {
+                                        $.messager.alert('提示', '用户添加失败，请重试', 'error');
+                                    }
+                                },
+                                error: function (text) {
+                                    $.messager.alert('提示', '用户添加失败', 'info');
+                                }
+                            });
+                        }
+                    });
+                }
+            } else {
+                $.messager.confirm('提示', '您是否需要添加该用户？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../../WebServer/UserLoginWebService.ashx?Method=AddUserInfo",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(GetDataJson()),
+                            dataType: "text",
+                            success: function (text) {
+                                if (text = "True") {
+                                    loadUserDG(roleId);
+                                    $('#UserRoledlg').dialog('close');
+                                    $.messager.alert('提示', '用户添加成功,初始密码为：888888', 'info');
+                                } else {
+                                    $.messager.alert('提示', '用户添加失败，请重试', 'error');
+                                }
+                            },
+                            error: function (text) {
+                                $.messager.alert('提示', '用户添加失败', 'info');
+                            }
+                        });
+                    }
+                });
+            }
+
+        }
+        function GetDataJson() {
+            var user = {
+                "RoleId": $('#SysRolesCmb').combobox('getValue'),
+                "DepartId": $('#SysDepartmentCmb').combobox('getValue'),
+                "UserName": $('#yhmtext').val().trim(),
+                "Phone": $('#Phonetext').val().trim()
+            };
+            return user;
+        }
+        function checkMobile(str) {
+            var re = /^1\d{10}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     </script>
 </head>
@@ -136,24 +295,32 @@
             </div>
         </div>
     </div>
-    <div id="UserRoledlg" class="easyui-dialog" title="菜单权限分配" style="text-align: center;
-        width: 600px; height: 500px; padding: 10px" data-options="
+    <div id="UserRoledlg" class="easyui-dialog" title="添加用户" style="text-align: center;
+        width: 500px; height: 300px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#UserRoledlg-buttons'
             ">
-        <div style="margin-bottom: 20px">
-            <h3>
-                <label>
-                    所选用户：<label id="labUserId"></label>
-                </label>
-            </h3>
-        </div>
-        <div>
-            <table id="user_dg1"></table>
-        </div>
+        <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+            <tr>
+                <td style=" text-align:right;">用户类型:</td>
+                <td style=" text-align:center;"><select id="SysRolesCmb" name="SysRolesCmb" class="easyui-combobox" style="width:80%"></select></td>
+            </tr>
+            <tr>
+                <td style=" text-align:right;">组织归属:</td>
+                <td style=" text-align:center;"><select id="SysDepartmentCmb" name="SysRSysDepartmentCmbolesCmb" class="easyui-combobox" style="width:80%"></select></td>
+            </tr>
+            <tr>
+                <td style=" text-align:right;">用户名:</td>
+                <td style=" text-align:center;"><input id="yhmtext" name="yhmtext" class="f1 easyui-textbox" style="width:80%;" /></td>
+            </tr>
+            <tr id="PhoneTD">
+                <td style=" text-align:right;">联系电话:</td>
+                <td style=" text-align:center;"><input id="Phonetext" name="Phonetext" class="f1 easyui-textbox" style="width:80%;" /></td>
+            </tr>
+        </table>
     </div>
     <div id="UserRoledlg-buttons">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="EditUserPwd()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="AddUserInfo()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#UserRoledlg').dialog('close')">
             关闭
         </a>

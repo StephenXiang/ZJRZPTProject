@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using GeneralFrameworkBLLModel;
+using System.Data.SqlClient;
+using GeneralFrameworkDAL.JSON;
 
 namespace GeneralFrameworkDAL
 {
@@ -68,6 +70,118 @@ and u.UserName='{0}' and u.UserPassWord='{1}' and u.IsEnable=0", userName, pwd);
             string sql = "select * from SysUser where UserName = '" + UserName + "'";
             dt = DBHelper.GetDataSet(sql);
             return dt;
+        }
+
+        public bool DelUser(string UserId)
+        {
+            string sql = @"update SysUser set IsEnable = 1 where ID =@userId";
+            var sid = DBHelper.Execute(sql, new SqlParameter("@userId", UserId));
+            if (sid > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool hfUser(string UserId)
+        {
+            string sql = @"update SysUser set IsEnable = 0 where ID =@userId";
+            var sid = DBHelper.Execute(sql, new SqlParameter("@userId", UserId));
+            if (sid > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool chongzhipwd(string UserId, string pwd)
+        {
+            string sql = @"update SysUser set UserPassWord = '" + pwd + "' where ID =@userId";
+            var sid = DBHelper.Execute(sql, new SqlParameter("@userId", UserId));
+            if (sid > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public string GetSysRolesCmb()
+        {
+            var sql = "select ID as ID,RolesDec as TypeName from SysRoles where ID != 1";
+            var dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.ConvertJosnData(dt);
+        }
+
+        public string GetSysDeparementCmb(string RoleID)
+        {
+            var sql = "select ID,DepartmentName as TypeName from SysDepartment where RoleID = '" + RoleID + "'";
+            var dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.ConvertJosnData(dt);
+        }
+
+        public string GetSysRoleId(string Did)
+        {
+            var sql = "select RoleID from SysDepartment where ID = '" + Did + "'";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                return dr[0].ToString();
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public bool AddUserInfo(SysUser user)
+        {
+            string sql = string.Empty;
+            if (user.RoleId == 2)
+            {
+                sql = @"insert into SysUser(RolesID,DepartmentID,UserName,UserPassWord,IsEnable,Phone)values(@roleid,@DepartmentID,@UserName,@UserPassWord,@IsEnable,@Phone)";
+                var sid = DBHelper.Execute(sql, new SqlParameter("@roleid", user.RoleId),
+                    new SqlParameter("@DepartmentID", user.DepartId),
+                    new SqlParameter("@UserName", user.UserName),
+                    new SqlParameter("@UserPassWord", user.UserPassWord),
+                    new SqlParameter("@IsEnable", user.IsEnable),
+                    new SqlParameter("@Phone", user.Phone));
+                if (sid > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                sql = @"insert into SysUser(RolesID,DepartmentID,UserName,UserPassWord,IsEnable)values(@roleid,@DepartmentID,@UserName,@UserPassWord,@IsEnable)";
+                var sid = DBHelper.Execute(sql, new SqlParameter("@roleid", user.RoleId),
+                    new SqlParameter("@DepartmentID", user.DepartId),
+                    new SqlParameter("@UserName", user.UserName),
+                    new SqlParameter("@UserPassWord", user.UserPassWord),
+                    new SqlParameter("@IsEnable", user.IsEnable));
+                if (sid > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
         }
     }
 }
