@@ -78,5 +78,11 @@ namespace GeneralFramework.WebServer
             var ji = javaScriptSerializer.Deserialize<JRCPInfo>(stream);
             Response.Write(_pm.SaveJRCPInfo(ji));
         }
+
+        public void GetJRCPLBJson()
+        {
+            string UserName = Request["UserName"];
+            Response.Write(_pm.GetJRCPLBJson(UserName));
+        }
     }
 }

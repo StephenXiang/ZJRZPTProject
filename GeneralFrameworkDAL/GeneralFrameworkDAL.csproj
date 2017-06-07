@@ -59,6 +59,7 @@
     <Compile Include="PublishJRCPService.cs" />
     <Compile Include="PublishRzService.cs" />
     <Compile Include="PublishZzdService.cs" />
+    <Compile Include="SmsService.cs" />
     <Compile Include="SysDepartmentService.cs" />
     <Compile Include="SysRolesService.cs" />
     <Compile Include="SysUserService.cs" />
