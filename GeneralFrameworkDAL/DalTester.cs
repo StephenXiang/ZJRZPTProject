@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GeneralFrameworkBLLModel;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace GeneralFrameworkDAL
@@ -35,8 +36,8 @@ SELECT @@IDENTITY";
             JRCPInfo ji = new JRCPInfo
             {
                 UserName = "testyh",
-                jrname="testname",
-                dkqxstart=1,
+                jrname = "testname",
+                dkqxstart = 1,
                 dkqxend = 2,
                 jrdanbao = 10,
                 dkedstart = 1.52,
@@ -51,6 +52,16 @@ SELECT @@IDENTITY";
                 jrcailiao = "材料"
             };
             ser.SaveJRCPInfo(ji);
+        }
+
+        [Test]
+        [Category("MANUAL")]
+        public void TestSmsSend()
+        {
+            var smsRet = JsonConvert.DeserializeObject<SmsReturn>("{\"status\":100,\"count\":1,\"list\":[{\"p\":\"13615274683\",\"mid\":\"dfcaeca3820d5282\"}]}");
+            Console.WriteLine("smsRet:{0}", smsRet.Status);
+            var sms = new SmsService();
+            sms.Send("");
         }
     }
 }
