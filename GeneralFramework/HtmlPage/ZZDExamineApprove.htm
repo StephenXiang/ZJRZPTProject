@@ -15,7 +15,9 @@
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#DetialInfo').hide();
-            $('#ZZDdlg').dialog('close');
+            $('#statusdiv').hide();
+            $('#zzdiddiv').hide();
+            $('#ZZDFeedBackdlg').dialog('close');
             loadzzddg();
         });
 
@@ -88,17 +90,9 @@
                                 EditZZDStatus('3', row.Id);
                             } else {
                                 $.messager.defaults = { ok: "确定", cancel: "取消" };
-                                $.messager.prompt('拒绝理由', '请填写受理不成功的原因！', function (msg) {
-                                    if (msg == "" || msg == null) {
-                                        //$.messager.alert('提示', '必须填写理由！', 'info');
-                                        msg = "银行未填写拒绝理由";
-                                        EditZZDStatusAndFeedback('4', row.Id, msg);
-
-                                    } else {
-                                        EditZZDStatusAndFeedback('4', row.Id, msg);
-                                    }
-                                });
-
+                                $('#statustext').textbox('setValue', '4');
+                                $('#zzdidtext').textbox("setValue", row.Id);
+                                $('#ZZDFeedBackdlg').dialog('open');
                             }
                         });
                     }
@@ -117,27 +111,41 @@
                     if (text == "True") {
                         loadzzddg();
                     } else {
-                        $.messager('提示', '周转贷数据状态修改失败!', "info");
+                        $.messager.alert('提示', '周转贷数据状态修改失败!', "info");
                     }
                 }
             });
         }
 
-        function EditZZDStatusAndFeedback(status, zzdid, Feedback) {
-            $.ajax({
-                type: "get",
-                async: true,
-                url: "../../WebServer/ZZDExamineApproveWebService.ashx?Method=EditZZDStatusAndFeedback",
-                data: { status: status, zzdid: zzdid, Feedback: Feedback },
-                dataType: "text",
-                success: function (text) {
-                    if (text == "True") {
-                        loadzzddg();
-                    } else {
-                        $.messager('提示', '周转贷数据状态修改失败!', "info");
+        function EditZZDStatusAndFeedback() {
+            if ($('#statustext').textbox("getValue") == "") {
+                $.messager.alert('提示', '单据状态获取失败!', "info");
+                $('#ZZDFeedBackdlg').dialog('close');
+            }
+            else if ($('#zzdidtext').textbox("getValue") == "") {
+                $.messager.alert('提示', '单据编号获取失败!!', "info");
+                $('#ZZDFeedBackdlg').dialog('close');
+            }
+            else if ($('#Feebacktext').textbox("getValue") == "") {
+                $.messager.alert('提示', '拒绝原因必须填写!', "info");
+            }
+            else {
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: "../../WebServer/ZZDExamineApproveWebService.ashx?Method=EditZZDStatusAndFeedback",
+                    data: { status: $('#statustext').textbox("getValue"), zzdid: $('#zzdidtext').textbox("getValue"), Feedback: $('#Feebacktext').textbox("getValue") },
+                    dataType: "text",
+                    success: function (text) {
+                        if (text == "True") {
+                            $('#ZZDFeedBackdlg').dialog('close');
+                            loadzzddg();
+                        } else {
+                            $.messager.alert('提示', '周转贷数据状态修改失败!', "info");
+                        }
                     }
-                }
-            });
+                });
+            }
 
         }
 
@@ -152,7 +160,7 @@
                     var Enterprise = json;
                     if (Enterprise["DataCount"] == 0) {
                         $('#DetialInfo').hide();
-                        $.messager('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
+                        $.messager.alert('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
                     } else {
                         $('#DetialInfo').show();
                         var Code = "";
@@ -194,7 +202,7 @@
                     EnterpriseFiancia = json;
                     if (EnterpriseFiancia["DataCount"] == 0) {
                         $('#DetialInfo').hide();
-                        $.messager('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
+                        $.messager.alert('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
                     } else {
                         $('#DetialInfo').show();
                         var thisyearMonths = EnterpriseFiancia["thisyear"].split('-');
@@ -240,7 +248,7 @@
                     EnterpriseZZDInfo = json;
                     if (EnterpriseZZDInfo["DataCount"] == 0) {
                         $('#DetialInfo').hide();
-                        $.messager('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
+                        $.messager.alert('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
                     } else {
                         $('#DetialInfo').show();
                         $('#labydkyh').html(EnterpriseZZDInfo["ydkyh"]);
@@ -481,6 +489,27 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="ZZDFeedBackdlg" class="easyui-dialog" title="拒绝受理原因" style="text-align: center;
+        width: 500px; height:200px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#ZZDFeedBackdlg-buttons'
+            ">
+        <div id="statusdiv" style="margin-bottom:20px">
+            <input class="easyui-textbox" id="statustext" name="statustext" style="width:80%; height:80px;" data-options="label:'状态:'">
+        </div>
+        <div id="zzdiddiv" style="margin-bottom:20px">
+            <input class="easyui-textbox" id="zzdidtext" name="zzdidtext" style="width:80%; height:80px;" data-options="label:'周转贷ID:'">
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" id="Feebacktext" name="Feebacktext" style="width:80%; height:80px;" data-options="label:'拒绝原因:',multiline:true">
+        </div>
+    </div>
+    <div id="ZZDFeedBackdlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="EditZZDStatusAndFeedback()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZZDFeedBackdlg').dialog('close')">
+            关闭
+        </a>
     </div>
 </body>
 </html>
