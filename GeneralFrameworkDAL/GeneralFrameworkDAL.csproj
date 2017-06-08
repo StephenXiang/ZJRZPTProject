@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Net965808Service.cs" />
     <Compile Include="BankInfoService.cs" />
+    <Compile Include="Encrypter.cs" />
     <Compile Include="MainBankInfoService.cs" />
     <Compile Include="DalTester.cs" />
     <Compile Include="DBHelper.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="SysDepartmentService.cs" />
     <Compile Include="SysRolesService.cs" />
     <Compile Include="SysUserService.cs" />
+    <Compile Include="WebHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeneralFrameworkBLLModel\GeneralFrameworkBLLModel.csproj">
