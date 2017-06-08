@@ -1294,6 +1294,9 @@
     <Compile Include="WebServer\UserLoginWebService.ashx.cs">
       <DependentUpon>UserLoginWebService.ashx</DependentUpon>
     </Compile>
+    <Compile Include="WebServer\ZZDExamineApproveWebService.ashx.cs">
+      <DependentUpon>ZZDExamineApproveWebService.ashx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1356,6 +1359,7 @@
     <Content Include="WebServer\PublishFinancialProductsWebService.ashx" />
     <Content Include="WebServer\MainBankInfoWebService.ashx" />
     <Content Include="WebServer\BankInfoWebService.ashx" />
+    <Content Include="WebServer\ZZDExamineApproveWebService.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

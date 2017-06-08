@@ -81,7 +81,7 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 3) e on a.EnterpriseTypeId = e.Id
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 4) f on a.RegistRegionId = f.Id
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 5) g on a.HuanpingId = g.Id
-                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 10) h on a.RegFinance = h.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 12) h on a.RegFinance = h.Id
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 6) i on a.RegFinanceMt = i.Id
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 7) j on a.Business = j.Id
                             where b.UserName = '" + UserName + "'";
@@ -119,7 +119,6 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
                 });
             }
             return reply;
-
         }
 
         public byte[] GetImgForCode(string Code)

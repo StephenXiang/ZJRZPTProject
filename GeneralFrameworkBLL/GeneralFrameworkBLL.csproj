@@ -51,6 +51,7 @@
     <Compile Include="SysDepartmentManager.cs" />
     <Compile Include="SysRolesManager.cs" />
     <Compile Include="SysUserManager.cs" />
+    <Compile Include="ZZDExamineApproveManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeneralFrameworkBLLModel\GeneralFrameworkBLLModel.csproj">

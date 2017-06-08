@@ -54,12 +54,18 @@
                             }
                     },
                     {
-                        field: 'ZZDStatus', title: '授信状态', width: 150, align: 'center', formatter:
+                        field: 'ZZDStatus', title: '受理状态', width: 150, align: 'center', formatter:
                         function (value, row, index) {
-                            if (value === 0) {
-                                return '待授信';
-                            } else if (value === 1) {
-                                return '已授信';
+                            if (value == 0) {
+                                return '待受理';
+                            } else if (value == 1) {
+                                return '受理中';
+                            } else if (value == 2) {
+                                return '已受理';
+                            } else if (value == 3) {
+                                return '受理成功';
+                            } else if (value == 4) {
+                                return '受理不成功';
                             }
                         }
                     }

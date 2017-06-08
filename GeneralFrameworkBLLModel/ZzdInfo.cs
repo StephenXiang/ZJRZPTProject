@@ -16,4 +16,16 @@ namespace GeneralFrameworkBLLModel
         public int zbh;
         public double bcdkje;
     }
+
+    public class ZzdInfoReply
+    {
+        public string UserName;
+        public string ydkyh;
+        public string khjlxm;
+        public string khjllxdh;
+        public string ydkje;
+        public string dkdqsj;
+        public string zbh;
+        public string bcdkje;
+    }
 }
