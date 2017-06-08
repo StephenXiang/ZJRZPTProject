@@ -65,6 +65,8 @@
     <Compile Include="SysDepartmentService.cs" />
     <Compile Include="SysRolesService.cs" />
     <Compile Include="SysUserService.cs" />
+    <Compile Include="WebHelper.cs" />
+    <Compile Include="ZZDExamineApproveService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeneralFrameworkBLLModel\GeneralFrameworkBLLModel.csproj">
