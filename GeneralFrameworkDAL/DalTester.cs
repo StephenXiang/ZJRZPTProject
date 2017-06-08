@@ -63,5 +63,14 @@ SELECT @@IDENTITY";
             var sms = new SmsService();
             sms.Send("18261952313", "test msg");
         }
+
+        [Test]
+        [Category("MANUAL")]
+        public void TestUserLogin()
+        {
+            Net965808Service ns = new Net965808Service();
+            string userid;
+            ns.Login("yinweiwen", "Zxc123456", out userid);
+        }
     }
 }
