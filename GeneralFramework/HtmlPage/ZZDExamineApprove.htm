@@ -37,15 +37,15 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'Id', title: 'ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'EnterpriseId', title: '企业ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'EnterpriseName', title: '企业名称', width: '300', align: 'center' },
-                                    { field: 'OriginalQuota', title: '原贷款金额(单位：万元)', width: '300', align: 'center' },
-                                    { field: 'BankName', title: '原贷款银行', width: '300', align: 'center' },
-                                    { field: 'ThisQuota', title: '本次贷款金额(单位：万元)', width: '300', align: 'center' },
-                                    { field: 'PublishDate', title: '发布时间', width: '300', align: 'center' },
+                                    { field: 'Id', title: 'ID', width: 0, hidden: true, align: 'center' },
+                                    { field: 'EnterpriseId', title: '企业ID', width: 0, hidden: true, align: 'center' },
+                                    { field: 'EnterpriseName', title: '企业名称', width: 300, align: 'center' },
+                                    { field: 'OriginalQuota', title: '原贷款金额(单位：万元)', width: 300, align: 'center' },
+                                    { field: 'BankName', title: '原贷款银行', width: 300, align: 'center' },
+                                    { field: 'ThisQuota', title: '本次贷款金额(单位：万元)', width: 300, align: 'center' },
+                                    { field: 'PublishDate', title: '发布时间', width: 300, align: 'center' },
                                     {
-                                        field: 'Status', title: '受理状态', width: '300', align: 'center', formatter:
+                                        field: 'Status', title: '受理状态', width: 300, align: 'center', formatter:
                                             function (value, row, index) {
                                                 if (value == 0) {
                                                     return '待受理';
@@ -80,7 +80,7 @@
                             if (r) {
                                 EditZZDStatus('2', row.Id);
                             } else {
-                                //$.messager.alert('提示', '受理已取消！', 'info');
+
                             }
                         });
                     } else if (row.Status == 2) {
@@ -228,11 +228,6 @@
                         $('#thisyszkLab').html(EnterpriseFiancia["thisyszk"] + "&nbsp万");
                         $('#thisjlrLab').html(EnterpriseFiancia["thisjlr"] + "&nbsp万");
                     }
-                },
-                error: function (json) {
-                    if (UserInfo["role"] == 4) {
-                        $('#EnterpriseFinanceInfoBtn').show();
-                    }
                 }
             });
         }
@@ -245,7 +240,7 @@
                 data: { ZZDID: zzdid },
                 dataType: "json",
                 success: function (json) {
-                    EnterpriseZZDInfo = json;
+                    var EnterpriseZZDInfo = json;
                     if (EnterpriseZZDInfo["DataCount"] == 0) {
                         $('#DetialInfo').hide();
                         $.messager.alert('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
@@ -258,11 +253,6 @@
                         $('#labdkdqsj').html(EnterpriseZZDInfo["dkdqsj"]);
                         $('#labzbh').html(EnterpriseZZDInfo["zbh"]);
                         $('#labbcdkje').html(EnterpriseZZDInfo["bcdkje"] + "&nbsp万");
-                    }
-                },
-                error: function (json) {
-                    if (UserInfo["role"] == 4) {
-                        $('#EnterpriseFinanceInfoBtn').show();
                     }
                 }
             });
@@ -449,9 +439,6 @@
                     <h2> 周转贷需求</h2>
                     <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%;">
                         <div data-options="region:'center'" style="width:33%;padding:10px">
-
-
-
                             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                                 <tr>
                                     <td style=" text-align:left;">原贷款银行:</td>

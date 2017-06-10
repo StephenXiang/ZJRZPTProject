@@ -198,6 +198,7 @@
     <Content Include="HtmlPage\SystemMaintain.htm" />
     <Content Include="HtmlPage\SystemUserMaintain.htm" />
     <Content Include="HtmlPage\PublishZCGG.htm" />
+    <Content Include="HtmlPage\ZZDExamineApprove.aspx" />
     <Content Include="HtmlPage\ZZDExamineApprove.htm" />
     <Content Include="images\htbanner.jpg" />
     <Content Include="images\timg.jpg" />
@@ -1256,6 +1257,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HtmlPage\ZZDExamineApprove.aspx.cs">
+      <DependentUpon>ZZDExamineApprove.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlPage\ZZDExamineApprove.aspx.designer.cs">
+      <DependentUpon>ZZDExamineApprove.aspx</DependentUpon>
+    </Compile>
     <Compile Include="WebServer\BankInfoWebService.ashx.cs">
       <DependentUpon>BankInfoWebService.ashx</DependentUpon>
     </Compile>
@@ -1287,6 +1295,9 @@
     </Compile>
     <Compile Include="WebServer\PublishZZDWebService.ashx.cs">
       <DependentUpon>PublishZZDWebService.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="WebServer\RZExamineApproveWebService.ashx.cs">
+      <DependentUpon>RZExamineApproveWebService.ashx</DependentUpon>
     </Compile>
     <Compile Include="WebServer\SysDepartmentWebService.ashx.cs">
       <DependentUpon>SysDepartmentWebService.ashx</DependentUpon>
@@ -1360,6 +1371,7 @@
     <Content Include="WebServer\MainBankInfoWebService.ashx" />
     <Content Include="WebServer\BankInfoWebService.ashx" />
     <Content Include="WebServer\ZZDExamineApproveWebService.ashx" />
+    <Content Include="WebServer\RZExamineApproveWebService.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

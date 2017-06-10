@@ -41,7 +41,7 @@ values(@BankId,@Title,@QxLow,@QxUp,@DanbaoId,@DaikunLow,@DaikuanUp,@LilvLow,@Lil
             return efc > 0;
         }
 
-        public string GetJRCPJson(string username)
+        public string GetJRCPJson(string username, int page, int rows)
         {
             var sql = string.Format(@"select BankId from SysUser where UserName='{0}'", username);
             var bank = DBHelper.GetScalar(sql) as int?;
@@ -54,10 +54,10 @@ Dianhua,Jianjie,CONVERT(varchar(30),PublishDate,102) as PublishDate,
 case Status when 0 then '待审批' when 1 then '已审批' end as Status
 from JRCPFlow f
 left join [Lookup] l on l.Id=f.DanbaoId
-where BankId={0}
+where BankId={0} order by f.Id Desc
 ", bank);
             DataTable dt = DBHelper.GetDataSet(sql);
-            var reply = JSON.JsonHelper.SerializeObject(dt);
+            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JSON.JsonHelper.GetPagedTable(dt, page, rows));
             return reply;
         }
     }

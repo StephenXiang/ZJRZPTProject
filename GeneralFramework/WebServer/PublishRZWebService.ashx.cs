@@ -93,7 +93,9 @@ namespace GeneralFramework.WebServer
         public void GetRZLBJson()
         {
             string UserName = Request["UserName"];
-            Response.Write(_pm.GetRZLBJson(UserName));
+            int page = int.Parse(Request["page"].ToString());
+            int rows = int.Parse(Request["rows"].ToString());
+            Response.Write(_pm.GetRZLBJson(UserName,page,rows));
         }
 
         public void GetRZBankstr()

@@ -14,4 +14,14 @@ namespace GeneralFrameworkBLLModel
         public int RZQT;
         public string dywdesc;
     }
+    public class RzInfoReply
+    {
+        public string UserName;
+        public string RZED;
+        public string RZYH;
+        public string RZQX;
+        public string RZQT;
+        public string isdyw;
+        public string dywdesc;
+    }
 }

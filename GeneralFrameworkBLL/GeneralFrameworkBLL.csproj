@@ -48,6 +48,7 @@
     <Compile Include="PublishJRCPManager.cs" />
     <Compile Include="PublishRzManager.cs" />
     <Compile Include="PublishZzdManager.cs" />
+    <Compile Include="RZExamineApproveManager.cs" />
     <Compile Include="SysDepartmentManager.cs" />
     <Compile Include="SysRolesManager.cs" />
     <Compile Include="SysUserManager.cs" />

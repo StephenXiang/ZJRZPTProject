@@ -41,7 +41,7 @@ values(@ent,@bk,@mbk,@ma,@map,@oq,@q,@ed,0)";
             return efc > 0;
         }
 
-        public string GetZZDLBJson(string UserName)
+        public string GetZZDLBJson(string UserName, int page, int rows)
         {
             var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", UserName);
             var ent = DBHelper.GetScalar(sql) as int?;
@@ -56,9 +56,9 @@ PublishDate as ZZDPublishDate
 from ZZDFlow f
 left join Bank b on b.Id=f.BankId
 left join Bank b2 on b2.Id=f.MastBankId
-where f.EnterpriseId={0}", ent);
+where f.EnterpriseId={0} order by f.Id Desc", ent);
             var dt = DBHelper.GetDataSet(sql);
-            var reply = JSON.JsonHelper.SerializeObject(dt);
+            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
             return reply;
         }
     }

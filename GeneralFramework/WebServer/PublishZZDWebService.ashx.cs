@@ -88,7 +88,9 @@ namespace GeneralFramework.WebServer
         public void GetZZDLBJson()
         {
             var userName = Request["UserName"];
-            Response.Write(_zm.GetZZDLBJson(userName));
+            int page = int.Parse(Request["page"].ToString());
+            int rows = int.Parse(Request["rows"].ToString());
+            Response.Write(_zm.GetZZDLBJson(userName, page, rows));
         }
     }
 }

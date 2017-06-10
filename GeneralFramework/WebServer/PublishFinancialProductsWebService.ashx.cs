@@ -81,8 +81,10 @@ namespace GeneralFramework.WebServer
 
         public void GetJRCPLBJson()
         {
+            int page = int.Parse(Request["page"].ToString());
+            int rows = int.Parse(Request["rows"].ToString());
             string UserName = Request["UserName"];
-            Response.Write(_pm.GetJRCPLBJson(UserName));
+            Response.Write(_pm.GetJRCPLBJson(UserName, page, rows));
         }
     }
 }

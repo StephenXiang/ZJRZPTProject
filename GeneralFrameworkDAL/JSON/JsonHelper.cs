@@ -133,5 +133,80 @@ namespace GeneralFrameworkDAL.JSON
             str = str + "]";
             return str;
         }
+        /// <summary>
+        /// DataTable转JSON
+        /// </summary>
+        /// <param name="count">记录数</param>
+        /// <param name="table">table</param>
+        /// <returns></returns>
+        public static string TableToJson(int count, DataTable table)
+        {
+            if (table.Rows.Count > 0)
+            {
+                string strJson = "";
+                strJson = "{\"total\":" + count + ",\"rows\":[";
+                try
+                {
+                    foreach (DataRow dr in table.Rows)
+                    {
+                        strJson += "{";
+                        for (int c = 0; c < table.Columns.Count; c++)
+                        {
+                            strJson += "\"" + table.Columns[c].ColumnName + "\":\"" + dr[c].ToString().Trim().Replace("\n", "") + "\",";
+                        }
+                        strJson = strJson.Substring(0, strJson.Length - 1);
+                        strJson += "},";
+                    }
+
+                }
+                catch
+                {
+                    strJson = strJson.Substring(0, strJson.Length - 1);
+                }
+                strJson = strJson.Substring(0, strJson.Length - 1);
+                strJson += "]}";
+                return strJson;
+            }
+            else
+            {
+                return "{\"total\":0,\"rows\":[]}";
+            }
+        }
+
+        /// <summary>
+        /// DATATABLE分页
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="PageIndex">PageIndex表示第几页</param>
+        /// <param name="PageSize">PageSize表示每页的记录数</param>
+        /// <returns></returns>
+        public static DataTable GetPagedTable(DataTable dt, int PageIndex, int PageSize)
+        {
+            if (PageIndex == 0)
+                return dt;//0页代表每页数据，直接返回
+
+            DataTable newdt = dt.Copy();
+            newdt.Clear();//copy dt的框架
+
+            int rowbegin = (PageIndex - 1) * PageSize;
+            int rowend = PageIndex * PageSize;
+
+            if (rowbegin >= dt.Rows.Count)
+                return newdt;//源数据记录数小于等于要显示的记录，直接返回dt
+
+            if (rowend > dt.Rows.Count)
+                rowend = dt.Rows.Count;
+            for (int i = rowbegin; i <= rowend - 1; i++)
+            {
+                DataRow newdr = newdt.NewRow();
+                DataRow dr = dt.Rows[i];
+                foreach (DataColumn column in dt.Columns)
+                {
+                    newdr[column.ColumnName] = dr[column.ColumnName];
+                }
+                newdt.Rows.Add(newdr);
+            }
+            return newdt;
+        }
     }
 }

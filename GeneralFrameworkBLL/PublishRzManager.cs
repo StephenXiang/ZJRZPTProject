@@ -19,9 +19,9 @@ namespace GeneralFrameworkBLL
         {
             return _prs.SaveRzInfo(rzi);
         }
-        public string GetRZLBJson(string UserName)
+        public string GetRZLBJson(string UserName, int page, int rows)
         {
-            return _prs.GetRZLBJson(UserName);
+            return _prs.GetRZLBJson(UserName, page, rows);
         }
 
         public string GetRZBankstr(string BankIds)

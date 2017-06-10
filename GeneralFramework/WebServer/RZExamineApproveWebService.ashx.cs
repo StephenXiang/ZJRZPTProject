@@ -1,5 +1,4 @@
 ﻿using GeneralFrameworkBLL;
-using GeneralFrameworkDAL.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +9,9 @@ using System.Web.SessionState;
 namespace GeneralFramework.WebServer
 {
     /// <summary>
-    /// ZZDExamineApproveWebService 的摘要说明
+    /// RZExamineApproveWebService 的摘要说明
     /// </summary>
-    public class ZZDExamineApproveWebService : IHttpHandler
+    public class RZExamineApproveWebService : IHttpHandler
     {
 
         HttpRequest Request;
@@ -22,7 +21,7 @@ namespace GeneralFramework.WebServer
         HttpCookie Cookie;
         HttpContext context;
         HttpFileCollection files;
-        ZZDExamineApproveManager zm = new ZZDExamineApproveManager();
+        RZExamineApproveManager rm = new RZExamineApproveManager();
         public void ProcessRequest(HttpContext context)
         {
             context.Response.Buffer = true;
@@ -61,41 +60,34 @@ namespace GeneralFramework.WebServer
                 return false;
             }
         }
-        public void GetZZDDataTable()
+        public void GetRZDataTable()
         {
             string userName = Request["UserName"];
-            int page = int.Parse(Request["page"].ToString());
             int rows = int.Parse(Request["rows"].ToString());
-            Response.Write(zm.GetZZDDataTable(userName,page,rows));
-        }
-        public void EditZZDStatus()
-        {
-            string status = Request["status"];
-            string zzdid = Request["zzdid"];
-            Response.Write(zm.EditZZDStatus(status, zzdid));
-        }
-        public void EditZZDStatusAndFeedback()
-        {
-            string status = Request["status"];
-            string zzdid = Request["zzdid"];
-            string liyou = Request["Feedback"];
-            Response.Write(zm.EditZZDStatus(status, zzdid, liyou));
+            int page = int.Parse(Request["page"].ToString());
+            Response.Write(rm.GetRZDataTable(userName, page, rows));
         }
 
-        public void GetEnterpriseInfoForEnterpriseId()
+        public void GetRZInfoByRZID()
         {
-            string enterpriseId = Request["EnterpriseId"];
-            Response.Write(zm.GetEnterpriseInfoForEnterpriseId(enterpriseId));
+            string RZID = Request["RZID"];
+            string UserNmae = Request["UserName"];
+            Response.Write((rm.GetRZInfoByRZID(RZID, UserNmae)));
         }
-        public void GetEnterpriseFinanceInfoByEnterpriseId()
+
+        public void EditRZStatus()
         {
-            string enterpriseId = Request["EnterpriseId"];
-            Response.Write(zm.GetEnterpriseFinanceInfoByEnterpriseId(enterpriseId));
+            string status = Request["status"];
+            string zzdid = Request["rzid"];
+            string UserName = Request["UserName"];
+            Response.Write(rm.EditRZStatus(status, zzdid, UserName, 0));
         }
-        public void GetZZDInfoByZZDID()
+        public void EditRZStatusAndFeedback()
         {
-            string ZZDID = Request["ZZDID"];
-            Response.Write(zm.GetZZDInfoByZZDID(ZZDID));
+            string status = Request["status"];
+            string rzid = Request["rzid"];
+            string liyou = Request["Feedback"];
+            Response.Write(rm.EditRZStatus(status, rzid, liyou));
         }
     }
 }

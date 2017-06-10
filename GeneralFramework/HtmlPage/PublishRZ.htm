@@ -73,15 +73,20 @@
                                          }
                                     },
                                     {
-                                        field: 'Status', title: '授信状态', width: 150, align: 'center', formatter:
-                                          function (value, row, index) {
-                                              UserID = row.ID;
-                                              if (value == 0) {
-                                                  return '待授信'
-                                              } else if (value == 1) {
-                                                  return '已授信'
-                                              }
-                                          }
+                                        field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
+                                           function (value, row, index) {
+                                               if (value == 0) {
+                                                   return '待受理';
+                                               } else if (value == 1) {
+                                                   return '受理中';
+                                               } else if (value == 2) {
+                                                   return '已受理';
+                                               } else if (value == 3) {
+                                                   return '受理成功';
+                                               } else if (value == 4) {
+                                                   return '受理不成功';
+                                               }
+                                           }
                                     }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
@@ -151,6 +156,7 @@
         }
 
         function SaveRZInfo() {
+
             var rzed = $('#RZEDtext').val().trim();
             var isdyw = $('input:radio[name="isDyw"]:checked').val();
             if (rzed == "") {
@@ -161,6 +167,9 @@
             }
             else if ($('#RZYHcmb').combobox('getValue') == "") {
                 $.messager.alert('提示', '融资银行必须选择', 'info');
+            }
+            else if ($('#RZYHcmb').combobox('getValues').length > 3) {
+                $.messager.alert('提示', '最多只能选择3个融资银行', 'info');
             }
             else if ($('#RZQXcmb').combobox('getValue') == "") {
                 $.messager.alert('提示', '融资期限必须选择', 'info');

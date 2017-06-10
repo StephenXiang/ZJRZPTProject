@@ -34,10 +34,10 @@ namespace GeneralFrameworkBLL
             return userdt;
         }
 
-        public string GetUserTBJsonForDepartmentId(int DepartmentId)
+        public string GetUserTBJsonForDepartmentId(int DepartmentId, int page, int rows)
         {
             DataTable dt = Sus.GetUserDTForDepartmentId(DepartmentId);
-            string UserJson = JsonHelper.SerializeObject(dt);
+            string UserJson = JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
             return UserJson;
         }
 

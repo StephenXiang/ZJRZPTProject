@@ -11,7 +11,7 @@ namespace GeneralFrameworkDAL
 {
     public class ZZDExamineApproveService
     {
-        public string GetZZDDataTable(string UserName)
+        public string GetZZDDataTable(string UserName, int page, int rows)
         {
             var sql = @"select BankId from SysUser where UserName = '" + UserName + "'";
             int BankId = 0;
@@ -30,9 +30,9 @@ namespace GeneralFrameworkDAL
                 sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c.Name as BankName,a.ThisQuota,a.PublishDate,a.[Status] from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID
 left join Bank c on a.BankId = c.Id
-where  a.MastBankId = '" + BankId + "'";
+where  a.MastBankId = '" + BankId + "' order by a.Id Desc";
                 var dt1 = DBHelper.GetDataSet(sql);
-                return JsonHelper.ConvertJosnData(dt1);
+                return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }
             else
             {

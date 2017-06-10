@@ -9,9 +9,9 @@ namespace GeneralFrameworkBLL
     public class ZZDExamineApproveManager
     {
         ZZDExamineApproveService zs = new ZZDExamineApproveService();
-        public string GetZZDDataTable(string UserName)
+        public string GetZZDDataTable(string UserName, int page, int rows)
         {
-            return zs.GetZZDDataTable(UserName);
+            return zs.GetZZDDataTable(UserName, page, rows);
         }
 
         public bool EditZZDStatus(string status, string zzdid)

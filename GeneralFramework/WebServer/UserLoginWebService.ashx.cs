@@ -96,7 +96,9 @@ namespace GeneralFramework.WebServer
         public void GetUserTBJson()
         {
             var DepartmentId = int.Parse(Request["DepartmentId"]);
-            Response.Write(sum.GetUserTBJsonForDepartmentId(DepartmentId));
+            int page = int.Parse(Request["page"].ToString());
+            int rows = int.Parse(Request["rows"].ToString());
+            Response.Write(sum.GetUserTBJsonForDepartmentId(DepartmentId, page, rows));
         }
 
         public void EditUserPwd()

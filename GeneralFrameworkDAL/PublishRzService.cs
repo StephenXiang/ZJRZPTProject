@@ -45,7 +45,7 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
             return efc > 0;
         }
 
-        public string GetRZLBJson(string UserName)
+        public string GetRZLBJson(string UserName, int page, int rows)
         {
             var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", UserName);
             var ent = DBHelper.GetScalar(sql) as int?;
@@ -54,9 +54,9 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
 left join RZFlow b on a.Id = b.DemandId
 left join (select * from Lookup where Type = 8) c on a.TermId = c.Id
 left join (select * from Lookup where Type = 9) d on a.PurposeId = d.Id
-where b.EnterpriseId = {0}", ent);
+where b.EnterpriseId = {0} order by b.Id Desc", ent);
             DataTable dt = DBHelper.GetDataSet(sql);
-            var reply = JSON.JsonHelper.SerializeObject(dt);
+            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
             return reply;
         }
 
@@ -87,5 +87,7 @@ where b.EnterpriseId = {0}", ent);
                 return "无";
             }
         }
+
+
     }
 }

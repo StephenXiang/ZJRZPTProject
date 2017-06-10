@@ -15,9 +15,9 @@ namespace GeneralFrameworkBLL
             return _js.SaveJRCPInfo(ji);
         }
 
-        public string GetJRCPLBJson(string username)
+        public string GetJRCPLBJson(string username, int page, int rows)
         {
-            return _js.GetJRCPJson(username);
+            return _js.GetJRCPJson(username, page, rows);
         }
     }
 }
