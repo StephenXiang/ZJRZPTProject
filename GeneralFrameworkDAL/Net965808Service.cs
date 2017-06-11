@@ -13,11 +13,11 @@ namespace GeneralFrameworkDAL
             var qurl = @"http://www.965808.gov.cn/encryptCredential.action";
             var timestamp = ((long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds).ToString();
             var key = WebHelper.Get(qurl, string.Format("timestamp={0}", timestamp));
-            Console.Write(key);
             var url = @"http://www.965808.gov.cn/mobile/userLogin.action";
             var pwde = Encrypter.EncryptMd5(pwd);
             var para = string.Format("userName={0},password={1}", username, pwde);
-            var parae = Encrypter.EncryptDes(para, key);
+            var parae = Encrypter.EncryptDes2(para);
+            Console.WriteLine("parae={0}", parae);
             var ret = WebHelper.Get(url, "para=" + parae);
             var reto = JsonConvert.DeserializeObject<Net965808Ret>(ret);
             userid = reto.userId;

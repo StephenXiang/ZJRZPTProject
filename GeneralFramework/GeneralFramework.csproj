@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LitJSON, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>kindeditor-4.1.7\asp.net\bin\LitJSON.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -1293,6 +1297,9 @@
     <Compile Include="WebServer\PublishRZWebService.ashx.cs">
       <DependentUpon>PublishRZWebService.ashx</DependentUpon>
     </Compile>
+    <Compile Include="WebServer\PublishZCGGWebService.ashx.cs">
+      <DependentUpon>PublishZCGGWebService.ashx</DependentUpon>
+    </Compile>
     <Compile Include="WebServer\PublishZZDWebService.ashx.cs">
       <DependentUpon>PublishZZDWebService.ashx</DependentUpon>
     </Compile>
@@ -1372,6 +1379,7 @@
     <Content Include="WebServer\BankInfoWebService.ashx" />
     <Content Include="WebServer\ZZDExamineApproveWebService.ashx" />
     <Content Include="WebServer\RZExamineApproveWebService.ashx" />
+    <Content Include="WebServer\PublishZCGGWebService.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

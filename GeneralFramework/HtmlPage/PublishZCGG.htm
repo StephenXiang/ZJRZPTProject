@@ -14,25 +14,64 @@
     <script charset="utf-8" src="../kindeditor-4.1.7/kindeditor.js"></script>
     <script charset="utf-8" src="../kindeditor-4.1.7/lang/zh_CN.js"></script>
     <script charset="utf-8" src="../kindeditor-4.1.7/plugins/code/prettify.js"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
-
+        var editor1 = '';
+        var editor2 = '';
+        var UserInfo;
+        var newsZcId;
+        var newsGgId;
+        UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZCdlg').dialog('close');
             $('#GGdlg').dialog('close');
-            var editor;
-            window.editor = KindEditor.create('#content', {
-                resizeType: 1,
-                urlType: 'domain' // 带有域名的绝对路径
+            loadZCDG();
+            loadGGDG();
+
+            KindEditor.ready(function (K) {
+                editor1 = K.create('#contentZC', {
+                    cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
+                    uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
+                    fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
+                    allowFileManager: true,
+                    afterCreate: function () {
+                        var self = this;
+                        K.ctrl(document, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                    }
+                });
             });
 
-            var editor1;
-            window.editor = KindEditor.create('#content1', {
-                resizeType: 1,
-                urlType: 'domain' // 带有域名的绝对路径
+            KindEditor.ready(function (K) {
+                editor2 = K.create('#contentGG', {
+                    cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
+                    uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
+                    fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
+                    allowFileManager: true,
+                    afterCreate: function () {
+                        var self = this;
+                        K.ctrl(document, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                    }
+                });
             });
+        });
 
+        function loadZCDG() {
             $('#ZC_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetZCDG',
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -46,10 +85,9 @@
                 pageList: [10, 20, 30],
                 columns: [[
                     { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                    { field: 'BankName', title: '产品名称', width: '450', align: 'center' },
-                    { field: 'Address', title: '产品LOG', width: '450', align: 'center' },
-                    { field: 'User', title: '发布时间', width: '250', align: 'center' },
-                    { field: 'Telephone', title: '审核状态', width: '250', align: 'center' }
+                    { field: 'NewsTitle', title: '政策标题', width: '450', align: 'center' },
+                    { field: 'Createdate', title: '创建时间', width: '250', align: 'center' },
+                    { field: 'CreateUser', title: '创建人员', width: '250', align: 'center' }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布政策',
@@ -60,17 +98,20 @@
                     iconCls: 'icon-remove',
                     text: '删除政策',
                     handler: function () {
-
+                        DelZC();
                     }
                 }],
                 onClickRow: (function (index, data) {
+                    newsZcId = data.ID;
                 }),
                 onDblClickRow: (function (index, row) {
                 })
             });
+        }
 
+        function loadGGDG() {
             $('#GG_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetGGDG',
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -84,10 +125,9 @@
                 pageList: [10, 20, 30],
                 columns: [[
                     { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                    { field: 'BankName', title: '产品名称', width: '450', align: 'center' },
-                    { field: 'Address', title: '产品LOG', width: '450', align: 'center' },
-                    { field: 'User', title: '发布时间', width: '250', align: 'center' },
-                    { field: 'Telephone', title: '审核状态', width: '250', align: 'center' }
+                    { field: 'NewsTitle', title: '公告标题', width: '450', align: 'center' },
+                    { field: 'Createdate', title: '创建时间', width: '250', align: 'center' },
+                    { field: 'CreateUser', title: '创建人员', width: '250', align: 'center' }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布公告',
@@ -98,15 +138,129 @@
                     iconCls: 'icon-remove',
                     text: '删除公告',
                     handler: function () {
-
+                        DelGG();
                     }
                 }],
                 onClickRow: (function (index, data) {
+                    newsGgId = data.ID;
                 }),
                 onDblClickRow: (function (index, row) {
                 })
             });
-        });
+        }
+
+        function saveZC() {
+            if ($('#titleZC').val() === '') {
+                $.messager.alert('提示', '必须填写政策标题！', 'info');
+            }
+            else if (editor1.html() === '') {
+                $.messager.alert('提示', '政策内容必须填写！', 'info');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "../../WebServer/PublishZCGGWebService.ashx?Method=AddZC",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        "CreateUser": UserInfo["name"],
+                        "NewsContent": editor1.html(),
+                        "NewsTitle": $('#titleZC').val().trim()
+                    }),
+                    dataType: "text",
+                    success: function (text) {
+                        if (text > 0) {
+                            $('#ZCdlg').dialog('close');
+                            $.messager.alert('提示', '政策添加成功！', 'info');
+                            loadZCDG();
+                        }
+                    },
+                    error: function (message) {
+                        $.messager.alert('错误提示', '政策添加出错，请重试或联系系统管理员！', 'error');
+                    }
+                });
+            }
+        }
+
+        function saveGG() {
+            if ($('#titleGG').val() === '') {
+                $.messager.alert('提示', '必须填写公告标题！', 'info');
+            }
+            else if (editor2.html() === '') {
+                $.messager.alert('提示', '公告内容必须填写！', 'info');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: "../../WebServer/PublishZCGGWebService.ashx?Method=AddGG",
+                    data: JSON.stringify({
+                        "CreateUser": UserInfo["name"],
+                        "NewsContent": editor2.html(),
+                        "NewsTitle": $('#titleGG').val().trim()
+                    }),
+                    success: function (text) {
+                        if (text > 0) {
+                            $('#GGdlg').dialog('close');
+                            $.messager.alert('提示', '公告添加成功！', 'info');
+                            loadGGDG();
+                        }
+                    },
+                    error: function () {
+                        $.messager.alert('错误提示', '公告添加出错，请重试或联系系统管理员！', 'error');
+                    }
+                });
+            }
+        }
+        function DelZC() {
+            if (newsZcId === '') {
+                $.messager.alert('提示', '请选择需要删除的政策记录！', 'info');
+            } else {
+                $.messager.confirm('确认', '您确认想要删除该篇政策吗？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "text",
+                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                            data: { 'newsId': newsZcId },
+                            success: function (text) {
+                                if (text > 0) {
+                                    $.messager.alert('提示', '政策删除成功！', 'info');
+                                    loadZCDG();
+                                    newsZcId = '';
+                                }
+                            },
+                            error: function () {
+                                $.messager.alert('错误提示', '政策删除出错，请重试或联系系统管理员！', 'error');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        function DelGG() {
+            if (newsGgId === '') {
+                $.messager.alert('提示', '请选择需要删除的公告记录！', 'info');
+            } else {
+                $.messager.confirm('确认', '您确认想要删除该篇公告吗？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "text",
+                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                            data: { 'newsId': newsGgId },
+                            success: function (text) {
+                                if (text > 0) {
+                                    $.messager.alert('提示', '公告删除成功！', 'info');
+                                    loadGGDG();
+                                    newsGgId = '';
+                                }
+                            },
+                            error: function () {
+                                $.messager.alert('错误提示', '公告删除出错，请重试或联系系统管理员！', 'error');
+                            }
+                        });
+                    }
+                });
+            }
+        }
     </script>
 </head>
 <body class="easyui-layout">
@@ -123,55 +277,47 @@
                 buttons: '#GG_dg-buttons'
             "></table>
         </div>
-        <div id="ZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center;
-                                                                                                                                                                                                                                                                                              width: 800px; height: 500px; padding: 10px" data-options="
+        <div id="ZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px" 
+             data-options="
                 iconCls: 'icon-save',
                 buttons: '#ZCdlg-buttons'
             ">
             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                 <tr>
-                    <td style=" text-align:right;">产品名称:</td>
-                    <td style=" text-align:left;"><input name="name" class="f1 easyui-textbox" style="width:80%;"></input></td>
-                </tr>
-                <tr>
-                    <td style=" text-align:right;">产品LOG:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;"></input></td>
+                    <td style=" text-align:right;">标题:</td>
+                    <td style=" text-align:left;"><input id="titleZC" name="name" class="f1 easyui-textbox" style="width: 80%;" /></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">详细内容:</td>
-                    <td style=" text-align:left;"><textarea id="content" name="content" style="width:100%; height:300px;"></textarea></td>
+                    <td style=" text-align:left;"><textarea id="contentZC" name="content" style="width:100%; height:350px;"></textarea></td>
                 </tr>
             </table>
         </div>
-        <div id="GGdlg" class="easyui-dialog" title="公告编辑" style="text-align: center;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               width: 800px; height: 500px; padding: 10px" data-options="
+        <div id="GGdlg" class="easyui-dialog" title="公告编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px" 
+             data-options="
                 iconCls: 'icon-save',
                 buttons: '#GGdlg-buttons'
             ">
             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                 <tr>
-                    <td style=" text-align:right;">产品名称:</td>
-                    <td style=" text-align:left;"><input name="name" class="f1 easyui-textbox" style="width:80%;" /></td>
-                </tr>
-                <tr>
-                    <td style=" text-align:right;">产品LOG:</td>
-                    <td style=" text-align:left;"><input name="file" class="f1 easyui-filebox" style="width:80%;" /></td>
+                    <td style=" text-align:right;">标题:</td>
+                    <td style=" text-align:left;"><input id="titleGG" name="name" class="f1 easyui-textbox" style="width:80%;" /></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">详细内容:</td>
-                    <td style=" text-align:left;"><textarea id="content1" name="content1" style="width:100%; height:300px;"></textarea></td>
+                    <td style=" text-align:left;"><textarea id="contentGG" name="content1" style="width:100%; height:350px;"></textarea></td>
                 </tr>
             </table>
         </div>
         <div id="ZCdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZCdlg').dialog('close')">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveZC()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZCdlg').dialog('close');">
                 关闭
             </a>
         </div>
         <div id="GGdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Save()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#GGdlg').dialog('close')">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveGG()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#GGdlg').dialog('close');">
                 关闭
             </a>
         </div>
