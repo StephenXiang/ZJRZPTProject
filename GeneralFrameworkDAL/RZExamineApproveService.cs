@@ -13,18 +13,21 @@ namespace GeneralFrameworkDAL
     {
         public string GetRZDataTable(string UserName, int page, int rows)
         {
-            var sql = @"select BankId from SysUser where UserName = '" + UserName + "'";
+            var sql = @"select BankId,RolesID from SysUser where UserName = '" + UserName + "'";
             int BankId = 0;
+            int RoleId = 0;
             DataTable dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
                 DataRow dr = dt.Rows[0];
-                BankId = int.Parse(dr[0].ToString());
+                BankId = dr["BankId"] == DBNull.Value ? 0 : int.Parse(dr["BankId"].ToString());
+                RoleId = dr["RolesID"] == DBNull.Value ? 0 : int.Parse(dr["RolesID"].ToString());
             }
             else
             {
                 return "";
             }
+
             if (BankId != 0)
             {
                 sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds from RZFlow a 
@@ -35,39 +38,53 @@ left join Enterprise c on a.EnterpriseId = c.ID where BankIds like '%" + BankId 
                 {
                     return "";
                 }
-                else
+                DataTable dtclone = new DataTable();
+                dtclone = dt1.Copy();
+                int dt1index = 0;
+                foreach (DataRow dr in dt1.Rows)
                 {
-                    DataTable dtclone = new DataTable();
-                    dtclone = dt1.Copy();
-                    int dt1index = 0;
-                    foreach (DataRow dr in dt1.Rows)
+                    string[] bankids = dr["BankIds"].ToString().Split(',');
+                    bool iscz = false;
+                    if (bankids.Length > 0)
                     {
-                        string[] bankids = dr["BankIds"].ToString().Split(',');
-                        bool iscz = false;
-                        if (bankids.Length > 0)
+                        for (int i = 0; i < bankids.Length; i++)
                         {
-                            for (int i = 0; i < bankids.Length; i++)
+                            if (int.Parse(bankids[i]) == BankId)
                             {
-                                if (int.Parse(bankids[i]) == BankId)
-                                {
-                                    iscz = true;
-                                    break;
-                                }
-                            }
-                            if (iscz == false)
-                            {
-                                dtclone.Rows.RemoveAt(dt1index);
+                                iscz = true;
+                                break;
                             }
                         }
-                        dt1index++;
+                        if (iscz == false)
+                        {
+                            dtclone.Rows.RemoveAt(dt1index);
+                        }
                     }
-                    return JsonHelper.TableToJson(dtclone.Rows.Count, GetPagedTable(dtclone, page, rows));
+                    dt1index++;
                 }
+                return JsonHelper.TableToJson(dtclone.Rows.Count, GetPagedTable(dtclone, page, rows));
             }
-            else
+            if (RoleId == 1 || RoleId == 4)    // 系统用户或政府部门
             {
-                return "";
+                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds from RZFlow a 
+left join RZDemandInfo b on a.DemandId = b.Id
+left join Enterprise c on a.EnterpriseId = c.ID";
+                var banks = BankInfoService.GetBanks();
+                var dt1 = DBHelper.GetDataSet(sql);
+                if (dt1.Rows.Count == 0)
+                {
+                    return "";
+                }
+                dt1.Columns.Add("Banks");
+                foreach (DataRow dr in dt1.Rows)
+                {
+                    dr["Banks"] = string.Join(",",
+                        dr["BankIds"].ToString().Split(',').Select(int.Parse)
+                            .Select(p => banks.ContainsKey(p) ? banks[p] : ""));
+                }
+                return JsonHelper.TableToJson(dt1.Rows.Count, GetPagedTable(dt1, page, rows));
             }
+            return "";
         }
 
         public DataTable GetPagedTable(DataTable dt, int PageIndex, int PageSize)//PageIndex表示第几页，PageSize表示每页的记录数
@@ -112,10 +129,13 @@ where a.Id = {0}", RZID);
             if (dt.Rows.Count > 0)
             {
                 var dr = dt.Rows[0];
+                var banks = BankInfoService.GetBanks();
                 var efi = new RzInfoReply
                 {
                     RZED = dr[0].ToString(),
-                    RZYH = GetBankNamesByUserName(UserName),
+                    RZYH = string.Join(",",
+                        dr["BankIds"].ToString().Split(',').Select(int.Parse)
+                            .Select(p => banks.ContainsKey(p) ? banks[p] : "")),
                     RZQX = dr[2].ToString(),
                     RZQT = dr[3].ToString(),
                     isdyw = dr[4].ToString(),

@@ -13,13 +13,15 @@ namespace GeneralFrameworkDAL
     {
         public string GetZZDDataTable(string UserName, int page, int rows)
         {
-            var sql = @"select BankId from SysUser where UserName = '" + UserName + "'";
+            var sql = @"select BankId,RolesID from SysUser where UserName = '" + UserName + "'";
             int BankId = 0;
+            int RoleId = 0;
             DataTable dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
                 DataRow dr = dt.Rows[0];
-                BankId = int.Parse(dr[0].ToString());
+                BankId = dr["BankId"] == DBNull.Value ? 0 : int.Parse(dr["BankId"].ToString());
+                RoleId = dr["RolesID"] == DBNull.Value ? 0 : int.Parse(dr["RolesID"].ToString());
             }
             else
             {
@@ -34,10 +36,16 @@ where  a.MastBankId = '" + BankId + "' order by a.Id Desc";
                 var dt1 = DBHelper.GetDataSet(sql);
                 return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }
-            else
+            if (RoleId == 1 || RoleId == 4)    // 系统用户或政府部门
             {
-                return "";
+                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c1.Name as Bank1,c2.Name as BankName,a.ThisQuota,a.PublishDate,a.[Status] from ZZDFlow a 
+left join Enterprise b on a.EnterpriseId = b.ID
+left join Bank c1 on a.MastBankId = c1.Id
+left join Bank c2 on a.BankId = c2.Id order by a.Id Desc";
+                var dt1 = DBHelper.GetDataSet(sql);
+                return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }
+            return "";
         }
 
         public bool EditZZDStatus(string status, string zzdid)

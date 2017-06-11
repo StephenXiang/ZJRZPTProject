@@ -67,5 +67,18 @@ left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             var reply = JSON.JsonHelper.SerializeObject(dt);
             return reply;
         }
+
+        // 获取所有银行名称
+        public static Dictionary<int, string> GetBanks()
+        {
+            var dic = new Dictionary<int, string>();
+            var sql = @"select Id,Name from Bank";
+            var dt1 = DBHelper.GetDataSet(sql);
+            foreach (DataRow dr in dt1.Rows)
+            {
+                dic.Add(dr.Field<int>("Id"), dr["Name"].ToString());
+            }
+            return dic;
+        }
     }
 }
