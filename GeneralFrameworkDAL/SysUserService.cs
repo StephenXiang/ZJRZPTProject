@@ -183,5 +183,20 @@ and u.UserName='{0}' and u.UserPassWord='{1}' and u.IsEnable=0", userName, pwd);
             }
 
         }
+
+        public static string GetUserDepartment(string user)
+        {
+            var sql = string.Format(@"select (case RolesID 
+when '1' then '管理员' 
+when '2' then (select DepartmentName from SysDepartment where ID=u.DepartmentID)
+when '3' then (select Name from Bank where ID=u.BankId)
+when '4' then (select Name from Enterprise where ID=u.EnterpriseId)
+end) as depart
+from SysUser u where u.UserName='{0}'", user);
+            var dt = DBHelper.GetDataTable(sql, null);
+            if (dt.Rows.Count == 0) return "";
+            return dt.Rows[0][0].ToString();
+        }
     }
 }
+
