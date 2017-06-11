@@ -36,7 +36,7 @@ where  a.MastBankId = '" + BankId + "' order by a.Id Desc";
                 var dt1 = DBHelper.GetDataSet(sql);
                 return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }
-            if (RoleId == 1 || RoleId == 4)    // 系统用户或政府部门
+            if (RoleId == 1 || RoleId == 2)    // 系统用户或政府部门
             {
                 sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c1.Name as Bank1,c2.Name as BankName,a.ThisQuota,a.PublishDate,a.[Status] from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID

@@ -64,7 +64,7 @@ left join Enterprise c on a.EnterpriseId = c.ID where BankIds like '%" + BankId 
                 }
                 return JsonHelper.TableToJson(dtclone.Rows.Count, GetPagedTable(dtclone, page, rows));
             }
-            if (RoleId == 1 || RoleId == 4)    // 系统用户或政府部门
+            if (RoleId == 1 || RoleId == 2)    // 系统用户或政府部门
             {
                 sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
