@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BankInfoManager.cs" />
+    <Compile Include="FinancialProductsApproveManager.cs" />
     <Compile Include="MainBankInfoManager.cs" />
     <Compile Include="EnterpriseManager.cs" />
     <Compile Include="NavMenuManager.cs" />

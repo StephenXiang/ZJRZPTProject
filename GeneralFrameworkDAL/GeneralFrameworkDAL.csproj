@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FinancialProductsApproveService.cs" />
     <Compile Include="Net965808Service.cs" />
     <Compile Include="BankInfoService.cs" />
     <Compile Include="Encrypter.cs" />

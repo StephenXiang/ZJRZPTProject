@@ -51,7 +51,7 @@ values(@BankId,@Title,@QxLow,@QxUp,@DanbaoId,@DaikunLow,@DaikuanUp,@LilvLow,@Lil
 l.[Desc] as Danbao,CAST(CAST(DaikunLow as float) as varchar)+'~'+CAST(CAST(DaikuanUp as float) as varchar) as Edu,
 CAST(CAST(LilvLow as float) as varchar)+'%~'+CAST(CAST(LilvUp as float) as varchar)+'%' as Lilv,
 Dianhua,Jianjie,CONVERT(varchar(30),PublishDate,102) as PublishDate,
-case Status when 0 then '待审批' when 1 then '已审批' end as Status
+case Status when 0 then '待审批' when 1 then '审核已通过' else '审核未通过' end as Status
 from JRCPFlow f
 left join [Lookup] l on l.Id=f.DanbaoId
 where BankId={0} order by f.Id Desc

@@ -12,8 +12,13 @@
     <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         $(function () {
-            $('#RZ_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+            $('#jrcpdetialdiv').hide();
+            loadjrcpdg();
+        });
+
+        function loadjrcpdg() {
+            $('#jrcp_dg').datagrid({
+                url: '../../WebServer/FinancialProductsApproveWebService.ashx?Method=GetJRCPTableJson',
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -26,39 +31,160 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
-                                    { field: 'UserRolesID', title: '产品名称', width: 150, align: 'center' },
-                                    { field: 'UserDepartment', title: '发布银行', width: 150, align: 'center' },
-                                    { field: 'UserID', title: '发布日期', width: 150, align: 'center' },
+                                    { field: 'Id', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'Title', title: '产品名称', width: 150, align: 'center' },
+                                    { field: 'Name', title: '发布银行', width: 150, align: 'center' },
+                                    { field: 'PublishDate', title: '发布日期', width: 150, align: 'center' },
                                     {
-                                        field: 'IsEnable', title: '审核', width: 150, align: 'center', formatter:
+                                        field: 'Status', title: '审核', width: 150, align: 'center', formatter:
                                           function (value, row, index) {
                                               UserID = row.ID;
                                               if (value == 0) {
-                                                  return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
+                                                  return '<a href="#" onclick="EditJRCPStatus(' + row.Id + ')">审核</a>'
                                               } else if (value == 1) {
-                                                  return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
+                                                  return '审核已通过'
+                                              } else if (value == 2) {
+                                                  return '审核未通过'
                                               }
                                           }
                                     }
-                ]]
+                ]],
+                onClickRow: (function (index, row) {
+                    loadJRCPDetialById(row.Id);
+                    $('#jrcpdetialdiv').show();
+                })
             });
-        });
+        }
+
+        function loadJRCPDetialById(id) {
+            var JRCPDETIALJSON;
+            $.ajax({
+                type: "get",
+                async: true,
+                url: "../../WebServer/FinancialProductsApproveWebService.ashx?Method=GetJRCPDetialById",
+                data: { Id: id },
+                dataType: "json",
+                success: function (json) {
+                    JRCPDETIALJSON = json;
+                    $("#labtitle").html(JRCPDETIALJSON["Title"]);
+                    $("#lablilvfanwei").html(JRCPDETIALJSON["lilvfanwei"]);
+                    $("#labdaikuanedu").html(JRCPDETIALJSON["daikuanedu"]);
+                    $("#labdaikuanqixian").html(JRCPDETIALJSON["daikuanqixian"]);
+                    $("#labdanbaofangshi").html(JRCPDETIALJSON["danbaofangshi"]);
+                    $("#lablixiandianhua").html(JRCPDETIALJSON["lianxidianhua"]);
+                    $("#labjianjie").html(JRCPDETIALJSON["jianjie"]);
+                    $("#labtedian").html(JRCPDETIALJSON["tedian"]);
+                    $("#labshiyongkehu").html(JRCPDETIALJSON["shiyongkehu"]);
+                    $("#labtiaojian").html(JRCPDETIALJSON["tiaojian"]);
+                    $("#labtijiaocailiao").html(JRCPDETIALJSON["cailiao"]);
+                }
+            });
+        }
+
+        function EditJRCPStatus(id) {
+            var status = 0;
+            $.messager.defaults = { ok: "是", cancel: "否" };
+            $.messager.confirm('提示', '该银行所发布的金融产品是否审核通过？', function (r) {
+                if (r) {
+                    status = 1;
+                } else {
+                    status = 2;
+                }
+                $.messager.defaults = { ok: "确定", cancel: "取消" };
+                $.ajax({
+                    type: "get",
+                    async: true,
+                    url: "../../WebServer/FinancialProductsApproveWebService.ashx?Method=EditJRCPStatus",
+                    data: { Id: id, status: status },
+                    dataType: "text",
+                    success: function (text) {
+                        if (text == "True") {
+                            loadjrcpdg();
+                        } else {
+                            $.messager.alert('提示', '金融产品审核操作失败，请重试!', "info");
+                        }
+                    }
+                });
+            });
+
+
+
+        }
+
+
+
     </script>
 
 </head>
 <body class="easyui-layout">
     <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
         <div>
-            <table id="RZ_dg" data-options="
+            <table id="jrcp_dg" data-options="
                 iconCls: 'icon-save',
-                buttons: '#RZ_dg-buttons'
+                buttons: '#jrcp_dg-buttons'
             "></table>
         </div>
 
-        <div class="easyui-panel" title="详细信息" style="width:100%;height:420px;padding:10px;">
+        <div id="jrcpdetialdiv" class="easyui-panel" title="详细信息" style="width:100%;padding:10px;">
             <div class="easyui-layout" data-options="fit:true">
+                <table style=" width:80%;border:1px dashed black;" align="center">
+                    <tr>
+                        <td colspan="4" align="center"><h1><label id="labtitle"></label></h1></td>
+                    </tr>
+                    <tr>
+                        <td width="100" align="center"><h3>利率范围：</h3></td>
+                        <td><label id="lablilvfanwei"></label></td>
 
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>贷款额度：</h3></td>
+                        <td><label id="labdaikuanedu"></label></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>贷款期限：</h3></td>
+                        <td><label id="labdaikuanqixian"></label></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>担保方式：</h3></td>
+                        <td><label id="labdanbaofangshi"></label></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>联系电话：</h3></td>
+                        <td><label id="lablixiandianhua"></label></td>
+
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>产品简介：</h3></td>
+                        <td><label id="labjianjie"></label></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>产品特点：</h3></td>
+                        <td>
+                            <label id="labtedian">
+
+                            </label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>适用客户：</h3></td>
+                        <td><label id="labshiyongkehu"></label></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>申请条件：</h3></td>
+                        <td>
+                            <label id="labtiaojian">
+
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center"><h3>提交材料：</h3></td>
+                        <td><label id="labtijiaocailiao">无</label></td>
+                    </tr>
+
+
+                </table>
             </div>
         </div>
     </div>

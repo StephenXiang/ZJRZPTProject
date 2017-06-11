@@ -24,4 +24,19 @@ namespace GeneralFrameworkBLLModel
         public string jrcailiao;
         public byte[] logo;
     }
+
+    public class JRCPReply
+    {
+        public string Title;
+        public string lilvfanwei;
+        public string daikuanedu;
+        public string daikuanqixian;
+        public string danbaofangshi;
+        public string lianxidianhua;
+        public string jianjie;
+        public string tedian;
+        public string shiyongkehu;
+        public string tiaojian;
+        public string cailiao;
+    }
 }
