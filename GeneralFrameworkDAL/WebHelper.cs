@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
 
 namespace GeneralFrameworkDAL
 {
@@ -85,10 +86,10 @@ namespace GeneralFrameworkDAL
 
         public static string Get(string url, string postDataStr)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url + (postDataStr == "" ? "" : "?") + postDataStr);
+            var request = (HttpWebRequest)WebRequest.Create(url + (postDataStr == "" ? "" : 
+                ("?" + string.Format("para={0}", HttpUtility.UrlEncode(Encrypter.EncryptDes(postDataStr))))));
             request.Method = "GET";
             request.ContentType = "text/html;charset=UTF-8";
-
             var response = (HttpWebResponse)request.GetResponse();
             var myResponseStream = response.GetResponseStream();
             if (myResponseStream == null) return "";
@@ -100,7 +101,7 @@ namespace GeneralFrameworkDAL
             return retString;
         }
 
-        public static string Get(string url, Dictionary<string, string> dic, string joiner = "&")
+        public static string Get(string url, Dictionary<string, string> dic, string joiner = ",")
         {
             var builder = new StringBuilder();
             var i = 0;
@@ -111,8 +112,7 @@ namespace GeneralFrameworkDAL
                 builder.AppendFormat("{0}={1}", item.Key, item.Value);
                 i++;
             }
-            var para = Encrypter.EncryptDes(string.Format("para={0}", builder), "");
-            return Get(url, para);
+            return Get(url, builder.ToString());
         }
 
         [Obsolete]

@@ -15,8 +15,7 @@ namespace GeneralFrameworkDAL
         {
             var pwde = Encrypter.EncryptMd5(pwd);
             var para = string.Format("userName={0},password={1}", username, pwde);
-            var parae = Encrypter.EncryptDes(para);
-            var ret = WebHelper.Get(LoginUrl, "para=" + parae);
+            var ret = WebHelper.Get(LoginUrl, para);
             var reto = JsonConvert.DeserializeObject<Net965808Ret>(ret);
             userid = reto.userId;
             return reto.IsOk();
