@@ -43,6 +43,7 @@
     <Compile Include="Bank.cs" />
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseFinanceInfo.cs" />
+    <Compile Include="IndexNewsInfo.cs" />
     <Compile Include="JRCPInfo.cs" />
     <Compile Include="MessageInfo.cs" />
     <Compile Include="NewsInfo.cs" />

@@ -19,5 +19,10 @@ namespace GeneralFrameworkBLL
         {
             return _js.GetJRCPJson(username, page, rows);
         }
+
+        public string GetIndexJRCPInfo()
+        {
+            return _js.GetIndexJRCPInfo();
+        }
     }
 }

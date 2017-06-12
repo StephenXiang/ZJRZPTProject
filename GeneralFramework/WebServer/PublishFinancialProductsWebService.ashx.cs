@@ -86,5 +86,10 @@ namespace GeneralFramework.WebServer
             string UserName = Request["UserName"];
             Response.Write(_pm.GetJRCPLBJson(UserName, page, rows));
         }
+
+        public void GetIndexJRCPInfo()
+        {
+            Response.Write(_pm.GetIndexJRCPInfo());
+        }
     }
 }

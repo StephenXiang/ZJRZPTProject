@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using GeneralFrameworkBLLModel;
+using GeneralFrameworkDAL.JSON;
 
 namespace GeneralFrameworkDAL
 {
@@ -59,6 +60,30 @@ where BankId={0} order by f.Id Desc
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JSON.JsonHelper.GetPagedTable(dt, page, rows));
             return reply;
+        }
+
+        public string GetIndexJRCPInfo()
+        {
+            List<IndexNewsInfo> list = new List<IndexNewsInfo>();
+            var sql = @"select top(6) b.Name,a.Id,Title,CONVERT(varchar(5), PublishDate, 110) as createdate from JRCPFlow a 
+left join Bank b on a.BankId = b.Id
+ where Status = 1 order by a.Id desc";
+            var dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow dr = dt.Rows[i];
+                    IndexNewsInfo ini = new IndexNewsInfo()
+                    {
+                        id = int.Parse(dr["Id"].ToString()),
+                        Title = dr["Name"] + "--" + dr["Title"].ToString(),
+                        date = dr["createdate"].ToString()
+                    };
+                    list.Add(ini);
+                }
+            }
+            return JsonHelper.SerializeObject(list);
         }
     }
 }

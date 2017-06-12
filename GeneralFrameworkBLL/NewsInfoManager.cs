@@ -31,5 +31,9 @@ namespace GeneralFrameworkBLL
         {
             return _ns.GetNewsContent(newsId);
         }
+        public string GetIndexNewsInfo(string newstype)
+        {
+            return _ns.GetIndexNewsInfo(newstype);
+        }
     }
 }

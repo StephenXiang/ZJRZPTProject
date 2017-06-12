@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>镇江市融资服务平台</title>
+<link rel="stylesheet" type="text/css" href="css/index.css" />
+<script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+</head>
+
+<body>
+<div class="main_head">
+	<div class="head">
+    	<div class="head_l">
+        	<div class="headpic"><img  src="images/12_388.png"/></div>
+            <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
+        </div>
+        <div class="head_r">
+        	<div class="head_rd">
+            	<input  type="text" class="head_rt" id="search" placeholder="请输入关键词"/>
+                <input  type="submit" class="searchbtn" value="搜索"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main_slider">
+	<div class="sliderc">
+    	<div class="slider_font"><img  src="images/font.png"/></div>
+    </div>
+</div>
+
+<div class="main_menu">
+	<div class="menu">
+    	<div class="menusin"><a href="index.html">首页</a></div>
+        <div class="menusin"><a href="list.html">政策资讯</a></div>
+        <div class="menusin"><a href="#">通知公告</a></div>
+        <div class="menusin"><a href="products.html">金融产品</a></div>
+        <div class="menusin"><a href="bank.html">合作银行</a></div>
+        <div class="menusin"><a href="#">企业风采</a></div>
+    </div>
+</div>
+
+
+<div class="main_relative">
+<div class="main">
+
+	<div class="listhead">
+    	<div class="listhl">金融产品</div>
+        <div class="listhr">
+        	<div class="listhrp"><img  src="images/home.png"/></div>
+            <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">金融产品</font></div>
+        </div>
+    </div>
+    
+    <div class="pro_split">
+            <div class="pro_jg">
+                <div class="proname">机构名称：</div>
+                <div class="protext"><input  type="text" id="jg" name="jg" class="proinput" placeholder="支持模糊查询"/></div>
+            </div>
+            <div class="pro_jg">
+                <div class="proname">产品名称：</div>
+                <div class="protext"><input  type="text" id="jg" name="jg" class="proinput" placeholder="支持模糊查询"/></div>
+            </div>
+            <div class="probtn"><input  type="submit" value="搜索" class="prosub"/></div>        
+    </div>
+    
+    <div class="main_pro">
+        <div class="prosx">
+            <div class="prosxh">产品筛选</div>
+            <div class="prohsin">
+            	<div class="prosina">贷款渠道：</div>
+                <a href="#"><div class="prosinc limit">不限</div></a>
+                <a href="#"><div class="prosinb nomal">银行</div></a>
+                <a href="#"><div class="prosinb limit">担保公司</div></a>
+                <a href="#"><div class="prosinb nomal">保险公司</div></a>
+                <a href="#"><div class="prosinb nomal">交易所</div></a>
+                <a href="#"><div class="prosinb nomal">金融租赁</div></a>
+                
+                <foreach $list as $v>
+                <a href="products.php?qd=$v['id']"><div class="prosinb <if condition="$qd=$v['id']">limit</else>nomal</if>">金融租赁</div></a>
+                </foreach>
+                
+            </div>
+            <div class="prohsin">
+            	<div class="prosina">贷款期限：</div>
+                <a href="#"><div class="prosinc limit">不限</div></a>
+                <a href="#"><div class="prosinb nomal">3个月及以下</div></a>
+                <a href="#"><div class="prosinb limit">6个月及以下</div></a>
+                <a href="#"><div class="prosinb nomal">12个月及以下</div></a>
+                <a href="#"><div class="prosinb nomal">36个月及以下</div></a>
+                <a href="#"><div class="prosinb nomal">36个月及以上</div></a>
+            </div>
+            <div class="prohsin">
+            	<div class="prosina">担保方式：</div>
+                <a href="#"><div class="prosinc limit">不限</div></a>
+                <a href="#"><div class="prosinb nomal">抵押</div></a>
+                <a href="#"><div class="prosinb nomal">质押</div></a>
+                <a href="#"><div class="prosinb nomal">信保基金</div></a>
+                <a href="#"><div class="prosinb nomal">一般保证</div></a>
+                <a href="#"><div class="prosinb limit">信用</div></a>
+            </div>
+            <div class="prohsin">
+            	<div class="prosina">贷款额度：</div>
+                <a href="#"><div class="prosinc limit">不限</div></a>
+                <a href="#"><div class="prosinb nomal">100万及以下</div></a>
+                <a href="#"><div class="prosinb nomal">200万及以下</div></a>
+                <a href="#"><div class="prosinb nomal">300万及以下</div></a>
+                <a href="#"><div class="prosinb nomal">500万及以下</div></a>
+                <a href="#"><div class="prosinb limit">1000万及以下</div></a>
+                <a href="#"><div class="prosinb nomal">1000万及以上</div></a>
+                <a href="#"><div class="prosinb nomal">其他金额</div></a>
+            </div>
+            <div class="prototal">
+            	<div class="totalline"></div>
+                <div class="totalm">共找到<b id="count">1233</b>个结果</div>
+                <div class="totalline"></div>
+            </div>
+        </div>
+        
+        <div class="prolist">
+        	<div class="prolistl">
+            	<div class="probank"><img  src="images/probank01.jpg"/></div>
+                <div class="profont">
+                	<div class="profontu">常熟农商行-燕谷信保贷</div>
+					<div class="profontd">参考利率范围： <font color="#e21739">4.32%-6.0%</font></div>
+                </div>
+            </div>
+            <div class="prolistr">
+            	<div class="prolistrl">
+                	<div class="prolistdk">贷款额度：<font color="#e21739">10万元-500万元</font></div>
+                    <div class="prolistdb">担保方式： <font color="#e21739">信保基金</font></div>
+                    <div class="prolistqx">贷款期限：<font color="#e21739">6个月-12个月</font></div>
+                </div>
+                <div class="prolistrr">
+                	<a href="products_view.html"><div class="prolistbtn">详情</div></a>
+                    <div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img  src="images/star5.png"/></div></div>
+                    <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>
+                </div>
+            </div>
+        </div>
+        <div class="prolist">
+        	<div class="prolistl">
+            	<div class="probank"><img  src="images/probank01.jpg"/></div>
+                <div class="profont">
+                	<div class="profontu">常熟农商行-燕谷信保贷</div>
+					<div class="profontd">参考利率范围： <font color="#e21739">4.32%-6.0%</font></div>
+                </div>
+            </div>
+            <div class="prolistr">
+            	<div class="prolistrl">
+                	<div class="prolistdk">贷款额度：<font color="#e21739">10万元-500万元</font></div>
+                    <div class="prolistdb">担保方式： <font color="#e21739">信保基金</font></div>
+                    <div class="prolistqx">贷款期限：<font color="#e21739">6个月-12个月</font></div>
+                </div>
+                <div class="prolistrr">
+                	<a href="products_view.html"><div class="prolistbtn">详情</div></a>
+                    <div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img  src="images/star5.png"/></div></div>
+                    <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>
+                </div>
+            </div>
+        </div>
+        <div class="prolist">
+        	<div class="prolistl">
+            	<div class="probank"><img  src="images/probank01.jpg"/></div>
+                <div class="profont">
+                	<div class="profontu">常熟农商行-燕谷信保贷</div>
+					<div class="profontd">参考利率范围： <font color="#e21739">4.32%-6.0%</font></div>
+                </div>
+            </div>
+            <div class="prolistr">
+            	<div class="prolistrl">
+                	<div class="prolistdk">贷款额度：<font color="#e21739">10万元-500万元</font></div>
+                    <div class="prolistdb">担保方式： <font color="#e21739">信保基金</font></div>
+                    <div class="prolistqx">贷款期限：<font color="#e21739">6个月-12个月</font></div>
+                </div>
+                <div class="prolistrr">
+                	<a href="products_view.html"><div class="prolistbtn">详情</div></a>
+                    <div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img  src="images/star5.png"/></div></div>
+                    <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>
+                </div>
+            </div>
+        </div>
+        <div class="prolist">
+        	<div class="prolistl">
+            	<div class="probank"><img  src="images/probank01.jpg"/></div>
+                <div class="profont">
+                	<div class="profontu">常熟农商行-短期流动资金贷款</div>
+					<div class="profontd">参考利率范围： <font color="#e21739">4.32%-6.0%</font></div>
+                </div>
+            </div>
+            <div class="prolistr">
+            	<div class="prolistrl">
+                	<div class="prolistdk">贷款额度：<font color="#e21739">10万元-500万元</font></div>
+                    <div class="prolistdb">担保方式： <font color="#e21739">信保基金</font></div>
+                    <div class="prolistqx">贷款期限：<font color="#e21739">6个月-12个月</font></div>
+                </div>
+                <div class="prolistrr">
+                	<a href="products_view.html"><div class="prolistbtn">详情</div></a>
+                    <div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img  src="images/star5.png"/></div></div>
+                    <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>
+                </div>
+            </div>
+        </div>
+        <div class="prolist">
+        	<div class="prolistl">
+            	<div class="probank"><img  src="images/probank01.jpg"/></div>
+                <div class="profont">
+                	<div class="profontu">常熟农商行-燕谷信保贷</div>
+					<div class="profontd">参考利率范围： <font color="#e21739">4.32%-6.0%</font></div>
+                </div>
+            </div>
+            <div class="prolistr">
+            	<div class="prolistrl">
+                	<div class="prolistdk">贷款额度：<font color="#e21739">10万元-500万元</font></div>
+                    <div class="prolistdb">担保方式： <font color="#e21739">信保基金</font></div>
+                    <div class="prolistqx">贷款期限：<font color="#e21739">6个月-12个月</font></div>
+                </div>
+                <div class="prolistrr">
+                	<a href="products_view.html"><div class="prolistbtn">详情</div></a>
+                    <div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img  src="images/star5.png"/></div></div>
+                    <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        <div class="clear"></div>
+        
+        <div class="listpage">
+            <div class="page">
+                <a href="#">首页</a>
+                 <a href="#">上一页</a>
+                <a href="#">1</a>
+                <span class="current">2</span>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">下一页</a>
+                <a href="#">尾页</a>
+            </div>
+        </div>	
+        
+        
+        
+    </div>
+    
+
+
+</div>
+</div>
+
+
+<div class="foot">
+	<div class="footcon">
+    	<div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
+        <div class="footsin">承办方：镇江市中小企业服务中心</div>
+        <div class="footsin">服务热线：965808</div>
+        <div class="footsin">Copyright©2017 All Rights Reserved</div>
+        <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+    </div>
+</div>
+
+
+<a href="message.html"><div class="kf">
+	<div class="kfbg"><img  src="images/liuyan.png"/></div>
+    <div class="kfcon">在线留言</div>
+</div>
+</a>
+
+<!--登录弹窗-->
+<div class="ui-mask" id="mask" onselectstart="return false"></div>
+
+<div class="ui-dialog" id="dialogMove" onselectstart='return false;' style="display:none;">
+	<div class="ui-dialog-title" id="dialogDrag"  onselectstart="return false;" >
+		
+		登录通行证
+
+		<a class="ui-dialog-closebutton" href="javascript:hideDialog();"></a>
+
+	</div>
+	<div class="ui-dialog-content">
+		<div class="ui-dialog-l40 ui-dialog-pt15">
+			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+		</div>
+		<div class="ui-dialog-l40 ui-dialog-pt15">
+			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+		</div>
+		<div class="ui-dialog-l40">
+		
+		</div>
+		<div>
+			<a class="ui-dialog-submit" href="#" >登录</a>
+		</div>
+		<div class="ui-dialog-l40">
+			<a href="#">立即注册</a>
+		</div>
+	</div>
+</div>
+
+<!--注册弹窗-->
+<div class="ui-dialog" id="reg" onselectstart='return false;' style="display:none;">
+	<div class="ui-dialog-title" id="dialogDragreg"  onselectstart="return false;" >
+		
+		注册通行证
+
+		<a class="ui-dialog-closebutton" href="javascript:hideDialogReg();"></a>
+
+	</div>
+	<div class="ui-dialog-content">
+		<div class="ui-dialog-l40 ui-dialog-pt15">
+			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+		</div>
+		<div class="ui-dialog-l40 ui-dialog-pt15">
+			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+		</div>
+        <div class="ui-dialog-l40 ui-dialog-pt15">
+			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
+		</div>
+		<div class="ui-dialog-l40">
+		
+		</div>
+		<div>
+			<a class="ui-dialog-submit" href="#" >注册</a>
+		</div>
+		<div class="ui-dialog-l40">
+			<a href="#">立即登录</a>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="js/login.js" language="javascript"></script>
+
+
+</body>
+</html>

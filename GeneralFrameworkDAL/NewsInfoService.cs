@@ -2,6 +2,7 @@
 using System.Data;
 using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
+using System.Collections.Generic;
 
 namespace GeneralFrameworkDAL
 {
@@ -58,6 +59,37 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
                 NewsContent = dr["NewsContent"].ToString(),
             };
             return newsContent;
+        }
+
+        public string GetIndexNewsInfo(string NewsType)
+        {
+            int count = 0;
+            if (NewsType == "zc")
+            {
+                count = 6;
+            }
+            else
+            {
+                count = 8;
+            }
+            List<IndexNewsInfo> list = new List<IndexNewsInfo>();
+            var sql = "select top(" + count + ") ID,NewsTitle, CONVERT(varchar(5), Createdate, 110) as createdate from NewsInFo where NewsType='" + NewsType + "' order by ID desc";
+            var dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow dr = dt.Rows[i];
+                    IndexNewsInfo ini = new IndexNewsInfo()
+                    {
+                        id = int.Parse(dr["ID"].ToString()),
+                        Title = dr["NewsTitle"].ToString(),
+                        date = dr["createdate"].ToString()
+                    };
+                    list.Add(ini);
+                }
+            }
+            return JsonHelper.SerializeObject(list);
         }
     }
 }

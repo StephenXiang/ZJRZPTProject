@@ -114,5 +114,11 @@ namespace GeneralFramework.WebServer
             var newsId = int.Parse(Request["newsId"]);
             Response.Write(_nm.DelNews(newsId));
         }
+
+        public void GetIndexNewsInfo()
+        {
+            var newstype = Request["NewsType"];
+            Response.Write(_nm.GetIndexNewsInfo(newstype));
+        }
     }
 }
