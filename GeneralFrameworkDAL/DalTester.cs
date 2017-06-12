@@ -72,5 +72,16 @@ SELECT @@IDENTITY";
             string userid;
             ns.Login("yinweiwen", "Zxc123456", out userid);
         }
+
+        [Test]
+        public void TestDeEncrypter()
+        {
+            var secret = @"MbT0uM2xs54lhPrwW/Z6DzOlyk0Dw39cUeHdxzi8qEz8Jf53RHivZ/g/8EXgObzEOlBwc00eQ2X7VUYwzNs4Rg==";
+            var para = Encrypter.DecryptDes(secret);
+            Console.WriteLine(para);
+            secret = @"d3eb9a9233e52948740d7eb8c3062d14";
+            para = Encrypter.EncryptMd5(secret);
+            Console.WriteLine(para);
+        }
     }
 }
