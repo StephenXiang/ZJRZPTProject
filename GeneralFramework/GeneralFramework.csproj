@@ -247,7 +247,7 @@
     <Content Include="HtmlWebSite\images\wyzz.png" />
     <Content Include="HtmlWebSite\images\zz1.png" />
     <Content Include="HtmlWebSite\images\zz2.png" />
-    <Content Include="HtmlWebSite\index.html" />
+    <Content Include="index.html" />
     <Content Include="HtmlWebSite\js\jquery-1.9.1.min.js" />
     <Content Include="HtmlWebSite\js\login.js" />
     <Content Include="HtmlWebSite\list.html" />
@@ -1435,6 +1435,7 @@
     <Content Include="WebServer\RZExamineApproveWebService.ashx" />
     <Content Include="WebServer\PublishZCGGWebService.ashx" />
     <Content Include="WebServer\FinancialProductsApproveWebService.ashx" />
+    <None Include="Properties\PublishProfiles\配置文件1.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
