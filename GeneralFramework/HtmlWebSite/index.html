@@ -8,6 +8,7 @@
     <script type="text/javascript">
         $(function () {
             loadIndexNewsInfo();
+            loadIndexTJInfo();
         });
 
         function loadIndexNewsInfo() {
@@ -75,10 +76,30 @@
                     }
                 }
             });
+        }
+        function loadIndexTJInfo() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: true,
+                url: "../../WebServer/PublishRZWebService.ashx?Method=GetIndexTJJson",
+                success: function (json) {
+                    var TJJson = json;
+                    $('#labrzxqsl').html(TJJson["fbrzsl"]);
+                    $('#labrzxqje').html(TJJson["fbrzje"]);
+                    $('#labdjrzxqsl').html(TJJson["djrzsl"]);
+                    $('#labdjrzdxqje').html(TJJson["djrzje"]);
+                    $('#labdjrzcgsl').html(TJJson["djcgsl"]);
+                    $('#labdjrzcgje').html(TJJson["djcgje"]);
+                    $('#labzzdxqsl').html(TJJson["fbzzdsl"]);
+                    $('#labzzdxqje').html(TJJson["fbzzdje"]);
+                    $('#labdjzzdxqsl').html(TJJson["djzzdsl"]);
+                    $('#labdjzzddxqje').html(TJJson["djzzdje"]);
+                    $('#labdjzzdcgsl').html(TJJson["djzzdcgsl"]);
+                    $('#labdjzzdcgje').html(TJJson["djzzdcgje"]);
 
-
-
-
+                }
+            });
         }
     </script>
 </head>
@@ -300,9 +321,9 @@
                                     <div class="b5sinlf">发布融资需求</div>
                                 </div>
                                 <div class="b5sinr">
-                                    <div class="b5sinra">笔数：<font color="#e6a4b6">280</font></div>
+                                    <div class="b5sinra">笔数：<font color="#e6a4b6"><label id="labrzxqsl">290</label></font></div>
                                     <div class="b5sinra">金额（万元）：</div>
-                                    <div class="b5sinra"><font color="#e6a4b6">280,989,00</font></div>
+                                    <div class="b5sinra"><font color="#e6a4b6"><label id="labrzxqje">280,989,00</label></font></div>
                                 </div>
                             </div>
                             <div class="b5sind">
@@ -311,9 +332,9 @@
                                     <div class="b5sinlf">对接中融资需求</div>
                                 </div>
                                 <div class="b5sinr">
-                                    <div class="b5sinra">笔数：<font color="#e6a4b6">280</font></div>
+                                    <div class="b5sinra">笔数：<font color="#e6a4b6"><label id="labdjrzxqsl">280</label></font></div>
                                     <div class="b5sinra">金额（万元）：</div>
-                                    <div class="b5sinra"><font color="#e6a4b6">280,989,00</font></div>
+                                    <div class="b5sinra"><font color="#e6a4b6"><label id="labdjrzdxqje">280,989,00</label></font></div>
                                 </div>
                             </div>
                             <div class="b5sind">
@@ -322,9 +343,9 @@
                                     <div class="b5sinlf">对接成功</div>
                                 </div>
                                 <div class="b5sinr">
-                                    <div class="b5sinra">笔数：<font color="#e6a4b6">280</font></div>
+                                    <div class="b5sinra">笔数：<font color="#e6a4b6"><label id="labdjrzcgsl">280</label></font></div>
                                     <div class="b5sinra">金额（万元）：</div>
-                                    <div class="b5sinra"><font color="#e6a4b6">280,989,00</font></div>
+                                    <div class="b5sinra"><font color="#e6a4b6"><label id="labdjrzcgje">280,989,00</label></font></div>
                                 </div>
                             </div>
                         </div>
@@ -337,9 +358,9 @@
                                     <div class="b5sinlf">发布周转贷需求</div>
                                 </div>
                                 <div class="b5sinr">
-                                    <div class="b5sinra">笔数：<font color="#e6a4b6">280</font></div>
+                                    <div class="b5sinra">笔数：<font color="#e6a4b6"><label id="labzzdxqsl">280</label></font></div>
                                     <div class="b5sinra">金额（万元）：</div>
-                                    <div class="b5sinra"><font color="#e6a4b6">280,989,00</font></div>
+                                    <div class="b5sinra"><font color="#e6a4b6"><label id="labzzdxqje">280,989,00</label></font></div>
                                 </div>
                             </div>
                             <div class="b5sind">
@@ -348,9 +369,9 @@
                                     <div class="b5sinlf">对接中周转贷需求</div>
                                 </div>
                                 <div class="b5sinr">
-                                    <div class="b5sinra">笔数：<font color="#e6a4b6">280</font></div>
+                                    <div class="b5sinra">笔数：<font color="#e6a4b6"><label id="labdjzzdxqsl">280</label></font></div>
                                     <div class="b5sinra">金额（万元）：</div>
-                                    <div class="b5sinra"><font color="#e6a4b6">280,989,00</font></div>
+                                    <div class="b5sinra"><font color="#e6a4b6"><label id="labdjzzddxqje">280,989,00</label></font></div>
                                 </div>
                             </div>
                             <div class="b5sind">
@@ -359,9 +380,9 @@
                                     <div class="b5sinlf">对接成功</div>
                                 </div>
                                 <div class="b5sinr">
-                                    <div class="b5sinra">笔数：<font color="#e6a4b6">280</font></div>
+                                    <div class="b5sinra">笔数：<font color="#e6a4b6"><label id="labdjzzdcgsl">280</label></font></div>
                                     <div class="b5sinra">金额（万元）：</div>
-                                    <div class="b5sinra"><font color="#e6a4b6">280,989,00</font></div>
+                                    <div class="b5sinra"><font color="#e6a4b6"><label id="labdjzzdcgje">280,989,00</label></font></div>
                                 </div>
                             </div>
                         </div>

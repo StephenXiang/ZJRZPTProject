@@ -95,13 +95,18 @@ namespace GeneralFramework.WebServer
             string UserName = Request["UserName"];
             int page = int.Parse(Request["page"].ToString());
             int rows = int.Parse(Request["rows"].ToString());
-            Response.Write(_pm.GetRZLBJson(UserName,page,rows));
+            Response.Write(_pm.GetRZLBJson(UserName, page, rows));
         }
 
         public void GetRZBankstr()
         {
             string BankIds = Request["BankIds"];
             Response.Write(_pm.GetRZBankstr(BankIds));
+        }
+
+        public void GetIndexTJJson()
+        {
+            Response.Write(_pm.GetIndexTJJson());
         }
     }
 }

@@ -88,6 +88,92 @@ where b.EnterpriseId = {0} order by b.Id Desc", ent);
             }
         }
 
+        public string GetIndexTJJson()
+        {
+            DataTable rzdt = new DataTable();
+            DataTable zzddt = new DataTable();
+            DataRow dr;
+            int fbrzsl = 0;
+            double fbrzje = 0;
+            int djrzsl = 0;
+            double djrzje = 0;
+            int djcgsl = 0;
+            double djcgje = 0;
+
+            int fbzzdsl = 0;
+            double fbzzdje = 0;
+            int djzzdsl = 0;
+            double djzzdje = 0;
+            int djzzdcgsl = 0;
+            double djzzdcgje = 0;
+
+            var RZsql = "select * from RZFlow";
+            rzdt = DBHelper.GetDataSet(RZsql);
+            fbrzsl = rzdt.Rows.Count;
+            RZsql = "select SUM(Quota) from RZDemandInfo";
+            rzdt = DBHelper.GetDataSet(RZsql);
+            dr = rzdt.Rows[0];
+            fbrzje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
+
+            RZsql = "select * from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status in (1,2)";
+            rzdt = DBHelper.GetDataSet(RZsql);
+            djrzsl = rzdt.Rows.Count;
+            RZsql = "select SUM(Quota) from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status in (1,2)";
+            rzdt = DBHelper.GetDataSet(RZsql);
+            dr = rzdt.Rows[0];
+            djrzje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
+
+            RZsql = "select * from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status = 3";
+            rzdt = DBHelper.GetDataSet(RZsql);
+            djcgsl = rzdt.Rows.Count;
+            RZsql = "select SUM(Quota) from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status = 3";
+            rzdt = DBHelper.GetDataSet(RZsql);
+            dr = rzdt.Rows[0];
+            djcgje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
+
+            var ZZDsql = "select * from ZZDFlow";
+            zzddt = DBHelper.GetDataSet(ZZDsql);
+            fbzzdsl = zzddt.Rows.Count;
+            ZZDsql = "select SUM(ThisQuota) from ZZDFlow";
+            zzddt = DBHelper.GetDataSet(ZZDsql);
+            dr = zzddt.Rows[0];
+            fbzzdje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
+
+            ZZDsql = "select * from ZZDFlow where Status in (1,2)";
+            zzddt = DBHelper.GetDataSet(ZZDsql);
+            djzzdsl = zzddt.Rows.Count;
+            ZZDsql = "select SUM(ThisQuota) from ZZDFlow where Status in (1,2)";
+            zzddt = DBHelper.GetDataSet(ZZDsql);
+            dr = zzddt.Rows[0];
+            djzzdje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
+
+            ZZDsql = "select * from ZZDFlow where Status = 3";
+            zzddt = DBHelper.GetDataSet(ZZDsql);
+            djzzdcgsl = zzddt.Rows.Count;
+            ZZDsql = "select SUM(ThisQuota) from ZZDFlow where Status = 3";
+            zzddt = DBHelper.GetDataSet(ZZDsql);
+            dr = zzddt.Rows[0];
+            djzzdcgje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
+
+            var jsonData = new IndexTJInfo
+            {
+                fbrzsl = fbrzsl.ToString(),
+                fbrzje = fbrzje.ToString("C"),
+                djrzsl = djrzsl.ToString(),
+                djrzje = djrzje.ToString("C"),
+                djcgsl = djcgsl.ToString(),
+                djcgje = djcgje.ToString("C"),
+                fbzzdsl = fbzzdsl.ToString(),
+                fbzzdje = fbzzdje.ToString("C"),
+                djzzdsl = djzzdsl.ToString(),
+                djzzdje = djzzdje.ToString("C"),
+                djzzdcgsl = djzzdcgsl.ToString(),
+                djzzdcgje = djzzdcgje.ToString("C")
+            };
+
+            return JsonHelper.SerializeObject(jsonData);
+        }
+
 
     }
 }

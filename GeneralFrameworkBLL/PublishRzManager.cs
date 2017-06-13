@@ -28,5 +28,9 @@ namespace GeneralFrameworkBLL
         {
             return _prs.GetRZBankstr(BankIds);
         }
+        public string GetIndexTJJson()
+        {
+            return _prs.GetIndexTJJson();
+        }
     }
 }
