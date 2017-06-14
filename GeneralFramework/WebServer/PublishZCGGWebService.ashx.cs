@@ -120,5 +120,13 @@ namespace GeneralFramework.WebServer
             var newstype = Request["NewsType"];
             Response.Write(_nm.GetIndexNewsInfo(newstype));
         }
+
+        public void GetZCNewsList()
+        {
+            var newstype = Request["NewsType"];
+            var PageIndex = int.Parse(Request["PageIndex"]);
+            var PageSize = int.Parse(Request["PageSize"]);
+            Response.Write(_nm.GetZCNewsList(newstype, PageIndex, PageSize));
+        }
     }
 }

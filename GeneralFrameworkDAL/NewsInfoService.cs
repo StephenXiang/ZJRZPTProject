@@ -91,5 +91,12 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
             }
             return JsonHelper.SerializeObject(list);
         }
+
+        public string GetZCNewsList(string newstype, int PageIndex, int PageSize)
+        {
+            var sql = "select NewsTitle,NewsContent,Createdate from NewsInFo where NewsType ='" + newstype + "' order by Createdate desc";
+            var dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.SerializeObject(dt);
+        }
     }
 }

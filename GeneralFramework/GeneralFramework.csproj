@@ -250,7 +250,7 @@
     <Content Include="index.html" />
     <Content Include="HtmlWebSite\js\jquery-1.9.1.min.js" />
     <Content Include="HtmlWebSite\js\login.js" />
-    <Content Include="HtmlWebSite\list.html" />
+    <Content Include="HtmlWebSite\zclist.html" />
     <Content Include="HtmlWebSite\message.html" />
     <Content Include="HtmlWebSite\products.html" />
     <Content Include="HtmlWebSite\products_view.html" />
