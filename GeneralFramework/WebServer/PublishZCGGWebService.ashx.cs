@@ -128,5 +128,11 @@ namespace GeneralFramework.WebServer
             var PageSize = int.Parse(Request["PageSize"]);
             Response.Write(_nm.GetZCNewsList(newstype, PageIndex, PageSize));
         }
+
+        public void GetZCNewsDetail()
+        {
+            var Id = int.Parse(Request["Id"]);
+            Response.Write(_nm.GetZCNewsDetail(Id));
+        }
     }
 }

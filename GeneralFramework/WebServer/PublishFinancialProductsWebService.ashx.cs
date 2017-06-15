@@ -91,5 +91,16 @@ namespace GeneralFramework.WebServer
         {
             Response.Write(_pm.GetIndexJRCPInfo());
         }
+
+        public void GetJRCPList()
+        {
+            string dkqd = null; string dkqx = null; string dbfs = null; string dked = null;
+            Response.Write(_pm.GetJRCPList());
+        }
+        public void GetJRCPById()
+        {
+            int id = int.Parse(Request["jrcpid"].ToString());
+            Response.Write(_pm.GetJRCPById(id));
+        }
     }
 }

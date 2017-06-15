@@ -24,5 +24,13 @@ namespace GeneralFrameworkBLL
         {
             return _js.GetIndexJRCPInfo();
         }
+        public string GetJRCPList(string dkqd = null, string dkqx = null, string dbfs = null, string dked = null)
+        {
+            return _js.GetJRCPList(dkqd, dkqx, dbfs, dked);
+        }
+        public string GetJRCPById(int id)
+        {
+            return _js.GetJRCPById(id);
+        }
     }
 }

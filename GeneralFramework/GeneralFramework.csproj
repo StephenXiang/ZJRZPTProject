@@ -207,6 +207,8 @@
     <Content Include="HtmlWebSite\bank.html" />
     <Content Include="HtmlWebSite\bank_view.html" />
     <Content Include="HtmlWebSite\css\index.css" />
+    <Content Include="HtmlWebSite\gglist.html" />
+    <Content Include="HtmlWebSite\ggview.html" />
     <Content Include="HtmlWebSite\images\12_388.png" />
     <Content Include="HtmlWebSite\images\bank01.png" />
     <Content Include="HtmlWebSite\images\bank02.png" />
@@ -254,7 +256,7 @@
     <Content Include="HtmlWebSite\message.html" />
     <Content Include="HtmlWebSite\products.html" />
     <Content Include="HtmlWebSite\products_view.html" />
-    <Content Include="HtmlWebSite\view.html" />
+    <Content Include="HtmlWebSite\zcview.html" />
     <Content Include="images\htbanner.jpg" />
     <Content Include="images\timg.jpg" />
     <Content Include="jquery-easyui-1.5.1\ajaxfileupload.js" />

@@ -85,5 +85,43 @@ left join Bank b on a.BankId = b.Id
             }
             return JsonHelper.SerializeObject(list);
         }
+
+        public string GetJRCPList(string dkqd = null, string dkqx = null, string dbfs = null, string dked = null)
+        {
+            if (!string.IsNullOrEmpty(dkqd))
+            {
+
+            }
+            if (!string.IsNullOrEmpty(dkqx))
+            {
+
+            }
+            if (!string.IsNullOrEmpty(dbfs))
+            {
+
+            }
+            if (!string.IsNullOrEmpty(dked))
+            {
+
+            }
+            var sql = @"select a.Id,c.BankName,a.Title,a.LilvLow,a.LilvUp,a.DaikunLow,a.DaikuanUp,a.DanbaoId,d.[Desc],a.QxLow,a.QxUp from JRCPFlow a 
+left join Bank b on a.BankId = b.Id
+left join MainBank c on b.MainBankId = c.Id
+left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a.DanbaoId = d.Id
+ where a.Status  = 1 order by a.PublishDate desc";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.SerializeObject(dt);
+        }
+
+        public string GetJRCPById(int id)
+        {
+            var sql = @"select BankId,b.Name,Title, a.LilvLow,a.LilvUp,a.DaikunLow,a.DaikuanUp,a.DanbaoId,d.[Desc],a.QxLow,a.QxUp,a.Jianjie,a.Tedian,a.Kehu,a.Tiaojian,a.Cailiao,Dianhua
+  from JRCPFlow a 
+ left join Bank b on a.BankId = b.Id
+ left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a.DanbaoId = d.Id
+ where a.Id = '" + id + "'";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.SerializeObject(dt);
+        }
     }
 }

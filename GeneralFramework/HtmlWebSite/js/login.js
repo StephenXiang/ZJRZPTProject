@@ -134,3 +134,30 @@
 $("#closeAd1").click(function(){	
   $("#newpro").hide();
 });
+
+
+
+$(".prosinb").click(function(){	
+  $(".prosinb").removeClass("limit");
+  $(".prosinb").addClass("nomal");
+  $(this).removeClass("nomal");
+  $(this).addClass("limit");
+});
+$(".prosinc").click(function(){	
+  $(".prosinc").removeClass("limit");
+  $(".prosinc").addClass("nomal");
+  $(this).removeClass("nomal");
+  $(this).addClass("limit");
+});
+$(".prosind").click(function(){	
+  $(".prosind").removeClass("limit");
+  $(".prosind").addClass("nomal");
+  $(this).removeClass("nomal");
+  $(this).addClass("limit");
+});
+$(".prosine").click(function(){	
+  $(".prosine").removeClass("limit");
+  $(".prosine").addClass("nomal");
+  $(this).removeClass("nomal");
+  $(this).addClass("limit");
+});

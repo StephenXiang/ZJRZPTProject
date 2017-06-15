@@ -40,5 +40,10 @@ namespace GeneralFrameworkBLL
         {
             return _ns.GetZCNewsList(newstype, PageIndex, PageSize);
         }
+
+        public string GetZCNewsDetail(int Id)
+        {
+            return _ns.GetZCNewsDetail(Id);
+        }
     }
 }

@@ -19,7 +19,7 @@
                 type: "get",
                 dataType: "json",
                 async: true,
-                data: { NewsType: "zc", PageIndex: PageIndex, PageSize: PageSize },
+                data: { NewsType: "gg", PageIndex: PageIndex, PageSize: PageSize },
                 url: "../../WebServer/PublishZCGGWebService.ashx?Method=GetZCNewsList",
                 success: function (json) {
                     var ZCNewsInfoJson = json;
@@ -37,7 +37,7 @@
                             }
                             $('#zcNewsDiv' + i + '').show();
                             $('#zcNews' + i + '').text(ZCNewsInfoJson[i].NewsTitle);
-                            $('#zcNews' + i + '').attr("href", "zcview.html?id=" + ZCNewsInfoJson[i].Id);
+                            $('#zcNews' + i + '').attr("href", "ggview.html?id=" + ZCNewsInfoJson[i].Id);
                             $('#zcNewsContent' + i + '').html(NewsContent);
                             $('#zcNewsCreateDate' + i + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
                         }
@@ -63,7 +63,7 @@
                             j = i - ((PageIndex - 1) * PageSize)
                             $('#zcNewsDiv' + j + '').show();
                             $('#zcNews' + j + '').text(ZCNewsInfoJson[i].NewsTitle);
-                            $('#zcNews' + j + '').attr("href", "zcview.html?id=" + ZCNewsInfoJson[i].Id);
+                            $('#zcNews' + j + '').attr("href", "ggview.html?id=" + ZCNewsInfoJson[i].Id);
                             $('#zcNewsContent' + j + '').html(NewsContent);
                             $('#zcNewsCreateDate' + j + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
                         }
@@ -165,7 +165,7 @@
         <div class="menu">
             <div class="menusin"><a href="../index.html">首页</a></div>
             <div class="menusin"><a href="../HtmlWebSite/zclist.html">政策资讯</a></div>
-            <div class="menusin"><a href="../HtmlWebSite/gglist.html">通知公告</a></div>
+            <div class="menusin"><a href="#">通知公告</a></div>
             <div class="menusin"><a href="products.html">金融产品</a></div>
             <div class="menusin"><a href="bank.html">合作银行</a></div>
             <div class="menusin"><a href="#">企业风采</a></div>
@@ -176,10 +176,10 @@
     <div class="main_relative">
         <div class="main">
             <div class="listhead">
-                <div class="listhl">政策资讯</div>
+                <div class="listhl">通知公告</div>
                 <div class="listhr">
                     <div class="listhrp"><img src="images/home.png" /></div>
-                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">政策资讯</font></div>
+                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">通知公告</font></div>
                 </div>
             </div>
 
@@ -189,8 +189,7 @@
                 <div class="listcon" id="zcNewsContent0">根据《镇江市事业单位公开招聘人员实施细则》（镇办发[2012]24号）文件及《镇江市事业单位2017年集中公开招聘工作人员公告》（镇人社事招[2017]4）精神，现就交通工程质量监督岗位通过资格复审考生专业面试公告如下：经研究，决定选择专业面试为本场考试方式，主要测试内容...</div>
                 <div class="listdown">
                     <div class="listdate" id="zcNewsCreateDate0">2017-05-23 17:12:12</div>
-                    <!--<div class="listpl">20人评论</div>
-                    <div class="listview">57次浏览</div>-->
+
                 </div>
             </div>
             <div id="zcNewsDiv1" class="listsin">
@@ -199,8 +198,7 @@
                 <div class="listcon" id="zcNewsContent1">根据《镇江市事业单位公开招聘人员实施细则》（镇办发[2012]24号）文件及《镇江市事业单位2017年集中公开招聘工作人员公告》（镇人社事招[2017]4）精神，现就交通工程质量监督岗位通过资格复审考生专业面试公告如下：经研究，决定选择专业面试为本场考试方式，主要测试内容...</div>
                 <div class="listdown">
                     <div class="listdate" id="zcNewsCreateDate1">2017-05-23 17:12:12</div>
-                    <!--<div class="listpl">20人评论</div>
-                    <div class="listview">57次浏览</div>-->
+
                 </div>
             </div>
             <div id="zcNewsDiv2" class="listsin">
@@ -209,8 +207,7 @@
                 <div class="listcon" id="zcNewsContent2">根据《镇江市事业单位公开招聘人员实施细则》（镇办发[2012]24号）文件及《镇江市事业单位2017年集中公开招聘工作人员公告》（镇人社事招[2017]4）精神，现就交通工程质量监督岗位通过资格复审考生专业面试公告如下：经研究，决定选择专业面试为本场考试方式，主要测试内容...</div>
                 <div class="listdown">
                     <div class="listdate" id="zcNewsCreateDate2">2017-05-23 17:12:12</div>
-                    <!--<div class="listpl">20人评论</div>
-                    <div class="listview">57次浏览</div>-->
+
                 </div>
             </div>
             <div id="zcNewsDiv3" class="listsin">
@@ -219,8 +216,7 @@
                 <div class="listcon" id="zcNewsContent3">根据《镇江市事业单位公开招聘人员实施细则》（镇办发[2012]24号）文件及《镇江市事业单位2017年集中公开招聘工作人员公告》（镇人社事招[2017]4）精神，现就交通工程质量监督岗位通过资格复审考生专业面试公告如下：经研究，决定选择专业面试为本场考试方式，主要测试内容...</div>
                 <div class="listdown">
                     <div class="listdate" id="zcNewsCreateDate3">2017-05-23 17:12:12</div>
-                    <!--<div class="listpl">20人评论</div>
-                    <div class="listview">57次浏览</div>-->
+
                 </div>
             </div>
             <div id="zcNewsDiv4" class="listsin">
@@ -229,8 +225,7 @@
                 <div class="listcon" id="zcNewsContent4">根据《镇江市事业单位公开招聘人员实施细则》（镇办发[2012]24号）文件及《镇江市事业单位2017年集中公开招聘工作人员公告》（镇人社事招[2017]4）精神，现就交通工程质量监督岗位通过资格复审考生专业面试公告如下：经研究，决定选择专业面试为本场考试方式，主要测试内容...</div>
                 <div class="listdown">
                     <div class="listdate" id="zcNewsCreateDate4">2017-05-23 17:12:12</div>
-                    <!--<div class="listpl">20人评论</div>
-                    <div class="listview">57次浏览</div>-->
+
                 </div>
             </div>
             <div id="zcNewsDiv5" class="listsin">
@@ -239,8 +234,7 @@
                 <div class="listcon" id="zcNewsContent5">根据《镇江市事业单位公开招聘人员实施细则》（镇办发[2012]24号）文件及《镇江市事业单位2017年集中公开招聘工作人员公告》（镇人社事招[2017]4）精神，现就交通工程质量监督岗位通过资格复审考生专业面试公告如下：经研究，决定选择专业面试为本场考试方式，主要测试内容...</div>
                 <div class="listdown">
                     <div class="listdate" id="zcNewsCreateDate5">2017-05-23 17:12:12</div>
-                    <!--<div class="listpl">20人评论</div>
-                    <div class="listview">57次浏览</div>-->
+
                 </div>
             </div>
             <div id="zcNewsDiv6" class="listsin">
@@ -249,8 +243,7 @@
                 <div class="listcon" id="zcNewsContent6">根据《镇江市事业单位公开招聘人员实施细则》（镇办发[2012]24号）文件及《镇江市事业单位2017年集中公开招聘工作人员公告》（镇人社事招[2017]4）精神，现就交通工程质量监督岗位通过资格复审考生专业面试公告如下：经研究，决定选择专业面试为本场考试方式，主要测试内容...</div>
                 <div class="listdown">
                     <div class="listdate" id="zcNewsCreateDate6">2017-05-23 17:12:12</div>
-                    <!--<div class="listpl">20人评论</div>
-                    <div class="listview">57次浏览</div>-->
+
                 </div>
             </div>
 
@@ -259,11 +252,7 @@
                 <div class="page">
                     <a href="#" onclick="shouye()">首页</a>
                     <a href="#" onclick="prePage()">上一页</a>
-                    <!--<a id="pageNum1" href="#">1</a>
-                    <span id="pageNum2" class="current">2</span>
-                    <a id="pageNum3" href="#">3</a>
-                    <a id="pageNum4" href="#">4</a>
-                    <a id="pageNum5" href="#">5</a>-->
+
                     <a href="#" onclick="NextPage()">下一页</a>
                     <a href="#" onclick="weiye()">尾页</a>
                 </div>

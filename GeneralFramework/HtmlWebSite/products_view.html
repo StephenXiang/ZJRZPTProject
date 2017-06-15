@@ -1,219 +1,267 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>镇江市融资服务平台</title>
-<link rel="stylesheet" type="text/css" href="css/index.css" />
-<script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>镇江市融资服务平台</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <script type="text/javascript">
+        var jrcpId = 0;
+        $(function () {
+            jrcpId = getQueryStringByName("jrcpid");
+            loadJrcpDetail();
+        });
+        function getQueryStringByName(name) {
+            var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+            if (result == null || result.length < 1) {
+                return "";
+            }
+            return result[1];
+        }
+        function loadJrcpDetail() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: true,
+                data: { jrcpid: jrcpId },
+                url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetJRCPById",
+                success: function (json) {
+                    $('#jrcptitle').html(json[0].Title);
+                    $('#bankname').html(json[0].Name);
+                    $('#lilvfanwei').html(json[0].LilvLow + "%-" + json[0].LilvUp + "%");
+                    $('#daikuanedu').html(json[0].DaikunLow + "万元-" + json[0].DaikuanUp + "万元");
+                    $('#daikuanqixian').html(json[0].QxLow + "个月-" + json[0].QxUp + "个月");
+                    $('#danbaofangshi').html(json[0].Desc);
+                    $('#lianxidianhua').html(json[0].Dianhua);
+                    $('#jianjie').html(json[0].Jianjie);
+                    $('#tedian').html(json[0].Tedian);
+                    $('#tiaojian').html(json[0].Tiaojian);
+                    $('#kehu').html(json[0].Kehu);
+                    $('#cailiao').html(json[0].Cailiao);
+                }
+            });
+        }
+
+        function fanhui() {
+            window.history.back();
+        }
+    </script>
 </head>
 
 <body>
-<div class="main_head">
-	<div class="head">
-    	<div class="head_l">
-        	<div class="headpic"><img  src="images/12_388.png"/></div>
-            <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
-        </div>
-        <div class="head_r">
-        	<div class="head_rd">
-            	<input  type="text" class="head_rt" id="search" placeholder="请输入关键词"/>
-                <input  type="submit" class="searchbtn" value="搜索"/>
+    <div class="main_head">
+        <div class="head">
+            <div class="head_l">
+                <div class="headpic"><img src="images/12_388.png" /></div>
+                <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="main_slider">
-	<div class="sliderc">
-    	<div class="slider_font"><img  src="images/font.png"/></div>
-    </div>
-</div>
-
-<div class="main_menu">
-	<div class="menu">
-    	<div class="menusin"><a href="index.html">首页</a></div>
-        <div class="menusin"><a href="list.html">政策资讯</a></div>
-        <div class="menusin"><a href="#">通知公告</a></div>
-        <div class="menusin"><a href="products.html">金融产品</a></div>
-        <div class="menusin"><a href="bank.html">合作银行</a></div>
-        <div class="menusin"><a href="#">企业风采</a></div>
-    </div>
-</div>
-
-
-<div class="main_relative">
-<div class="main">
-
-	<div class="listhead">
-    	<div class="listhl">金融产品</div>
-        <div class="listhr">
-        	<div class="listhrp"><img  src="images/home.png"/></div>
-            <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">金融产品</font></div>
-        </div>
-    </div>
-    
-    <div class="prodes">
-    	<div class="prodescon">
-        	<div class="prodeshead">
-            	<div class="prodeshp"><img  src="images/bankxq.jpg"/></div>
-                <div class="prodeshf">
-                	<p class="prodesname">燕谷信保贷</p><p><b>发布机构</b>：常熟农商行</p>
+            <div class="head_r">
+                <div class="head_rd">
+                    <input type="text" class="head_rt" id="search" placeholder="请输入关键词" />
+                    <input type="submit" class="searchbtn" value="搜索" />
                 </div>
             </div>
-            <div class="prodeshline"></div>
-            <div class="prodessin">
-            	<table class="detail-table">
-					<tbody>
-					
-							<td class="title" id="rateRange">参考利率范围：</td>
-							<td class="orange" id="detail_rate" colspan="3">4.32%-6.0%</td>
-						</tr>
-						<tr>
-							<td class="title" id="loaAmt">贷款额度：</td>
-							<td id="detail_amt" width="30%" class="orange">10万元-500万元</td>
-							<td class="title" id="loaTime">贷款期限：</td>
-							<td id="detail_date" class="orange">6个月 - 12个月</td>
-							
-						</tr>
-						<tr id="guaType">
-							<td class="title">担保方式：</td>
-							<td id="detail_gua" class="common">信保基金</td>						
-							<td class="title">联系电话：</td> 
-							<td class="common">18962333750</td> 
-								
-						</tr>
-						<tr class="guaProduct" style="display: none;">
-							<td class="title">反担保措施：</td>
-							<td id="detail_measures"></td>						
-							<td class="title">联系电话：</td> 
-							<td class="detail_phone">18962333750</td> 
-						</tr>
-						<tr class="guaProduct" style="display: none;">
-							<td class="title">产品类型：</td>
-							<td id="detail_proType" colspan="3"></td>
-						</tr>
- 						<tr>
-							<td class="title">产品简介：</td> 
-							<td id="detail_prochr" colspan="3" class="common">为扶持创新型企业及具有发展潜力的企业，向担保公司（保险公司）、常熟农商行共同审核同意的中小企业发放的贷款。<br></td>
-						</tr> 
-						<tr>
-							<td class="title">产品特点：</td>
-							<td colspan="3" id="detail_flow" class="common">1、可免担保（信用）方式发放&nbsp;
-<br>2、可享受贷款贴息政策及保险补贴政策，财务成本降低<br></td>
-						
-						</tr>
-						<tr>
-							<td class="title">适用客户：</td>
-							<td id="detail_use" colspan="3" class="common">在苏州地区注册登记，依法合规经营，且符合国家产业、行业、环保、等相关政策。<br></td>
-						</tr>
-						<tr>
-							<td class="title">申请条件：</td>
-							<td id="detail_select" colspan="3" class="common">1、行业前景良好、技术创新具有领先性。已具备符合政府重点支持科技型企业政策的科研成果，已进入或即将进入实质性生产经营阶段；&nbsp;
-<br>2、企业拥有优秀和谐的管理团队和技术团队，人员结构稳定；&nbsp;&nbsp;
-<br>3、内部管理规范，财务情况良好；&nbsp;
-<br>4、企业主要上下游客户群稳定；&nbsp;&nbsp;
-<br>5、符合常熟农商行授信规定的其他相关要求。<br></td>
-						</tr>
-						<tr>
-							<td class="title">提交材料 ：</td>
-							<td id="detail_desc" colspan="3" class="common">1、企业基础材料&nbsp;
-<br>2、常熟农商行授信要求的其他材料<br></td>
-						</tr>
-						
-						</tbody>
-				</table>
-            </div>
-            <div class="btn-area">
-					<a class="reset-btn" id="back">返回</a>
-					<a class="blue-link" id="apply">立即申请</a>
-			</div>
-            
         </div>
     </div>
 
-</div>
-</div>
-
-
-<div class="foot">
-	<div class="footcon">
-    	<div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
-        <div class="footsin">承办方：镇江市中小企业服务中心</div>
-        <div class="footsin">服务热线：965808</div>
-        <div class="footsin">Copyright©2017 All Rights Reserved</div>
-        <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+    <div class="main_slider">
+        <div class="sliderc">
+            <div class="slider_font"><img src="images/font.png" /></div>
+        </div>
     </div>
-</div>
+
+    <div class="main_menu">
+        <div class="menu">
+            <div class="menusin"><a href="index.html">首页</a></div>
+            <div class="menusin"><a href="list.html">政策资讯</a></div>
+            <div class="menusin"><a href="#">通知公告</a></div>
+            <div class="menusin"><a href="products.html">金融产品</a></div>
+            <div class="menusin"><a href="bank.html">合作银行</a></div>
+            <div class="menusin"><a href="#">企业风采</a></div>
+        </div>
+    </div>
 
 
-<a href="message.html"><div class="kf">
-	<div class="kfbg"><img  src="images/liuyan.png"/></div>
-    <div class="kfcon">在线留言</div>
-</div>
-</a>
+    <div class="main_relative">
+        <div class="main">
 
-<!--登录弹窗-->
-<div class="ui-mask" id="mask" onselectstart="return false"></div>
+            <div class="listhead">
+                <div class="listhl">金融产品</div>
+                <div class="listhr">
+                    <div class="listhrp"><img src="images/home.png" /></div>
+                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">金融产品</font></div>
+                </div>
+            </div>
 
-<div class="ui-dialog" id="dialogMove" onselectstart='return false;' style="display:none;">
-	<div class="ui-dialog-title" id="dialogDrag"  onselectstart="return false;" >
-		
-		登录通行证
+            <div class="prodes">
+                <div class="prodescon">
+                    <div class="prodeshead">
+                        <div class="prodeshp"><img src="images/bankxq.jpg" /></div>
+                        <div class="prodeshf">
+                            <p class="prodesname" id="jrcptitle">燕谷信保贷</p><p><b>发布机构</b>：<label id="bankname"> 常熟农商行</label></p>
+                        </div>
+                    </div>
+                    <div class="prodeshline"></div>
+                    <div class="prodessin">
+                        <table class="detail-table">
+                            <tbody></tbody>
 
-		<a class="ui-dialog-closebutton" href="javascript:hideDialog();"></a>
+                            <td class="title" id="rateRange">参考利率范围：</td>
+                            <td class="orange" id="lilvfanwei" colspan="3">4.32%-6.0%</td>
+                            </tr>
+                            <tr>
+                                <td class="title" id="loaAmt">贷款额度：</td>
+                                <td id="daikuanedu" width="30%" class="orange">10万元-500万元</td>
+                                <td class="title" id="loaTime">贷款期限：</td>
+                                <td id="daikuanqixian" class="orange">6个月 - 12个月</td>
 
-	</div>
-	<div class="ui-dialog-content">
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
-		</div>
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
-		</div>
-		<div class="ui-dialog-l40">
-		
-		</div>
-		<div>
-			<a class="ui-dialog-submit" href="#" >登录</a>
-		</div>
-		<div class="ui-dialog-l40">
-			<a href="#">立即注册</a>
-		</div>
-	</div>
-</div>
+                            </tr>
+                            <tr id="guaType">
+                                <td class="title">担保方式：</td>
+                                <td id="danbaofangshi" class="common">信保基金</td>
+                                <td class="title">联系电话：</td>
+                                <td id="lianxidianhua" class="common">18962333750</td>
 
-<!--注册弹窗-->
-<div class="ui-dialog" id="reg" onselectstart='return false;' style="display:none;">
-	<div class="ui-dialog-title" id="dialogDragreg"  onselectstart="return false;" >
-		
-		注册通行证
+                            </tr>
+                            <tr class="guaProduct" style="display: none;">
+                                <td class="title">反担保措施：</td>
+                                <td id="detail_measures"></td>
+                                <td class="title">联系电话：</td>
+                                <td class="detail_phone">18962333750</td>
+                            </tr>
+                            <tr class="guaProduct" style="display: none;">
+                                <td class="title">产品类型：</td>
+                                <td id="detail_proType" colspan="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="title">产品简介：</td>
+                                <td id="jianjie" colspan="3" class="common">为扶持创新型企业及具有发展潜力的企业，向担保公司（保险公司）、常熟农商行共同审核同意的中小企业发放的贷款。<br /></td>
+                            </tr>
+                            <tr>
+                                <td class="title">产品特点：</td>
+                                <td colspan="3" id="tedian" class="common">
+                                    1、可免担保（信用）方式发放&nbsp;
+                                    <br />2、可享受贷款贴息政策及保险补贴政策，财务成本降低<br />
+                                </td>
 
-		<a class="ui-dialog-closebutton" href="javascript:hideDialogReg();"></a>
+                            </tr>
+                            <tr>
+                                <td class="title">适用客户：</td>
+                                <td id="kehu" colspan="3" class="common">在苏州地区注册登记，依法合规经营，且符合国家产业、行业、环保、等相关政策。<br /></td>
+                            </tr>
+                            <tr>
+                                <td class="title">申请条件：</td>
+                                <td id="tiaojian" colspan="3" class="common">
+                                    1、行业前景良好、技术创新具有领先性。已具备符合政府重点支持科技型企业政策的科研成果，已进入或即将进入实质性生产经营阶段；&nbsp;
+                                    <br />2、企业拥有优秀和谐的管理团队和技术团队，人员结构稳定；&nbsp;&nbsp;
+                                    <br />3、内部管理规范，财务情况良好；&nbsp;
+                                    <br />4、企业主要上下游客户群稳定；&nbsp;&nbsp;
+                                    <br />5、符合常熟农商行授信规定的其他相关要求。<br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title">提交材料 ：</td>
+                                <td id="cailiao" colspan="3" class="common">
+                                    1、企业基础材料&nbsp;
+                                    <br />2、常熟农商行授信要求的其他材料<br />
+                                </td>
+                            </tr>
 
-	</div>
-	<div class="ui-dialog-content">
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
-		</div>
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
-		</div>
-        <div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
-		</div>
-		<div class="ui-dialog-l40">
-		
-		</div>
-		<div>
-			<a class="ui-dialog-submit" href="#" >注册</a>
-		</div>
-		<div class="ui-dialog-l40">
-			<a href="#">立即登录</a>
-		</div>
-	</div>
-</div>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="btn-area">
+                        <a class="reset-btn" id="back" onclick="fanhui()">返回</a>
+                        <!--<a class="blue-link" id="apply">立即申请</a>-->
+                    </div>
 
-<script type="text/javascript" src="js/login.js" language="javascript"></script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="foot">
+        <div class="footcon">
+            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
+            <div class="footsin">承办方：镇江市中小企业服务中心</div>
+            <div class="footsin">服务热线：965808</div>
+            <div class="footsin">Copyright©2017 All Rights Reserved</div>
+            <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+        </div>
+    </div>
+
+
+    <a href="message.html">
+        <div class="kf">
+            <div class="kfbg"><img src="images/liuyan.png" /></div>
+            <div class="kfcon">在线留言</div>
+        </div>
+    </a>
+
+    <!--登录弹窗-->
+    <div class="ui-mask" id="mask" onselectstart="return false"></div>
+
+    <div class="ui-dialog" id="dialogMove" onselectstart='return false;' style="display:none;">
+        <div class="ui-dialog-title" id="dialogDrag" onselectstart="return false;">
+
+            登录通行证
+
+            <a class="ui-dialog-closebutton" href="javascript:hideDialog();"></a>
+
+        </div>
+        <div class="ui-dialog-content">
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+            </div>
+            <div class="ui-dialog-l40">
+
+            </div>
+            <div>
+                <a class="ui-dialog-submit" href="#">登录</a>
+            </div>
+            <div class="ui-dialog-l40">
+                <a href="#">立即注册</a>
+            </div>
+        </div>
+    </div>
+
+    <!--注册弹窗-->
+    <div class="ui-dialog" id="reg" onselectstart='return false;' style="display:none;">
+        <div class="ui-dialog-title" id="dialogDragreg" onselectstart="return false;">
+
+            注册通行证
+
+            <a class="ui-dialog-closebutton" href="javascript:hideDialogReg();"></a>
+
+        </div>
+        <div class="ui-dialog-content">
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
+            </div>
+            <div class="ui-dialog-l40">
+
+            </div>
+            <div>
+                <a class="ui-dialog-submit" href="#">注册</a>
+            </div>
+            <div class="ui-dialog-l40">
+                <a href="#">立即登录</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/login.js" language="javascript"></script>
 
 
 </body>
