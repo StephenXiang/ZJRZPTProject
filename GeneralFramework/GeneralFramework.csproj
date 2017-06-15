@@ -1321,6 +1321,9 @@
     <Compile Include="HtmlPage\ZZDExamineApprove.aspx.designer.cs">
       <DependentUpon>ZZDExamineApprove.aspx</DependentUpon>
     </Compile>
+    <Compile Include="WebServer\MessageService.ashx.cs">
+      <DependentUpon>MessageService.ashx</DependentUpon>
+    </Compile>
     <Compile Include="WebServer\BankInfoWebService.ashx.cs">
       <DependentUpon>BankInfoWebService.ashx</DependentUpon>
     </Compile>
@@ -1437,6 +1440,7 @@
     <Content Include="WebServer\RZExamineApproveWebService.ashx" />
     <Content Include="WebServer\PublishZCGGWebService.ashx" />
     <Content Include="WebServer\FinancialProductsApproveWebService.ashx" />
+    <Content Include="WebServer\MessageService.ashx" />
     <None Include="Properties\PublishProfiles\配置文件1.pubxml" />
   </ItemGroup>
   <PropertyGroup>

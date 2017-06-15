@@ -13,8 +13,9 @@ namespace GeneralFrameworkDAL
     {
         public string GetMessages(int page, int rows, int? status = null)
         {
-            var sql = @"select Id,Title,Content,UserName,Date,(
-case Status when '0' then '未回复' when '1' then '已回复' end) as Status from Message
+            var sql = @"select Id as ID,Type,UserPhone,Title,Content,UserName,Date,(
+case Status when '0' then '未回复' when '1' then '已回复' end) as Status,
+ReplyUser,ReplyContent,ReplyDate from Message
 " + (status == null ? "" : string.Format("where Status={0}", status));
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
@@ -27,28 +28,30 @@ case Status when '0' then '未回复' when '1' then '已回复' end) as Status f
             return JsonHelper.ConvertJosnData(dt);
         }
 
-        public bool DelMessage(int msgId)
+        public bool Reply(MessageInfo mi)
         {
-            return true;
+            var sql = string.Format("update Message set ReplyUser='{0}',ReplyContent='{1}',ReplyDate=GETDATE(),Status=1 where Id={2}",
+                mi.ReplyUser, mi.ReplyContent, mi.ID);
+            return DBHelper.Execute(sql) > 0;
         }
 
-        public bool Reply()
+        public bool DelMessage(int msgId)
         {
             return true;
         }
 
         public bool AddMessage(MessageInfo mi)
         {
-            var dep = SysUserService.GetUserDepartment(mi.UserName);
-            var sql = @"
-insert into Message (Title,Content,ReceiverDepartmentId,UserName,UserDepartment)
-values (@title,@cont,@recv,@un,@ud)";
+            var dep = string.IsNullOrEmpty(mi.LoginName) ? "" : SysUserService.GetUserDepartment(mi.LoginName);
+            var sql = @"insert into Message (Title,Content,UserName,UserPhone,UserDepartment,Date,Status)
+values (@title,@cont,@un,@up,@ud,@date,0)";
 
             return DBHelper.Execute(sql,
                        new SqlParameter("@title", mi.Title),
                        new SqlParameter("@cont", mi.Content),
-                       new SqlParameter("@recv", mi.DepartmentId),
                        new SqlParameter("@un", mi.UserName),
+                       new SqlParameter("@up", mi.UserPhone),
+                       new SqlParameter("@date", DateTime.Now),
                        new SqlParameter("@ud", dep)) > 0;
         }
     }

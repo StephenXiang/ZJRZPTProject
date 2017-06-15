@@ -71,7 +71,7 @@ SELECT @@IDENTITY";
             Net965808Service ns = new Net965808Service();
             string userid;
             var user = "yinweiwen";
-            var res = ns.Login(user, "Zxc123456", out userid) ? "登录成功" : "登录失败";
+            var res = ns.Login(user, "Zxc123456", out userid, false) ? "登录成功" : "登录失败";
             Console.WriteLine("用户{0}{1},userId={2}", user, res, userid);
             user = "xiangpeng";
             res = ns.Login(user, "123456", out userid) ? "登录成功" : "登录失败";

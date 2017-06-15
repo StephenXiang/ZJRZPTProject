@@ -11,10 +11,11 @@ namespace GeneralFrameworkDAL
 
         private const string ModifyUrl = @"http://www.965808.gov.cn/mobile/userInfoModify.action";
 
-        public bool Login(string username, string pwd, out string userid)
+        public bool Login(string username, string pwd, out string userid, bool md5 = true)
         {
-            var pwde = Encrypter.EncryptMd5(pwd);
-            var para = string.Format("userName={0},password={1}", username, pwde);
+            if (!md5)
+                pwd = Encrypter.EncryptMd5(pwd);
+            var para = string.Format("userName={0},password={1}", username, pwd);
             var ret = WebHelper.Get(LoginUrl, para);
             var reto = JsonConvert.DeserializeObject<Net965808Ret>(ret);
             userid = reto.userId;

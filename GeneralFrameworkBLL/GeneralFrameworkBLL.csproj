@@ -44,6 +44,7 @@
     <Compile Include="FinancialProductsApproveManager.cs" />
     <Compile Include="MainBankInfoManager.cs" />
     <Compile Include="EnterpriseManager.cs" />
+    <Compile Include="MessageManager.cs" />
     <Compile Include="NavMenuManager.cs" />
     <Compile Include="NewsInfoManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

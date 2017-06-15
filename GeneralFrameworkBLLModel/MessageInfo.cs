@@ -7,8 +7,10 @@ namespace GeneralFrameworkBLLModel
 {
     public class MessageInfo
     {
+        public int ID;
         public string UserName;
-        public int DepartmentId;
+        public string UserPhone;
+        //public int DepartmentId;
         public string Title;
         public string Content;
         public string Date;
@@ -18,5 +20,7 @@ namespace GeneralFrameworkBLLModel
         public int Status;
 
         public int Type;
+
+        public string LoginName;
     }
 }

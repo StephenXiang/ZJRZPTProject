@@ -1,179 +1,207 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>镇江市融资服务平台</title>
-<link rel="stylesheet" type="text/css" href="css/index.css" />
-<script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>镇江市融资服务平台</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
 
 </head>
 
 <body>
-<div class="main_head">
-	<div class="head">
-    	<div class="head_l">
-        	<div class="headpic"><img  src="images/12_388.png"/></div>
-            <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
-        </div>
-        <div class="head_r">
-        	<div class="head_rd">
-            	<input  type="text" class="head_rt" id="search" placeholder="请输入关键词"/>
-                <input  type="submit" class="searchbtn" value="搜索"/>
+    <div class="main_head">
+        <div class="head">
+            <div class="head_l">
+                <div class="headpic"><img src="images/12_388.png" /></div>
+                <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
+            </div>
+            <div class="head_r">
+                <div class="head_rd">
+                    <input type="text" class="head_rt" id="search" placeholder="请输入关键词" />
+                    <input type="submit" class="searchbtn" value="搜索" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="main_slider">
-	<div class="sliderc">
-    	<div class="slider_font"><img  src="images/font.png"/></div>
+    <div class="main_slider">
+        <div class="sliderc">
+            <div class="slider_font"><img src="images/font.png" /></div>
+        </div>
     </div>
-</div>
 
-<div class="main_menu">
-	<div class="menu">
-    	<div class="menusin"><a href="index.html">首页</a></div>
-        <div class="menusin"><a href="list.html">政策资讯</a></div>
-        <div class="menusin"><a href="#">通知公告</a></div>
-        <div class="menusin"><a href="products.html">金融产品</a></div>
-        <div class="menusin"><a href="bank.html">合作银行</a></div>
-        <div class="menusin"><a href="#">企业风采</a></div>
+    <div class="main_menu">
+        <div class="menu">
+            <div class="menusin"><a href="index.html">首页</a></div>
+            <div class="menusin"><a href="list.html">政策资讯</a></div>
+            <div class="menusin"><a href="#">通知公告</a></div>
+            <div class="menusin"><a href="products.html">金融产品</a></div>
+            <div class="menusin"><a href="bank.html">合作银行</a></div>
+            <div class="menusin"><a href="#">企业风采</a></div>
+        </div>
     </div>
-</div>
 
 
-<div class="main_relative">
-<div class="main">
+    <div class="main_relative">
+        <div class="main">
 
-	<div class="msg">在线留言</div>
-    <form action="" method="post" id="message" name="message" onsubmit="return checkform();">
-	<div class="msgcon">
-    	<div class="msgsin">
-        	<div class="msgf">标题：</div>
-            <div class="msgt"><input  type="text" name="title" id="title" class="msginput" placeholder="请输入标题"/></div>
+            <div class="msg">在线留言</div>
+            <form action="../../WebServer/MessageService.ashx?Method=AddMessage" method="post" id="message" name="message" onsubmit="return checkform();">
+                <div class="msgcon">
+                    <div class="msgsin">
+                        <div class="msgf">标题：</div>
+                        <div class="msgt"><input type="text" name="title" id="title" class="msginput" placeholder="请输入标题" /></div>
+                    </div>
+                    <div class="msgsin">
+                        <div class="msgf">手机号：</div>
+                        <div class="msgt"><input type="text" name="mobile" id="mobile" class="msginput" placeholder="请输入您的手机号" /></div>
+                    </div>
+                    <div class="msgsin">
+                        <div class="msgf">联系人：</div>
+                        <div class="msgt"><input type="text" name="uname" id="uname" class="msginput" placeholder="请输入您的姓名" /></div>
+                    </div>
+                    <div class="msgsin">
+                        <div class="msgf">留言内容：</div>
+                        <div class="msgt">
+                            <textarea placeholder="请输入内容" class="msgarea" id="content" name="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="msgsin"><input type="submit" class="msgsub" value="提交" /></div>
+
+                </div>
+            </form>
+
         </div>
-        <div class="msgsin">
-        	<div class="msgf">手机号：</div>
-            <div class="msgt"><input  type="text" name="mobile" id="mobile" class="msginput" placeholder="请输入您的手机号"/></div>
+    </div>
+
+
+    <div class="foot">
+        <div class="footcon">
+            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
+            <div class="footsin">承办方：镇江市中小企业服务中心</div>
+            <div class="footsin">服务热线：965808</div>
+            <div class="footsin">Copyright©2017 All Rights Reserved</div>
+            <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
         </div>
-        <div class="msgsin">
-        	<div class="msgf">联系人：</div>
-            <div class="msgt"><input  type="text" name="uname" id="uname" class="msginput" placeholder="请输入您的姓名"/></div>
+    </div>
+
+
+    <a href="message.html">
+        <div class="kf">
+            <div class="kfbg"><img src="images/liuyan.png" /></div>
+            <div class="kfcon">在线留言</div>
         </div>
-        <div class="msgsin">
-        	<div class="msgf">留言内容：</div>
-            <div class="msgt">
-            <textarea placeholder="请输入内容" class="msgarea" id="content" name="content"></textarea>
+    </a>
+
+
+    <!--登录弹窗-->
+    <div class="ui-mask" id="mask" onselectstart="return false"></div>
+
+    <div class="ui-dialog" id="dialogMove" onselectstart='return false;' style="display:none;">
+        <div class="ui-dialog-title" id="dialogDrag" onselectstart="return false;">
+
+            登录通行证
+
+            <a class="ui-dialog-closebutton" href="javascript:hideDialog();"></a>
+
+        </div>
+        <div class="ui-dialog-content">
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+            </div>
+            <div class="ui-dialog-l40">
+
+            </div>
+            <div>
+                <a class="ui-dialog-submit" href="#">登录</a>
+            </div>
+            <div class="ui-dialog-l40">
+                <a href="#">立即注册</a>
             </div>
         </div>
-        <div class="msgsin"><input  type="submit" class="msgsub" value="提交"/></div>
-        
     </div>
-	</form>
 
-</div>
-</div>
+    <!--注册弹窗-->
+    <div class="ui-dialog" id="reg" onselectstart='return false;' style="display:none;">
+        <div class="ui-dialog-title" id="dialogDragreg" onselectstart="return false;">
 
+            注册通行证
 
-<div class="foot">
-	<div class="footcon">
-    	<div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
-        <div class="footsin">承办方：镇江市中小企业服务中心</div>
-        <div class="footsin">服务热线：965808</div>
-        <div class="footsin">Copyright©2017 All Rights Reserved</div>
-        <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+            <a class="ui-dialog-closebutton" href="javascript:hideDialogReg();"></a>
+
+        </div>
+        <div class="ui-dialog-content">
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
+            </div>
+            <div class="ui-dialog-l40">
+
+            </div>
+            <div>
+                <a class="ui-dialog-submit" href="#">注册</a>
+            </div>
+            <div class="ui-dialog-l40">
+                <a href="#">立即登录</a>
+            </div>
+        </div>
     </div>
-</div>
 
-
-<a href="message.html"><div class="kf">
-	<div class="kfbg"><img  src="images/liuyan.png"/></div>
-    <div class="kfcon">在线留言</div>
-</div>
-</a>
-
-
-<!--登录弹窗-->
-<div class="ui-mask" id="mask" onselectstart="return false"></div>
-
-<div class="ui-dialog" id="dialogMove" onselectstart='return false;' style="display:none;">
-	<div class="ui-dialog-title" id="dialogDrag"  onselectstart="return false;" >
-		
-		登录通行证
-
-		<a class="ui-dialog-closebutton" href="javascript:hideDialog();"></a>
-
-	</div>
-	<div class="ui-dialog-content">
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
-		</div>
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
-		</div>
-		<div class="ui-dialog-l40">
-		
-		</div>
-		<div>
-			<a class="ui-dialog-submit" href="#" >登录</a>
-		</div>
-		<div class="ui-dialog-l40">
-			<a href="#">立即注册</a>
-		</div>
-	</div>
-</div>
-
-<!--注册弹窗-->
-<div class="ui-dialog" id="reg" onselectstart='return false;' style="display:none;">
-	<div class="ui-dialog-title" id="dialogDragreg"  onselectstart="return false;" >
-		
-		注册通行证
-
-		<a class="ui-dialog-closebutton" href="javascript:hideDialogReg();"></a>
-
-	</div>
-	<div class="ui-dialog-content">
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
-		</div>
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
-		</div>
-        <div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
-		</div>
-		<div class="ui-dialog-l40">
-		
-		</div>
-		<div>
-			<a class="ui-dialog-submit" href="#" >注册</a>
-		</div>
-		<div class="ui-dialog-l40">
-			<a href="#">立即登录</a>
-		</div>
-	</div>
-</div>
-
-<script type="text/javascript" src="js/login.js" language="javascript"></script>
+    <script type="text/javascript" src="js/login.js" language="javascript"></script>
 
 
 
 
-<script language="javascript">
-function checkform(){
-	var title	= $.trim($("#title").val());
-	var uname	= $.trim($("#uname").val());
-	var mobile	= $.trim($("#mobile").val());
-	var temp_mobile = /^((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8}$/;
-    if(!temp_mobile.test(mobile)){
-        alert("手机格式不正确");return false;
-    }
-	if(uname==""||uname==null){
-	    alert("联系人不能为空");return false;
-	}
-
-}
-</script>
+    <script language="javascript">
+        function checkform() {
+            var title = $.trim($("#title").val());
+            var uname = $.trim($("#uname").val());
+            var mobile = $.trim($("#mobile").val());
+            var content = $.trim($("#content").val());
+            var temp_mobile = /^((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8}$/;
+            if (!temp_mobile.test(mobile)) {
+                alert("手机格式不正确"); return false;
+            }
+            if (uname == "" || uname == null) {
+                alert("联系人不能为空"); return false;
+            }
+            if (content == "" || content == null) {
+                alert("留言内容不能为空"); return false;
+            }
+            //$.ajax({
+            //    type: "POST",
+            //    url: "../../WebServer/MessageService.ashx?Method=AddMessage",
+            //    contentType: "application/json; charset=utf-8",
+            //    data: { 'UserName': uname, 'UserPhone': mobile, 'Title': title, 'Content': content },
+            //    dataType: "text",
+            //    success: function (text) {
+            //        if (text === "True") {
+            //            $.messager.alert('提示', '发布留言成功！请耐心等待回复', 'info');
+            //            $("#title").val("");
+            //            $("#uname").val("");
+            //            $("#mobile").val("");
+            //            $("#content").val("");
+            //        } else {
+            //            $.messager.alert('提示', '发布留言失败，请重试', 'error');
+            //            return false;
+            //        }
+            //    },
+            //    error: function (message) {
+            //        $.messager.alert('提示', '发布留言失败，请重试', 'error');
+            //        return false;
+            //    }
+            //});
+            return true;
+        }
+    </script>
 
 </body>
 </html>

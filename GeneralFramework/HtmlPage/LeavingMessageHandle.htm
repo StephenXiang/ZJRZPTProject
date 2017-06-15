@@ -13,59 +13,209 @@
     <script type="text/javascript">
         var UserInfo;
         UserInfo = JSON.parse($.cookie('UserInfo'));
+        var lyid;
         $(function () {
-            $('#panel_LY').hide();
-            $('#panel_LYHistory').hide();
-            $('#panel_PubLY').hide();
+            loadLYDG();
+            loadHandledLYDG();
             $('#LYdlg').dialog('close');
+            $('#LYdlg_OLD').dialog('close');
         });
+
+        function loadLYDG() {
+            $('#LY_dg').datagrid({
+                url: '../../WebServer/MessageService.ashx?Method=LoadMessages',
+                queryParams: { UserName: UserInfo["name"] },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '留言列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'Type', title: 'Type', width: '10', hidden: true, align: 'center' },
+                    { field: 'Content', title: 'Content', width: '10', hidden: true, align: 'center' },
+                    { field: 'Title', title: '留言标题', width: '300', align: 'center' },
+                    { field: 'UserName', title: '留言人姓名', width: '300', align: 'center' },
+                    { field: 'UserPhone', title: '留言人电话', width: '300', align: 'center' },
+                    { field: 'Date', title: '留言时间', width: '300', align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-remove',
+                    text: '删除留言',
+                    handler: function () {
+                        /*
+                        {
+                    iconCls: 'icon-save',
+                    text: '回复留言',
+                    handler: function () {
+                        openLYDlg();
+                    }
+                }, '-',
+                        */
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    lyid = data.ID;
+                }),
+                onDblClickRow: (function (index, row) {
+                    openLYDlg(row);
+                })
+            });
+        }
+        function loadHandledLYDG() {
+            $('#LY_dgOLD').datagrid({
+                url: '../../WebServer/MessageService.ashx?Method=LoadHandledMessages',
+                queryParams: { UserName: UserInfo["name"] },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '已处理留言列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'Type', title: 'Type', width: '10', hidden: true, align: 'center' },
+                    { field: 'Content', title: 'Content', width: '10', hidden: true, align: 'center' },
+                    { field: 'ReplyContent', title: 'ReplyContent', width: '10', hidden: true, align: 'center' },
+                    { field: 'Title', title: '留言标题', width: '300', align: 'center' },
+                    { field: 'UserName', title: '留言人姓名', width: '300', align: 'center' },
+                    { field: 'UserPhone', title: '留言人电话', width: '300', align: 'center' },
+                    { field: 'Date', title: '留言时间', width: '300', align: 'center' },
+                    { field: 'ReplyUser', title: '处理人', width: '300', align: 'center' },
+                    { field: 'ReplyDate', title: '处理时间', width: '300', align: 'center' }
+                ]],
+                onDblClickRow: (function (index, row) {
+                    openLYDlgOld(row);
+                })
+            });
+        }
+
+        function openLYDlg(data) {
+            $("#MessageTitle").html(data.Title);
+            $("#MessageContent").html(data.Content);
+            $("#ReplyUser").html(UserInfo["name"]);
+            $("#contentReply").html("");
+            $('#LYdlg').dialog('open');
+        }
+
+        function openLYDlgOld(data) {
+            $("#MessageTitleOLD").html(data.Title);
+            $("#MessageContentOLD").html(data.Content);
+            $("#ReplyUserOLD").html(data.UserName);
+            $("#contentReplyOLD").html(data.ReplyContent);
+            $('#LYdlg_OLD').dialog('open');
+        }
+
+        function SaveReply() {
+
+            if ($('#contentReply').val() === '') {
+                $.messager.alert('提示', '必须填写回复内容!', 'info');
+            } else {
+                alert('123');
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: "../../WebServer/MessageService.ashx?Method=SaveReply",
+                    data: JSON.stringify(GetJsonData()),
+                    success: function (text) {
+                        if (text =="True") {
+                            $.messager.alert('提示', '留言回复成功！', 'info');
+                            $('#LYdlg').dialog('close');
+                            loadLYDG();
+                            openLYDlgOld();
+                            lyid = 0;
+                        }
+                    },
+                    error: function () {
+                        $.messager.alert('提示', '留言回复出错，请重试或联系系统管理员！', 'error');
+                    }
+                });
+            }
+        }
+
+        function GetJsonData() {
+            //????
+            var ret =
+                {
+                    "ID": lyid,
+                    "ReplyUser": UserInfo["name"],
+                    "ReplyContent": $('#contentReply').val().trim()
+                };
+            return ret;
+        }
     </script>
 </head>
 <body class="easyui-layout">
     <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
-        <div class="easyui-accordion" style="width: 100%; height: 98%;">
-            <div id="panel_LY" title="留言回复" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
-                <div>
-                    <table id="LY_dg" data-options="
-                iconCls: 'icon-save',
-                buttons: '#LY_dg-buttons'
-            "></table>
-                </div>
-                <div id="LYdlg" class="easyui-dialog" title="留言回复" style="text-align: center; width: 800px; height: 500px; padding: 10px" data-options="
+        <div id="panel_LY" title="留言处理与回复" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+            <div>
+                <table id="LY_dg" data-options=" iconCls: 'icon-save', buttons: '#LY_dg-buttons'"></table>
+            </div>
+            <div>
+                <table id="LY_dgOLD" data-options=" iconCls: 'icon-save'"></table>
+            </div>
+            <div id="LYdlg" class="easyui-dialog" title="留言处理与回复" style="text-align: center; width: 800px; height: 500px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#LYdlg-buttons'
             ">
-                    <table border="0" style="width: 100%; border-collapse: separate; border-spacing: 0px 6px;">
-                        <tr>
-                            <td style="text-align: right;">产品名称:</td>
-                            <td style="text-align: left;"><input name="name" class="f1 easyui-textbox" style="width: 80%;"></input></td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right;">产品LOG:</td>
-                            <td style="text-align: left;"><input name="file" class="f1 easyui-filebox" style="width: 80%;"></input></td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right;">详细内容:</td>
-                            <td style="text-align: left;"><textarea id="content" name="content" style="width: 100%; height: 300px;"></textarea></td>
-                        </tr>
-                    </table>
-                </div>
-                <div id="LYdlg-buttons">
-                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Reply()">回复</a>
-                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#LYdlg').dialog('close');">
-                        关闭
-                    </a>
-                </div>
+                <table border="0" style="width: 100%; border-collapse: separate; border-spacing: 0px 6px;">
+                    <tr>
+                        <td style="text-align: right;">标题:</td>
+                        <td style="text-align: left;"><span id="MessageTitle"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">内容:</td>
+                        <td style="text-align: left;"><div id="MessageContent" style="width: 80%;"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">回复人:</td>
+                        <td style="text-align: left;"><span id="ReplyUser"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">回复内容:</td>
+                        <td style="text-align: left;"><textarea id="contentReply" style="width: 100%; height: 300px;"></textarea></td>
+                    </tr>
+                </table>
             </div>
-            <div id="panel_LYHistory" title="历史留言处理记录" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;display: none;">
-                <div>
-                    <table id="LYHistory_dg" data-options="iconCls: 'icon-save'"></table>
-                </div>
+            <div id="LYdlg_OLD" class="easyui-dialog" title="已处理留言查看" style="text-align: center; width: 800px; height: 500px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#LYdlgOLD-buttons'
+            ">
+                <table border="0" style="width: 100%; border-collapse: separate; border-spacing: 0px 6px;">
+                    <tr>
+                        <td style="text-align: right;">标题:</td>
+                        <td style="text-align: left;"><span id="MessageTitleOLD"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">内容:</td>
+                        <td style="text-align: left;"><div id="MessageContentOLD" style="width: 80%;"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">回复人:</td>
+                        <td style="text-align: left;"><span id="ReplyUserOLD"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">回复内容:</td>
+                        <td style="text-align: left;"><textarea id="contentReplyOLD" style="width: 100%; height: 300px;"></textarea></td>
+                    </tr>
+                </table>
             </div>
-            <div id="panel_PubLY" title="留言" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px; display: none;">
-                <div>
-                    <table id="PubLY_dg" data-options="iconCls: 'icon-save'"></table>
-                </div>
+            <div id="LYdlg-buttons">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveReply()">回复</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#LYdlg').dialog('close');">关闭</a>
+            </div>
+            <div id="LYdlgOLD-buttons">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#LYdlg_OLD').dialog('close');">关闭</a>
             </div>
         </div>
     </div>
