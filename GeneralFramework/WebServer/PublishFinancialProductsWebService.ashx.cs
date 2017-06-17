@@ -94,8 +94,13 @@ namespace GeneralFramework.WebServer
 
         public void GetJRCPList()
         {
-            string dkqd = null; string dkqx = null; string dbfs = null; string dked = null;
-            Response.Write(_pm.GetJRCPList());
+            string jgmc = Request["jgmc"].ToString();
+            string cpmc = Request["cpmc"].ToString();
+            string dkqd = Request["dkqd"].ToString();
+            string dkqx = Request["dkqx"].ToString();
+            string dbfs = Request["dbfs"].ToString();
+            string dked = Request["dked"].ToString();
+            Response.Write(_pm.GetJRCPList(dkqd, dkqx, dbfs, dked, jgmc, cpmc));
         }
         public void GetJRCPById()
         {

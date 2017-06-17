@@ -86,29 +86,93 @@ left join Bank b on a.BankId = b.Id
             return JsonHelper.SerializeObject(list);
         }
 
-        public string GetJRCPList(string dkqd = null, string dkqx = null, string dbfs = null, string dked = null)
+        public string GetJRCPList(string dkqd, string dkqx, string dbfs, string dked, string jgmc, string cpmc)
         {
-            if (!string.IsNullOrEmpty(dkqd))
+            string where = "";
+            if (jgmc != "0")
+            {
+                where = where + " and c.BankName like '%" + jgmc + "%'";
+            }
+            if (cpmc != "0")
+            {
+                where = where + " and a.Title like '%" + cpmc + "%'";
+            }
+            if (dkqd != "0")
             {
 
             }
-            if (!string.IsNullOrEmpty(dkqx))
+            if (dkqx != "0")
             {
-
+                switch (dkqx)
+                {
+                    case "1":
+                        where = where + " and a.QxLow <= '" + 3 + "'";
+                        break;
+                    case "2":
+                        where = where + " and a.QxLow <= '" + 6 + "'";
+                        break;
+                    case "3":
+                        where = where + " and a.QxLow <= '" + 12 + "'";
+                        break;
+                    case "4":
+                        where = where + " and a.QxLow <= '" + 36 + "'";
+                        break;
+                    case "5":
+                        where = where + " and a.QxLow >= '" + 36 + "'";
+                        break;
+                }
             }
-            if (!string.IsNullOrEmpty(dbfs))
+            if (dbfs != "0")
             {
-
+                switch (dbfs)
+                {
+                    case "1":
+                        where = where + " and d.[Desc] = '抵押'";
+                        break;
+                    case "2":
+                        where = where + " and d.[Desc] = '质押'";
+                        break;
+                    case "3":
+                        where = where + " and d.[Desc] = '信保基金'";
+                        break;
+                    case "4":
+                        where = where + " and d.[Desc] = '一般保证'";
+                        break;
+                    case "5":
+                        where = where + " and d.[Desc] = '信用'";
+                        break;
+                }
             }
-            if (!string.IsNullOrEmpty(dked))
+            if (dked != "0")
             {
+                switch (dked)
+                {
+                    case "1":
+                        where = where + " and a.DaikunLow <= '100'";
+                        break;
+                    case "2":
+                        where = where + " and a.DaikunLow <= '200'";
+                        break;
+                    case "3":
+                        where = where + " and a.DaikunLow <= '300'";
+                        break;
+                    case "4":
+                        where = where + " and a.DaikunLow <= '500'";
+                        break;
+                    case "5":
+                        where = where + " and a.DaikunLow <= '1000'";
+                        break;
+                    case "6":
+                        where = where + " and a.DaikunLow >= '1000'";
+                        break;
+                }
 
             }
             var sql = @"select a.Id,c.BankName,a.Title,a.LilvLow,a.LilvUp,a.DaikunLow,a.DaikuanUp,a.DanbaoId,d.[Desc],a.QxLow,a.QxUp from JRCPFlow a 
 left join Bank b on a.BankId = b.Id
 left join MainBank c on b.MainBankId = c.Id
 left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a.DanbaoId = d.Id
- where a.Status  = 1 order by a.PublishDate desc";
+ where a.Status  = 1 " + where + " order by a.PublishDate desc";
             DataTable dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
         }
