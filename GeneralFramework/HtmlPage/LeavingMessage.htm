@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>留言与回复</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript">
+        var UserInfo;
+        UserInfo = JSON.parse($.cookie('UserInfo'));
+        var lyid;
+        $(function () {
+            loadLYDG();
+            $('#LYSdlg').dialog('close');
+            $('#LYdlg_OLD').dialog('close');
+        });
+        function loadLYDG() {
+            $('#LYS_dg').datagrid({
+                url: '../../WebServer/MessageService.ashx?Method=GetUserMsg',
+                queryParams: { UserName: UserInfo["name"] },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '留言列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'Type', title: 'Type', width: '10', hidden: true, align: 'center' },
+                    { field: 'Content', title: 'Content', width: '10', hidden: true, align: 'center' },
+                    { field: 'ReplyContent', title: 'ReplyContent', width: '10', hidden: true, align: 'center' },
+                    { field: 'Title', title: '留言标题', width: '300', align: 'center' },
+                    { field: 'Date', title: '留言时间', width: '300', align: 'center' },
+                    { field: 'Status', title: '处理状态', width: '300', align: 'center' },
+                    { field: 'ReplyUser', title: '处理人', width: '300', align: 'center' },
+                    { field: 'ReplyDate', title: '处理时间', width: '300', align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-save',
+                    text: '留言',
+                    handler: function () {
+                        openLY();
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除留言',
+                    handler: function () {
+                    }
+                }],
+                onDblClickRow: (function (index, row) {
+                    openLYDlgOld(row);
+                })
+            });
+        }
+
+        function openLYDlgOld(data) {
+            $("#MessageTitleOLD").html(data.Title);
+            $("#MessageContentOLD").html(data.Content);
+            $("#ReplyUserOLD").html(data.ReplyUser);
+            $("#contentReplyOLD").val(data.ReplyContent);
+            $('#LYdlg_OLD').dialog('open');
+        }
+
+        function openLY() {
+            $("#LYTitle").val("");
+            $("#LYContent").val("");
+            $('#LYSdlg').dialog('open');
+        }
+
+        function SaveLY() {
+            if ($('#LYTitle').val().trim() === '') {
+                $.messager.alert('提示', '必须填写标题!', 'info');
+            }
+            else if ($('#LYContent').val().trim() === '') {
+                $.messager.alert('提示', '必须填写内容!', 'info');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: "../../WebServer/MessageService.ashx?Method=LeaveMsg",
+                    data: {
+                        UserName: UserInfo["name"],
+                        Title: $('#LYTitle').val().trim(),
+                        Content: $('#LYContent').val().trim()
+                    },
+                    success: function (text) {
+                        if (text === "True") {
+                            $.messager.alert('提示', '留言成功！', 'info');
+                            $('#LYSdlg').dialog('close');
+                            loadLYDG();
+                            lyid = 0;
+                        }
+                    },
+                    error: function () {
+                        $.messager.alert('提示', '留言出错，请重试或联系系统管理员！', 'error');
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div id="panel_LYS" title="留言与回复" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+            <div>
+                <table id="LYS_dg" data-options=" iconCls: 'icon-save', buttons: '#LYS_dg-buttons'"></table>
+            </div>
+            <div id="LYSdlg" class="easyui-dialog" title="留言" style="text-align: center; width: 800px; height: 500px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#LYSdlg-buttons'
+            ">
+                <table border="0" style="width: 100%; border-collapse: separate; border-spacing: 0px 6px;">
+                    <tr>
+                        <td style="text-align: right;">标题:</td>
+                        <td style="text-align: left;"><input id="LYTitle" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">内容:</td>
+                        <td style="text-align: left;"><textarea id="LYContent" style="width: 100%; height: 300px;"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="LYdlg_OLD" class="easyui-dialog" title="已处理留言查看" style="text-align: center; width: 800px; height: 500px; padding: 10px" data-options="iconCls: 'icon-save',buttons: '#LYdlgOLD-buttons'">
+                <table border="0" style="width: 100%; border-collapse: separate; border-spacing: 0px 6px;">
+                    <tr>
+                        <td style="text-align: right;">标题:</td>
+                        <td style="text-align: left;"><span id="MessageTitleOLD"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">内容:</td>
+                        <td style="text-align: left;"><div id="MessageContentOLD" style="width: 80%;"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">回复人:</td>
+                        <td style="text-align: left;"><span id="ReplyUserOLD"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">回复内容:</td>
+                        <td style="text-align: left;"><textarea id="contentReplyOLD" readonly="readonly" style="width: 100%; height: 300px;"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="LYSdlg-buttons">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveLY()">确定</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#LYSdlg').dialog('close');">关闭</a>
+            </div>
+            <div id="LYdlgOLD-buttons">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#LYdlg_OLD').dialog('close');">关闭</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

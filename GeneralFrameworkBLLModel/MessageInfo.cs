@@ -8,9 +8,10 @@ namespace GeneralFrameworkBLLModel
     public class MessageInfo
     {
         public int ID;
+        public int Type;
         public string UserName;
         public string UserPhone;
-        //public int DepartmentId;
+        public int? UserId;
         public string Title;
         public string Content;
         public string Date;
@@ -18,9 +19,5 @@ namespace GeneralFrameworkBLLModel
         public string ReplyUser;
         public string ReplyDate;
         public int Status;
-
-        public int Type;
-
-        public string LoginName;
     }
 }

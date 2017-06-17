@@ -192,6 +192,7 @@
     <Content Include="HtmlPage\EnterpriseInfo.htm" />
     <Content Include="HtmlPage\FinancialProductsApprove.htm" />
     <Content Include="HtmlPage\HistoricalApprove.htm" />
+    <Content Include="HtmlPage\LeavingMessage.htm" />
     <Content Include="HtmlPage\PublishFinancialProducts.htm" />
     <Content Include="HtmlPage\HomeMaintain.htm" />
     <Content Include="HtmlPage\LeavingMessageHandle.htm" />

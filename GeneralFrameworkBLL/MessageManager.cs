@@ -6,6 +6,7 @@ namespace GeneralFrameworkBLL
     public class MessageManager
     {
         readonly MessageService _ms = new MessageService();
+
         public bool Reply(MessageInfo mi)
         {
             return _ms.Reply(mi);
@@ -35,6 +36,16 @@ namespace GeneralFrameworkBLL
                 UserName = username,
                 UserPhone = userphone
             });
+        }
+
+        public string GetUserMessages(int page, int rows, string username)
+        {
+            return _ms.GetUserMessages(page, rows, username);
+        }
+
+        public bool LeaveMesage(string username, string title, string content)
+        {
+            return _ms.LeaveMesage(username, title, content);
         }
     }
 }
