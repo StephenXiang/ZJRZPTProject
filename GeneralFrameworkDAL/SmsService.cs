@@ -30,7 +30,7 @@ namespace GeneralFrameworkDAL
                 var smsRet = JsonConvert.DeserializeObject<SmsReturn>(ret);
                 return smsRet.Status == 100;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }

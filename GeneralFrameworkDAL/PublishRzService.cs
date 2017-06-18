@@ -2,6 +2,8 @@
 using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
 using System.Data;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace GeneralFrameworkDAL
 {
@@ -42,14 +44,36 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
                 new SqlParameter("@ent", ent),
                 new SqlParameter("@bks", rzi.RZYH),
                 new SqlParameter("@dm", demid));
+            if (efc > 0)
+            {
+                List<string> phonelist = new List<string>();
+                sql = "select Phone from SysUser where RolesID = 2";
+                DataTable dt = DBHelper.GetDataSet(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        string Phone = dr[0].ToString();
+                        phonelist.Add(Phone);
+                    }
+                }
+                sql = string.Format(@"select ConnectorPhone from Bank where Id in({0})", rzi.RZYH);
+                DataTable yhdt = DBHelper.GetDataSet(sql);
+                if (yhdt.Rows.Count > 0)
+                {
+                    foreach (DataRow yhdr in yhdt.Rows)
+                    {
+                        string Phone = yhdr[0].ToString();
+                        phonelist.Add(Phone);
+                    }
+                }
+                SmsService sms = new SmsService();
+                for (int h = 0; h < phonelist.Count; h++)
+                {
+                    sms.Send(phonelist[h].ToString(), "有新的融资申请，请及时登陆镇江融资平台查看详细信息");
+                }
+            }
             return efc > 0;
-        }
-
-        public bool DeleteRz(int id)
-        {
-            var sql = string.Format("update RZFlow set IsDeleted=1 where Id={0}", id);
-            DBHelper.Execute(sql);
-            return true;
         }
 
         public string GetRZLBJson(string UserName, int page, int rows)
@@ -179,6 +203,12 @@ where b.EnterpriseId = {0} and b.IsDeleted=0 order by b.Id Desc", ent);
             };
 
             return JsonHelper.SerializeObject(jsonData);
+        }
+        public bool DeleteRz(int id)
+        {
+            var sql = string.Format("update RZFlow set IsDeleted=1 where Id={0}", id);
+            DBHelper.Execute(sql);
+            return true;
         }
 
 

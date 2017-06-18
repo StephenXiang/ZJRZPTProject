@@ -22,5 +22,10 @@ namespace GeneralFrameworkBLL
         {
             return bi.GetBankInfolbForBankId(BankId);
         }
+
+        public string GetBankInfoList()
+        {
+            return bi.GetBankInfoList();
+        }
     }
 }
