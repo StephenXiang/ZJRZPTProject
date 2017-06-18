@@ -55,6 +55,35 @@ left join Bank c2 on a.BankId = c2.Id order by a.Id Desc";
             var sid = DBHelper.Execute(sql, new SqlParameter("@status", status), new SqlParameter("@zzdid", zzdid));
             if (sid > 0)
             {
+                if (status == "3")
+                {
+                    List<string> phonelist = new List<string>();
+                    sql = "select Phone from SysUser where RolesID = 2";
+                    DataTable dt = DBHelper.GetDataSet(sql);
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            string phone = dr[0].ToString();
+                            phonelist.Add(phone);
+                        }
+                    }
+                    sql = string.Format(@"select b.ConnectionTelephone from ZZDFlow a left join Enterprise b on a.EnterpriseId = b.ID where a.Id = {0}", zzdid);
+                    DataTable yhdt = DBHelper.GetDataSet(sql);
+                    if (yhdt.Rows.Count > 0)
+                    {
+                        foreach (DataRow yhdr in yhdt.Rows)
+                        {
+                            string phone = yhdr[0].ToString();
+                            phonelist.Add(phone);
+                        }
+                    }
+                    SmsService sms = new SmsService();
+                    for (int h = 0; h < phonelist.Count; h++)
+                    {
+                        sms.Send(phonelist[h].ToString(), "有一笔周转贷申请受理成功，请及时登陆镇江融资平台查看详细信息");
+                    }
+                }
                 return true;
             }
             else
@@ -200,6 +229,32 @@ left join Bank c on a.MastBankId = c.Id where a.Id = {0}", zzdid);
             var sid = DBHelper.Execute(sql, new SqlParameter("@status", status), new SqlParameter("@zzdid", zzdid), new SqlParameter("@Feedback", liyou));
             if (sid > 0)
             {
+                List<string> phonelist = new List<string>();
+                sql = "select Phone from SysUser where RolesID = 2";
+                DataTable dt = DBHelper.GetDataSet(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        string phone = dr[0].ToString();
+                        phonelist.Add(phone);
+                    }
+                }
+                sql = string.Format(@"select b.ConnectionTelephone from ZZDFlow a left join Enterprise b on a.EnterpriseId = b.ID where a.Id = {0}", zzdid);
+                DataTable yhdt = DBHelper.GetDataSet(sql);
+                if (yhdt.Rows.Count > 0)
+                {
+                    foreach (DataRow yhdr in yhdt.Rows)
+                    {
+                        string phone = yhdr[0].ToString();
+                        phonelist.Add(phone);
+                    }
+                }
+                SmsService sms = new SmsService();
+                for (int h = 0; h < phonelist.Count; h++)
+                {
+                    sms.Send(phonelist[h].ToString(), "有一笔周转贷申请受理不成功，请及时登陆镇江融资平台查看详细信息");
+                }
                 return true;
             }
             else

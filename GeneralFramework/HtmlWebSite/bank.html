@@ -1,183 +1,289 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>镇江市融资服务平台</title>
-<link rel="stylesheet" type="text/css" href="css/index.css" />
-<script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>镇江市融资服务平台</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <script type="text/javascript">
+        var PageIndex = 1;
+        var PageSize = 10;
+        var PageAllNum = 0;
+
+        $(function () {
+
+
+            loadjrcplist();
+
+        });
+        function loadjrcplist() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: true,
+                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfoList",
+                success: function (json) {
+                    var JRCPJSON = json;
+                    checkxiaoshu(JRCPJSON.length);
+                    if (PageIndex == 1) {
+                        var onePagesize = 0;
+                        if (JRCPJSON.length < PageSize) {
+                            onePagesize = JRCPJSON.length;
+                        } else {
+                            onePagesize = PageSize;
+                        }
+                        for (var i = 0; i < onePagesize; i++) {
+                            $('#BankLi' + i + '').show();
+                            $('#BankTitle' + i + '').html(JRCPJSON[i].Name);
+                            $('#BankLink' + i + '').attr("href", "bank_view.html?bankid=" + JRCPJSON[i].Id);
+                        }
+                        for (var l = PageSize; l > onePagesize; l--) {
+                            $('#BankLi' + (l - 1) + '').hide();
+                        }
+                    } else {
+                        var twopagesize = 0;
+                        if ((PageIndex * PageSize) > JRCPJSON.length) {
+                            twopagesize = JRCPJSON.length;
+                        }
+                        else {
+                            twopagesize = PageIndex * PageSize;
+                        }
+                        var j = 0;
+                        for (var i = ((PageIndex - 1) * PageSize) ; i < twopagesize; i++) {
+                            j = i - ((PageIndex - 1) * PageSize)
+                            $('#BankLi' + j + '').show();
+                            $('#BankTitle' + j + '').html(JRCPJSON[i].Name);
+                            $('#BankLink' + j + '').attr("href", "bank_view.html?bankid=" + JRCPJSON[i].Id);
+                        }
+                        for (var k = 9; k > j; k--) {
+                            $('#BankLi' + k + '').hide();
+                        }
+                    }
+                }
+            });
+        }
+
+
+
+        function NextPage() {
+            if (PageIndex == PageAllNum) {
+                alert("已经是尾页");
+            } else {
+                PageIndex = PageIndex + 1;
+                loadjrcplist();
+            }
+        }
+
+        function prePage() {
+            if (PageIndex == 1) {
+                alert("已经是首页");
+            } else {
+                PageIndex = PageIndex - 1;
+                loadjrcplist();
+            }
+        }
+
+        function checkxiaoshu(totalnum) {
+            var num = totalnum / PageSize;
+            var reg = /.*\..*/;
+            if (reg.test(num)) {
+                var nums = num.toString().split('.');
+                PageAllNum = parseInt(nums[0]) + 1;
+            } else {
+                PageAllNum = num
+            }
+        }
+        function shouye() {
+            if (PageIndex == 1) {
+                alert("已经是首页");
+            } else {
+                PageIndex = 1;
+                loadjrcplist();
+            }
+        }
+
+        function weiye() {
+            if (PageIndex == PageAllNum) {
+                alert("已经是尾页");
+            } else {
+                PageIndex = PageAllNum;
+                loadjrcplist();
+            }
+        }
+    </script>
+
 </head>
 
 <body>
-<div class="main_head">
-	<div class="head">
-    	<div class="head_l">
-        	<div class="headpic"><img  src="images/12_388.png"/></div>
-            <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
-        </div>
-        <div class="head_r">
-        	<div class="head_rd">
-            	<input  type="text" class="head_rt" id="search" placeholder="请输入关键词"/>
-                <input  type="submit" class="searchbtn" value="搜索"/>
+    <div class="main_head">
+        <div class="head">
+            <div class="head_l">
+                <div class="headpic"><img src="images/12_388.png" /></div>
+                <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
+            </div>
+            <div class="head_r">
+                <div class="head_rd">
+                    <input type="text" class="head_rt" id="search" placeholder="请输入关键词" />
+                    <input type="submit" class="searchbtn" value="搜索" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="main_slider">
-	<div class="sliderc">
-    	<div class="slider_font"><img  src="images/font.png"/></div>
-    </div>
-</div>
-
-<div class="main_menu">
-	<div class="menu">
-    	<div class="menusin"><a href="index.html">首页</a></div>
-        <div class="menusin"><a href="list.html">政策资讯</a></div>
-        <div class="menusin"><a href="#">通知公告</a></div>
-        <div class="menusin"><a href="products.html">金融产品</a></div>
-        <div class="menusin"><a href="bank.html">合作银行</a></div>
-        <div class="menusin"><a href="#">企业风采</a></div>
-    </div>
-</div>
-
-
-<div class="main_relative">
-<div class="main">
-
-	<div class="listhead">
-    	<div class="listhl">合作银行</div>
-        <div class="listhr">
-        	<div class="listhrp"><img  src="images/home.png"/></div>
-            <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">合作银行</font></div>
+    <div class="main_slider">
+        <div class="sliderc">
+            <div class="slider_font"><img src="images/font.png" /></div>
         </div>
     </div>
-    
-    <div class="bankblock">
-    	<div class="bankcon law-block">
-        	<ul id="bank">
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">浙商银行</b><span class="fr">2017-03-09</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">中华联合财产保险股份有限公司</b><span class="fr">2016-12-08</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">苏州市吴中城乡农业担保有限公司</b><span class="fr">2016-11-28</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">吴江创融中小企业担保有限公司</b><span class="fr">2016-11-28</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">江苏省信用再担保有限公司</b><span class="fr">2016-11-16</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">新合盛担保</b><span class="fr">2016-11-15</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">苏州市苏园担保</b><span class="fr">2016-11-07</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">太仓担保</b><span class="fr">2016-11-03</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">张家港农业担保</b><span class="fr">2016-10-31</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">苏金租赁</b><span class="fr">2016-06-24</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">苏金租赁</b><span class="fr">2016-06-24</span></a></li>
-                <li><a class="gotoDetail" href="bank_view.html"><b class="fl">苏金租赁</b><span class="fr">2016-06-24</span></a></li>
-            </ul>
-            
-            <div class="bankpage">
-            <div class="bpage">
-                <a href="#">首页</a>
-                 <a href="#">上一页</a>
-                <a href="#">1</a>
-                <span class="current">2</span>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#">下一页</a>
-                <a href="#">尾页</a>
+
+    <div class="main_menu">
+        <div class="menu">
+            <div class="menusin"><a href="index.html">首页</a></div>
+            <div class="menusin"><a href="list.html">政策资讯</a></div>
+            <div class="menusin"><a href="#">通知公告</a></div>
+            <div class="menusin"><a href="products.html">金融产品</a></div>
+            <div class="menusin"><a href="bank.html">合作银行</a></div>
+            <div class="menusin"><a href="#">企业风采</a></div>
+        </div>
+    </div>
+
+
+    <div class="main_relative">
+        <div class="main">
+
+            <div class="listhead">
+                <div class="listhl">合作银行</div>
+                <div class="listhr">
+                    <div class="listhrp"><img src="images/home.png" /></div>
+                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">合作银行</font></div>
+                </div>
             </div>
-        </div>	
-            
-            
+
+            <div class="bankblock">
+                <div class="bankcon law-block">
+                    <ul id="bank">
+                        <li id="BankLi0"><a id="BankLink0" class="gotoDetail" href="bank_view.html"><b id="BankTitle0" class="fl">浙商银行</b><!--<span class="fr">2017-03-09</span>--></a></li>
+                        <li id="BankLi1"><a id="BankLink1" class="gotoDetail" href="bank_view.html"><b id="BankTitle1" class="fl">中华联合财产保险股份有限公司</b><!--<span class="fr">2016-12-08</span>--></a></li>
+                        <li id="BankLi2"><a id="BankLink2" class="gotoDetail" href="bank_view.html"><b id="BankTitle2" class="fl">苏州市吴中城乡农业担保有限公司</b><!--<span class="fr">2016-11-28</span>--></a></li>
+                        <li id="BankLi3"><a id="BankLink3" class="gotoDetail" href="bank_view.html"><b id="BankTitle3" class="fl">吴江创融中小企业担保有限公司</b><!--<span class="fr">2016-11-28</span></a>--></a></li>
+                        <li id="BankLi4"><a id="BankLink4" class="gotoDetail" href="bank_view.html"><b id="BankTitle4" class="fl">江苏省信用再担保有限公司</b><!--<span class="fr">2016-11-16</span></a>--></a></li>
+                        <li id="BankLi5"><a id="BankLink5" class="gotoDetail" href="bank_view.html"><b id="BankTitle5" class="fl">新合盛担保</b><!--<span class="fr">2016-11-15</span>--></a></li>
+                        <li id="BankLi6"><a id="BankLink6" class="gotoDetail" href="bank_view.html"><b id="BankTitle6" class="fl">苏州市苏园担保</b><!--<span class="fr">2016-11-07</span>--></a></li>
+                        <li id="BankLi7"><a id="BankLink7" class="gotoDetail" href="bank_view.html"><b id="BankTitle7" class="fl">太仓担保</b><!--<span class="fr">2016-11-03</span></a>--></a></li>
+                        <li id="BankLi8"><a id="BankLink8" class="gotoDetail" href="bank_view.html"><b id="BankTitle8" class="fl">张家港农业担保</b><!--<span class="fr">2016-10-31</span>--></a></li>
+                        <li id="BankLi9"><a id="BankLink9" class="gotoDetail" href="bank_view.html"><b id="BankTitle9" class="fl">苏金租赁</b><!--<span class="fr">2016-06-24</span>--></a></li>
+                    </ul>
+
+                    <div class="bankpage">
+                        <div class="bpage">
+                            <a href="#" onclick="shouye()">首页</a>
+                            <a href="#" onclick="prePage()">上一页</a>
+                            <!--<a href="#">1</a>
+                            <span class="current">2</span>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>-->
+                            <a href="#" onclick="NextPage()">下一页</a>
+                            <a href="#" onclick="weiye()">尾页</a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+
         </div>
     </div>
-    
-        
-        
-     
-
-	
 
 
-</div>
-</div>
-
-
-<div class="foot">
-	<div class="footcon">
-    	<div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
-        <div class="footsin">承办方：镇江市中小企业服务中心</div>
-        <div class="footsin">服务热线：965808</div>
-        <div class="footsin">Copyright©2017 All Rights Reserved</div>
-        <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+    <div class="foot">
+        <div class="footcon">
+            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
+            <div class="footsin">承办方：镇江市中小企业服务中心</div>
+            <div class="footsin">服务热线：965808</div>
+            <div class="footsin">Copyright©2017 All Rights Reserved</div>
+            <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+        </div>
     </div>
-</div>
 
 
-<a href="message.html"><div class="kf">
-	<div class="kfbg"><img  src="images/liuyan.png"/></div>
-    <div class="kfcon">在线留言</div>
-</div>
-</a>
+    <a href="message.html">
+        <div class="kf">
+            <div class="kfbg"><img src="images/liuyan.png" /></div>
+            <div class="kfcon">在线留言</div>
+        </div>
+    </a>
 
 
-<!--登录弹窗-->
-<div class="ui-mask" id="mask" onselectstart="return false"></div>
+    <!--登录弹窗-->
+    <div class="ui-mask" id="mask" onselectstart="return false"></div>
 
-<div class="ui-dialog" id="dialogMove" onselectstart='return false;' style="display:none;">
-	<div class="ui-dialog-title" id="dialogDrag"  onselectstart="return false;" >
-		
-		登录通行证
+    <div class="ui-dialog" id="dialogMove" onselectstart='return false;' style="display:none;">
+        <div class="ui-dialog-title" id="dialogDrag" onselectstart="return false;">
 
-		<a class="ui-dialog-closebutton" href="javascript:hideDialog();"></a>
+            登录通行证
 
-	</div>
-	<div class="ui-dialog-content">
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
-		</div>
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
-		</div>
-		<div class="ui-dialog-l40">
-		
-		</div>
-		<div>
-			<a class="ui-dialog-submit" href="#" >登录</a>
-		</div>
-		<div class="ui-dialog-l40">
-			<a href="#">立即注册</a>
-		</div>
-	</div>
-</div>
+            <a class="ui-dialog-closebutton" href="javascript:hideDialog();"></a>
 
-<!--注册弹窗-->
-<div class="ui-dialog" id="reg" onselectstart='return false;' style="display:none;">
-	<div class="ui-dialog-title" id="dialogDragreg"  onselectstart="return false;" >
-		
-		注册通行证
+        </div>
+        <div class="ui-dialog-content">
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+            </div>
+            <div class="ui-dialog-l40">
 
-		<a class="ui-dialog-closebutton" href="javascript:hideDialogReg();"></a>
+            </div>
+            <div>
+                <a class="ui-dialog-submit" href="#">登录</a>
+            </div>
+            <div class="ui-dialog-l40">
+                <a href="#">立即注册</a>
+            </div>
+        </div>
+    </div>
 
-	</div>
-	<div class="ui-dialog-content">
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
-		</div>
-		<div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
-		</div>
-        <div class="ui-dialog-l40 ui-dialog-pt15">
-			<input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
-		</div>
-		<div class="ui-dialog-l40">
-		
-		</div>
-		<div>
-			<a class="ui-dialog-submit" href="#" >注册</a>
-		</div>
-		<div class="ui-dialog-l40">
-			<a href="#">立即登录</a>
-		</div>
-	</div>
-</div>
+    <!--注册弹窗-->
+    <div class="ui-dialog" id="reg" onselectstart='return false;' style="display:none;">
+        <div class="ui-dialog-title" id="dialogDragreg" onselectstart="return false;">
 
-<script type="text/javascript" src="js/login.js" language="javascript"></script>
+            注册通行证
+
+            <a class="ui-dialog-closebutton" href="javascript:hideDialogReg();"></a>
+
+        </div>
+        <div class="ui-dialog-content">
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+            </div>
+            <div class="ui-dialog-l40 ui-dialog-pt15">
+                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
+            </div>
+            <div class="ui-dialog-l40">
+
+            </div>
+            <div>
+                <a class="ui-dialog-submit" href="#">注册</a>
+            </div>
+            <div class="ui-dialog-l40">
+                <a href="#">立即登录</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/login.js" language="javascript"></script>
 
 
 </body>

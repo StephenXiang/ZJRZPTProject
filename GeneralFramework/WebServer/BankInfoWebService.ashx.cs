@@ -85,5 +85,10 @@ namespace GeneralFramework.WebServer
             string BankId = _request["BankId"];
             _response.Write(_bi.GetBankInfolbForBankId(BankId));
         }
+
+        public void GetBankInfoList()
+        {
+            _response.Write(_bi.GetBankInfoList());
+        }
     }
 }

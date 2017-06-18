@@ -2,6 +2,8 @@
 using System.Data.SqlClient;
 using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
+using System.Collections.Generic;
+using System;
 
 namespace GeneralFrameworkDAL
 {
@@ -27,8 +29,8 @@ namespace GeneralFrameworkDAL
             var ent = DBHelper.GetScalar(sql) as int?;
             if (ent == null) return false;
             sql = @"
-insert into ZZDFlow(EnterpriseId,BankId,MastBankId,Manager,ManagerPhone,OriginalQuota,ThisQuota,ExpirationDate,[Status])
-values(@ent,@bk,@mbk,@ma,@map,@oq,@q,@ed,0)";
+insert into ZZDFlow(EnterpriseId,BankId,MastBankId,Manager,ManagerPhone,OriginalQuota,ThisQuota,ExpirationDate,[Status],PublishDate)
+values(@ent,@bk,@mbk,@ma,@map,@oq,@q,@ed,0,@date)";
             var efc = DBHelper.Execute(sql, new SqlParameter("@eid", ent),
                 new SqlParameter("@ent", ent),
                 new SqlParameter("@bk", zi.ydkyh),
@@ -37,7 +39,37 @@ values(@ent,@bk,@mbk,@ma,@map,@oq,@q,@ed,0)";
                 new SqlParameter("@map", zi.khjllxdh),
                 new SqlParameter("@oq", zi.ydkje),
                 new SqlParameter("@q", zi.bcdkje),
-                new SqlParameter("@ed", zi.dkdqsj));
+                new SqlParameter("@ed", zi.dkdqsj),
+                new SqlParameter("@date", DateTime.Now));
+            if (efc > 0)
+            {
+                List<string> phonelist = new List<string>();
+                sql = "select Phone from SysUser where RolesID = 2";
+                DataTable dt = DBHelper.GetDataSet(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        string Phone = dr[0].ToString();
+                        phonelist.Add(Phone);
+                    }
+                }
+                sql = string.Format(@"select ConnectorPhone from Bank where Id in({0})", zi.zbh);
+                DataTable yhdt = DBHelper.GetDataSet(sql);
+                if (yhdt.Rows.Count > 0)
+                {
+                    foreach (DataRow yhdr in yhdt.Rows)
+                    {
+                        string Phone = yhdr[0].ToString();
+                        phonelist.Add(Phone);
+                    }
+                }
+                SmsService sms = new SmsService();
+                for (int h = 0; h < phonelist.Count; h++)
+                {
+                    sms.Send(phonelist[h].ToString(), "有新的周转贷申请，请及时登陆镇江融资平台查看详细信息");
+                }
+            }
             return efc > 0;
         }
 

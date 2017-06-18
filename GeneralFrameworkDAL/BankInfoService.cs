@@ -80,5 +80,13 @@ left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             }
             return dic;
         }
+
+        public string GetBankInfoList()
+        {
+            var sql = @"select Id,Name from Bank";
+            var dt1 = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.SerializeObject(dt1);
+            return reply;
+        }
     }
 }
