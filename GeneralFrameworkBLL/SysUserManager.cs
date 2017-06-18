@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define NEWLOGIN
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,19 +13,14 @@ namespace GeneralFrameworkBLL
     public class SysUserManager
     {
         SysUserService Sus = new SysUserService();
-        public bool Islogin(string username, string pwd)
+        public SysUser Login(string username, string pwd, out string msg)
         {
-            bool islogin = false;
-            if (Sus.getUserCount(username, pwd) == 1)
-            {
-                islogin = true;
-            }
-            return islogin;
-        }
-
-        public SysUser Login(string username, string pwd)
-        {
+#if NEWLOGIN
+            return Sus.Login(username, pwd, out msg);
+#else
+            msg = "";
             return Sus.GetSysUserInfo(username, pwd);
+#endif
         }
 
         public DataTable GetUserDT()
@@ -41,7 +37,7 @@ namespace GeneralFrameworkBLL
             return UserJson;
         }
 
-        public int EditUserPwd(string username, string pwd)
+        public bool EditUserPwd(string username, string pwd)
         {
             return Sus.EditUserPwd(username, pwd);
         }
@@ -61,7 +57,7 @@ namespace GeneralFrameworkBLL
         }
         public bool chongzhipwd(string UserId, string pwd)
         {
-            return Sus.chongzhipwd(UserId, pwd);
+            return Sus.Chongzhipwd(UserId, pwd);
         }
         public string GetSysRolesCmb()
         {
@@ -78,6 +74,11 @@ namespace GeneralFrameworkBLL
         public bool AddUserInfo(SysUser user)
         {
             return Sus.AddUserInfo(user);
+        }
+
+        public bool Regist(string username, string md5pwd, out string msg)
+        {
+            return Sus.Regist(username, md5pwd, out msg);
         }
     }
 }

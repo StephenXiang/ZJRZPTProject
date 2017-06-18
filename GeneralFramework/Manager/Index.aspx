@@ -98,7 +98,7 @@
                     data: { UserName: $('#textUserName').val(), Pwd: newpwd },
                     url: "../../WebServer/UserLoginWebService.ashx?Method=EditUserPwd",
                     success: function (text) {
-                        if (text == "1") {
+                        if (text === "True") {
                             $.messager.alert('提示', '密码修改成功！', 'info');
                             $('#dlg').dialog('close');
                         } else {

@@ -69,7 +69,8 @@ namespace GeneralFramework.WebServer
         {
             var UserName = Request.Form["UserName"];
             var Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"], "MD5").ToLower();
-            var loginInfo = sum.Login(UserName, Pwd);
+            string msg;
+            var loginInfo = sum.Login(UserName, Pwd, out msg);
             if (loginInfo != null)
             {
                 Session["UserName"] = UserName;
@@ -79,8 +80,35 @@ namespace GeneralFramework.WebServer
             {
                 name = UserName,
                 status = loginInfo != null,
-                role = loginInfo != null ? loginInfo.RoleId : 0
+                role = loginInfo != null ? loginInfo.RoleId : 0,
+                msg = msg
             }));
+        }
+
+        public void Regist()
+        {
+            var userName = Request.Form["UserName"];
+            var Pwd = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(Request.Form["Pwd"], "MD5").ToLower();
+            string msg;
+            var status = sum.Regist(userName, Pwd, out msg);
+            Response.Write(JsonHelper.SerializeObject(new
+            {
+                status,
+                msg
+            }));
+        }
+
+        public void ExitLogin()
+        {
+            var userName = Request.Form["UserName"];
+            Session.Clear();
+        }
+
+        public void IsLogined()
+        {
+            var userName = Request.Form["UserName"];
+            var sessionun = Session["UserName"] ?? "";
+            Response.Write(userName != null && userName == sessionun.ToString());
         }
 
         public void GetLoginUserInfo()
@@ -142,6 +170,7 @@ namespace GeneralFramework.WebServer
             string Did = Request["Did"];
             Response.Write(sum.GetSysRoleId(Did));
         }
+
         public void AddUserInfo()
         {
             var data = Request;

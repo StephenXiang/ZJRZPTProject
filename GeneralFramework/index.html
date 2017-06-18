@@ -5,10 +5,12 @@
     <title>镇江市融资服务平台</title>
     <link rel="stylesheet" type="text/css" href="HtmlWebSite/css/index.css" />
     <script type="text/javascript" src="HtmlWebSite/js/jquery-1.9.1.min.js" language="javascript"></script>
+    <script src="Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         $(function () {
             loadIndexNewsInfo();
             loadIndexTJInfo();
+            initLogin();
         });
 
         function loadIndexNewsInfo() {
@@ -113,7 +115,12 @@
         <div class="head">
             <div class="head_l">
                 <div class="headpic"><img src="HtmlWebSite/images/12_388.png" /></div>
-                <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
+                <div id="head_l_info" class="head_l_con" style="display: none">
+                    <a id="logined-username" href="javascript:gotoUserBackgourd();"></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:exitLogin();">退出</a>
+                </div>
+                <div id="head_l_con" class="head_l_con">
+                    <a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a>
+                </div>
             </div>
             <div class="head_r">
                 <div class="head_rd">
@@ -480,19 +487,19 @@
         </div>
         <div class="ui-dialog-content">
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+                <input id="login-username" class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
             </div>
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+                <input id="login-passwords" class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
             </div>
             <div class="ui-dialog-l40">
 
             </div>
             <div>
-                <a class="ui-dialog-submit" href="#">登录</a>
+                <a class="ui-dialog-submit" href="#" onclick="login()">登录</a>
             </div>
             <div class="ui-dialog-l40">
-                <a href="#">立即注册</a>
+                <a href="#" onclick="toRegist()">立即注册</a>
             </div>
         </div>
     </div>
@@ -508,22 +515,22 @@
         </div>
         <div class="ui-dialog-content">
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+                <input id="regist-username" class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
             </div>
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+                <input id="regist-pwd" class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
             </div>
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
+                <input id="regist-pwd-confirm" class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
             </div>
             <div class="ui-dialog-l40">
 
             </div>
             <div>
-                <a class="ui-dialog-submit" href="#">注册</a>
+                <a class="ui-dialog-submit" href="#" onclick="regist()">注册</a>
             </div>
             <div class="ui-dialog-l40">
-                <a href="#">立即登录</a>
+                <a href="#" onclick="toLogin()">立即登录</a>
             </div>
         </div>
     </div>

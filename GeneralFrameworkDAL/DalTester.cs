@@ -69,12 +69,12 @@ SELECT @@IDENTITY";
         public void TestUserLogin()
         {
             Net965808Service ns = new Net965808Service();
-            string userid;
+            string userid, msg;
             var user = "yinweiwen";
-            var res = ns.Login(user, "Zxc123456", out userid, false) ? "登录成功" : "登录失败";
+            var res = ns.Login(user, "Zxc123456", out userid, out msg, false) ? "登录成功" : "登录失败";
             Console.WriteLine("用户{0}{1},userId={2}", user, res, userid);
             user = "xiangpeng";
-            res = ns.Login(user, "123456", out userid) ? "登录成功" : "登录失败";
+            res = ns.Login(user, "123456", out userid, out msg) ? "登录成功" : "登录失败";
             Console.WriteLine("用户{0}{1},userId={2}", user, res, userid);
         }
 
@@ -83,7 +83,8 @@ SELECT @@IDENTITY";
         public void TestRegister()
         {
             Net965808Service ns = new Net965808Service();
-            var res = ns.Regist("xiangpeng", "1234567") ? "注册成功" : "注册失败";
+            string msg;
+            var res = ns.Regist("xiangpeng", "1234567", out msg, false) ? "注册成功" : "注册失败";
             Console.WriteLine(res);
         }
 
@@ -92,7 +93,7 @@ SELECT @@IDENTITY";
         public void TestModify()
         {
             Net965808Service ns = new Net965808Service();
-            var res = ns.Modify("xiangpeng", "123456", "1234567") ? "修改成功" : "修改失败";
+            var res = ns.Modify("xiangpeng", "123456", "1234567", "", "", false) ? "修改成功" : "修改失败";
             Console.WriteLine(res);
         }
 
