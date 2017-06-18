@@ -32,5 +32,10 @@ namespace GeneralFrameworkBLL
         {
             return _prs.GetIndexTJJson();
         }
+
+        public bool Delete(int id)
+        {
+            return _prs.DeleteRz(id);
+        }
     }
 }

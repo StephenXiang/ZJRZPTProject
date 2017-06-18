@@ -47,5 +47,10 @@ namespace GeneralFrameworkBLL
         {
             return _ms.LeaveMesage(username, title, content);
         }
+
+        public bool Delete(int id)
+        {
+            return _ms.DelMessage(id);
+        }
     }
 }

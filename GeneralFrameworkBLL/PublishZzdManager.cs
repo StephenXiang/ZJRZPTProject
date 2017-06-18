@@ -29,5 +29,10 @@ namespace GeneralFrameworkBLL
         {
             return _zs.GetZZDLBJson(user, page, rows);
         }
+
+        public bool Delete(int id)
+        {
+            return _zs.Delete(id);
+        }
     }
 }

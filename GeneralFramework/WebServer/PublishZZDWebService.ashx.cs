@@ -92,5 +92,11 @@ namespace GeneralFramework.WebServer
             int rows = int.Parse(Request["rows"].ToString());
             Response.Write(_zm.GetZZDLBJson(userName, page, rows));
         }
+
+        public void Delete()
+        {
+            var id = Convert.ToInt32(Request["id"]);
+            Response.Write(_zm.Delete(id));
+        }
     }
 }

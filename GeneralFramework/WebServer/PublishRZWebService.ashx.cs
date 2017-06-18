@@ -108,5 +108,11 @@ namespace GeneralFramework.WebServer
         {
             Response.Write(_pm.GetIndexTJJson());
         }
+
+        public void Delete()
+        {
+            var id = Convert.ToInt32(Request["id"]);
+            Response.Write(_pm.Delete(id));
+        }
     }
 }

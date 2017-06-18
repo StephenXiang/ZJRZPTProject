@@ -56,10 +56,17 @@ PublishDate as ZZDPublishDate
 from ZZDFlow f
 left join Bank b on b.Id=f.BankId
 left join Bank b2 on b2.Id=f.MastBankId
-where f.EnterpriseId={0} order by f.Id Desc", ent);
+where f.EnterpriseId={0} and f.IsDeleted=0 order by f.Id Desc", ent);
             var dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
             return reply;
+        }
+
+        public bool Delete(int id)
+        {
+            var sql = string.Format("update ZZDFlow set IsDeleted=1 where Id={0}", id);
+            DBHelper.Execute(sql);
+            return true;
         }
     }
 }

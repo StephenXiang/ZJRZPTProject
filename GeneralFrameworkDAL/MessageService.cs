@@ -17,9 +17,9 @@ namespace GeneralFrameworkDAL
 (case m.Status when '0' then '未处理' when '1' then '已回复' end) as Status,
 (case when m.UserPhone is null then u.Phone else m.UserPhone end) as UserPhone,
 (case when m.UserName is null then u.UserName else m.UserName end) as UserName
-from Message m left join SysUser u on m.UserId=u.ID
+from Message m left join SysUser u on m.UserId=u.ID where m.IsDeleted=0
 " + (status == null ? "order by m.ReplyDate desc,m.Date desc" :
-string.Format("where m.Status={0} {1}", status, status == 0 ? "order by m.Date desc" : "order by m.ReplyDate desc,m.Date desc"));
+string.Format("and m.Status={0} {1}", status, status == 0 ? "order by m.Date desc" : "order by m.ReplyDate desc,m.Date desc"));
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
         }
@@ -28,7 +28,7 @@ string.Format("where m.Status={0} {1}", status, status == 0 ? "order by m.Date d
         {
             var sql = string.Format(@"select Id as ID,Type,UserPhone,Title,Content,UserName,Date,(
 case Status when '0' then '未处理' when '1' then '已回复' end) as Status,
-ReplyUser,ReplyContent,ReplyDate from Message where UserId in (select ID from SysUser where UserName='{0}')
+ReplyUser,ReplyContent,ReplyDate from Message where UserId in (select ID from SysUser where UserName='{0}') and IsDeleted=0
 order by Date desc",
                 username);
             var dt = DBHelper.GetDataSet(sql);
@@ -68,6 +68,8 @@ values (@title,@cont,@ui,@date,0)";
 
         public bool DelMessage(int msgId)
         {
+            var sql = string.Format("update Message set IsDeleted=1 where Id={0}", msgId);
+            DBHelper.Execute(sql);
             return true;
         }
 

@@ -14,6 +14,7 @@
         var UserInfo;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         var lyid;
+        var lyido;
         $(function () {
             loadLYDG();
             loadHandledLYDG();
@@ -22,6 +23,7 @@
         });
 
         function loadLYDG() {
+            lyid = 0;
             $('#LY_dg').datagrid({
                 url: '../../WebServer/MessageService.ashx?Method=LoadMessages',
                 queryParams: { UserName: UserInfo["name"] },
@@ -48,15 +50,7 @@
                     iconCls: 'icon-remove',
                     text: '删除留言',
                     handler: function () {
-                        /*
-                        {
-                    iconCls: 'icon-save',
-                    text: '回复留言',
-                    handler: function () {
-                        openLYDlg();
-                    }
-                }, '-',
-                        */
+                        deleteLY(lyid, false);
                     }
                 }],
                 onClickRow: (function (index, data) {
@@ -67,7 +61,38 @@
                 })
             });
         }
+        function deleteLY(selectid, handled) {
+            if (selectid == 0) {
+                alert('请先选择要删除的项');
+                return;
+            }
+            $.messager.confirm('提示', '确认删除当前选择项？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../../WebServer/MessageService.ashx?Method=Delete",
+                        data: { 'id': selectid },
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                if (handled)
+                                    loadHandledLYDG();
+                                else
+                                    loadLYDG();
+                                $.messager.alert('提示', '留言信息删除成功', 'info');
+                            } else {
+                                $.messager.alert('提示', '留言信息删除失败，请重试', 'error');
+                            }
+                        },
+                        error: function (message) {
+                            $.messager.alert('提示', '留言信息删除失败，请重试', 'error');
+                        }
+                    });
+                };
+            });
+        }
         function loadHandledLYDG() {
+            lyido = 0;
             $('#LY_dgOLD').datagrid({
                 url: '../../WebServer/MessageService.ashx?Method=LoadHandledMessages',
                 queryParams: { UserName: UserInfo["name"] },
@@ -94,6 +119,16 @@
                     { field: 'ReplyUser', title: '处理人', width: '300', align: 'center' },
                     { field: 'ReplyDate', title: '处理时间', width: '300', align: 'center' }
                 ]],
+                toolbar: [{
+                    iconCls: 'icon-remove',
+                    text: '删除留言',
+                    handler: function () {
+                        deleteLY(lyido, true);
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    lyido = data.ID;
+                }),
                 onDblClickRow: (function (index, row) {
                     openLYDlgOld(row);
                 })
@@ -127,7 +162,7 @@
                     url: "../../WebServer/MessageService.ashx?Method=SaveReply",
                     data: JSON.stringify(GetJsonData()),
                     success: function (text) {
-                        if (text =="True") {
+                        if (text == "True") {
                             $.messager.alert('提示', '留言回复成功！', 'info');
                             $('#LYdlg').dialog('close');
                             loadLYDG();
