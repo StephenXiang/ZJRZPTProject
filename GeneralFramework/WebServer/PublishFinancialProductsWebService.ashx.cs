@@ -107,5 +107,11 @@ namespace GeneralFramework.WebServer
             int id = int.Parse(Request["jrcpid"].ToString());
             Response.Write(_pm.GetJRCPById(id));
         }
+
+        public void Delete()
+        {
+            var id = Convert.ToInt32(Request["id"]);
+            Response.Write(_pm.Delete(id));
+        }
     }
 }

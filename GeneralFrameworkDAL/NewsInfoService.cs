@@ -14,7 +14,7 @@ namespace GeneralFrameworkDAL
             var countDt = DBHelper.GetDataSet(sqlCount);
             var sql = string.Format(@"
 select top {0} ID,NewsTitle,NewsLink,NewsType,Relation_Firm,Createdate,CreateUser from (
-select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo where NewsType='{2}' and IsDelete=0) as r where r.rowId>{1}
+select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo where NewsType='{2}' and IsDeleted=0) as r where r.rowId>{1}
 ", rows, (page - 1) * rows, type);
             var dt = DBHelper.GetDataSet(sql);
             var json = JsonHelper.TableToJson(countDt.Rows.Count, dt);
@@ -39,7 +39,7 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
 
         public int DelNews(int newsId)
         {
-            var sql = "update NewsInFo set IsDelete=1 , DeleteAt='" + DateTime.Now + "' where ID = '" + newsId + "'";
+            var sql = "update NewsInFo set IsDeleted=1 , DeleteAt='" + DateTime.Now + "' where ID = '" + newsId + "'";
             var i = DBHelper.GetNonQuery(sql);
             return i;
         }
@@ -73,7 +73,7 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
                 count = 8;
             }
             List<IndexNewsInfo> list = new List<IndexNewsInfo>();
-            var sql = "select top(" + count + ") ID,NewsTitle, CONVERT(varchar(5), Createdate, 110) as createdate from NewsInFo where NewsType='" + NewsType + "' order by ID desc";
+            var sql = "select top(" + count + ") ID,NewsTitle, CONVERT(varchar(5), Createdate, 110) as createdate from NewsInFo where NewsType='" + NewsType + "' and IsDeleted=0 order by ID desc";
             var dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
@@ -94,7 +94,7 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
 
         public string GetZCNewsList(string newstype, int PageIndex, int PageSize)
         {
-            var sql = "select Id,NewsTitle,NewsContent,Createdate from NewsInFo where NewsType ='" + newstype + "' order by Createdate desc";
+            var sql = "select Id,NewsTitle,NewsContent,Createdate from NewsInFo where NewsType ='" + newstype + "' and IsDeleted=0 order by Createdate desc";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
         }

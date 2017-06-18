@@ -70,6 +70,7 @@
         });
 
         function loadZCDG() {
+            newsZcId = '';
             $('#ZC_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetZCDG',
                 rownumbers: true,
@@ -110,6 +111,7 @@
         }
 
         function loadGGDG() {
+            newsGgId = '';
             $('#GG_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetGGDG',
                 rownumbers: true,

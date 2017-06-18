@@ -14,7 +14,7 @@ namespace GeneralFrameworkDAL
         public string GetJRCPTableJson(int page, int rows)
         {
             string sql = @"select a.Id,a.Title,b.Name,a.PublishDate,a.Status from JRCPFlow a 
-left join Bank b on a.BankId = b.Id order by a.Id desc";
+left join Bank b on a.BankId = b.Id where a.IsDeleted=0 order by a.Id desc";
             DataTable dt = DBHelper.GetDataSet(sql);
             return JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
         }

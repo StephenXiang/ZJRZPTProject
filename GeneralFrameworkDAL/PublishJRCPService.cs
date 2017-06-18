@@ -55,7 +55,7 @@ Dianhua,Jianjie,CONVERT(varchar(30),PublishDate,102) as PublishDate,
 case Status when 0 then '待审批' when 1 then '审核已通过' else '审核未通过' end as Status
 from JRCPFlow f
 left join [Lookup] l on l.Id=f.DanbaoId
-where BankId={0} order by f.Id Desc
+where BankId={0} and f.IsDeleted=0 order by f.Id Desc
 ", bank);
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JSON.JsonHelper.GetPagedTable(dt, page, rows));
@@ -67,7 +67,7 @@ where BankId={0} order by f.Id Desc
             List<IndexNewsInfo> list = new List<IndexNewsInfo>();
             var sql = @"select top(6) b.Name,a.Id,Title,CONVERT(varchar(5), PublishDate, 110) as createdate from JRCPFlow a 
 left join Bank b on a.BankId = b.Id
- where Status = 1 order by a.Id desc";
+ where Status = 1 and a.IsDeleted=0 order by a.Id desc";
             var dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
@@ -172,7 +172,7 @@ left join Bank b on a.BankId = b.Id
 left join Bank b on a.BankId = b.Id
 left join MainBank c on b.MainBankId = c.Id
 left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a.DanbaoId = d.Id
- where a.Status  = 1 " + where + " order by a.PublishDate desc";
+ where a.Status  = 1 and a.IsDeleted=0 " + where + " order by a.PublishDate desc";
             DataTable dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
         }
@@ -186,6 +186,13 @@ left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a
  where a.Id = '" + id + "'";
             DataTable dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
+        }
+
+        public bool Delete(int id)
+        {
+            var sql = string.Format("update JRCPFlow set IsDeleted=1 where Id={0}", id);
+            DBHelper.Execute(sql);
+            return true;
         }
     }
 }

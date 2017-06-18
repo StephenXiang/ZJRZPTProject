@@ -32,7 +32,7 @@ namespace GeneralFrameworkDAL
                 sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c.Name as BankName,a.ThisQuota,a.PublishDate,a.[Status] from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID
 left join Bank c on a.BankId = c.Id
-where  a.MastBankId = '" + BankId + "' order by a.Id Desc";
+where  a.MastBankId = '" + BankId + "' and a.IsDeleted=0 order by a.Id Desc";
                 var dt1 = DBHelper.GetDataSet(sql);
                 return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }
@@ -41,7 +41,7 @@ where  a.MastBankId = '" + BankId + "' order by a.Id Desc";
                 sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c1.Name as Bank1,c2.Name as BankName,a.ThisQuota,a.PublishDate,a.[Status] from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID
 left join Bank c1 on a.MastBankId = c1.Id
-left join Bank c2 on a.BankId = c2.Id order by a.Id Desc";
+left join Bank c2 on a.BankId = c2.Id where a.IsDeleted=0 order by a.Id Desc";
                 var dt1 = DBHelper.GetDataSet(sql);
                 return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }

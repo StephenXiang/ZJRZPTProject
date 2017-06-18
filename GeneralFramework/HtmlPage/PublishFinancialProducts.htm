@@ -17,6 +17,7 @@
     <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         var UserInfo;
+        var selectid;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#FPdlg').dialog('close');
@@ -24,6 +25,7 @@
         });
 
         function LoadJRCPDG() {
+            selectid = 0;
             $('#FP_dg').datagrid({
                 url: '../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetJRCPLBJson',
                 queryParams: { UserName: UserInfo["name"] },
@@ -59,15 +61,42 @@
                     iconCls: 'icon-remove',
                     text: '删除金融产品',
                     handler: function () {
-
+                        deleteJRCP();
                     }
                 }],
                 onClickRow: (function (index, data) {
-
+                    selectid = data.ID;
                 }),
                 onDblClickRow: (function (index, row) {
 
                 })
+            });
+        }
+        function deleteJRCP() {
+            if (selectid == 0) {
+                alert('请先选择要删除的项');
+                return;
+            }
+            $.messager.confirm('提示', '确认删除当前选择项？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=Delete",
+                        data: { 'id': selectid },
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                LoadJRCPDG();
+                                $.messager.alert('提示', '金融产品信息删除成功', 'info');
+                            } else {
+                                $.messager.alert('提示', '金融产品信息删除失败，请重试', 'error');
+                            }
+                        },
+                        error: function (message) {
+                            $.messager.alert('提示', '金融产品信息删除失败，请重试', 'error');
+                        }
+                    });
+                };
             });
         }
 

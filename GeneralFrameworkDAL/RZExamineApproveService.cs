@@ -32,7 +32,7 @@ namespace GeneralFrameworkDAL
             {
                 sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
-left join Enterprise c on a.EnterpriseId = c.ID where BankIds like '%" + BankId + "%'";
+left join Enterprise c on a.EnterpriseId = c.ID where BankIds like '%" + BankId + "%' and a.IsDeleted=0";
                 var dt1 = DBHelper.GetDataSet(sql);
                 if (dt1.Rows.Count == 0)
                 {
@@ -68,7 +68,7 @@ left join Enterprise c on a.EnterpriseId = c.ID where BankIds like '%" + BankId 
             {
                 sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
-left join Enterprise c on a.EnterpriseId = c.ID";
+left join Enterprise c on a.EnterpriseId = c.ID where a.IsDeleted=0";
                 var banks = BankInfoService.GetBanks();
                 var dt1 = DBHelper.GetDataSet(sql);
                 if (dt1.Rows.Count == 0)
