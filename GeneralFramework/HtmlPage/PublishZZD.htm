@@ -12,6 +12,7 @@
     <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         var UserInfo;
+        var selectid;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZZDdlg').dialog('close');
@@ -19,6 +20,7 @@
         });
 
         function LoadZZDDG() {
+            selectid = 0;
             $('#ZZD_dg').datagrid({
                 url: '../../WebServer/PublishZZDWebService.ashx?Method=GetZZDLBJson',
                 queryParams: { UserName: UserInfo["name"] },
@@ -79,15 +81,43 @@
                     iconCls: 'icon-remove',
                     text: '删除周转贷',
                     handler: function () {
-
+                        deleteZZD();
                     }
                 }],
                 onClickRow: (function (index, data) {
-
+                    selectid = data.ZZDID;
                 }),
                 onDblClickRow: (function (index, row) {
 
                 })
+            });
+        }
+
+        function deleteZZD() {
+            if (selectid == 0) {
+                alert('请先选择要删除的项');
+                return;
+            }
+            $.messager.confirm('提示', '确认删除当前选择项？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../../WebServer/PublishZZDWebService.ashx?Method=Delete",
+                        data: { 'id': selectid },
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                LoadZZDDG();
+                                $.messager.alert('提示', '周转贷信息删除成功', 'info');
+                            } else {
+                                $.messager.alert('提示', '周转贷信息删除失败，请重试', 'error');
+                            }
+                        },
+                        error: function (message) {
+                            $.messager.alert('提示', '周转贷信息删除失败，请重试', 'error');
+                        }
+                    });
+                };
             });
         }
 

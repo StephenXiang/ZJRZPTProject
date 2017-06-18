@@ -126,5 +126,11 @@ namespace GeneralFramework.WebServer
             var rows = int.Parse(Request["rows"].ToString());
             Response.Write(_mm.GetUserMessages(page, rows, userName));
         }
+
+        public void Delete()
+        {
+            var id = Convert.ToInt32(Request["id"]);
+            Response.Write(_mm.Delete(id));
+        }
     }
 }

@@ -2,8 +2,6 @@
 using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
 using System.Data;
-using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace GeneralFrameworkDAL
 {
@@ -44,43 +42,14 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
                 new SqlParameter("@ent", ent),
                 new SqlParameter("@bks", rzi.RZYH),
                 new SqlParameter("@dm", demid));
-            if (efc > 0)
-            {
-                List<PhoneList> phonelist = new List<PhoneList>();
-                sql = "select Phone from SysUser where RolesID = 2";
-                DataTable dt = DBHelper.GetDataSet(sql);
-                if (dt.Rows.Count > 0)
-                {
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        PhoneList phone = new PhoneList();
-                        phone.Phone = dr[0].ToString();
-                        phonelist.Add(phone);
-                    }
-                }
-                sql = string.Format(@"select ConnectorPhone from Bank where Id in({0})", rzi.RZYH);
-                DataTable yhdt = DBHelper.GetDataSet(sql);
-                if (yhdt.Rows.Count > 0)
-                {
-                    foreach (DataRow yhdr in yhdt.Rows)
-                    {
-                        PhoneList phone = new PhoneList();
-                        phone.Phone = yhdr[0].ToString();
-                        phonelist.Add(phone);
-                    }
-                }
-                SmsService sms = new SmsService();
-                for (int h = 0; h < phonelist.Count; h++)
-                {
-                    sms.Send(phonelist[h].ToString(), "有新的融资申请，请及时登陆镇江融资平台查看详细信息");
-                }
-            }
             return efc > 0;
         }
 
-        struct PhoneList
+        public bool DeleteRz(int id)
         {
-            public string Phone;
+            var sql = string.Format("update RZFlow set IsDeleted=1 where Id={0}", id);
+            DBHelper.Execute(sql);
+            return true;
         }
 
         public string GetRZLBJson(string UserName, int page, int rows)
@@ -89,10 +58,10 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
             var ent = DBHelper.GetScalar(sql) as int?;
             if (ent == null) return "";
             sql = string.Format(@"select b.Id as ID,a.Quota as RZED,c.[Desc] as RZQX,b.BankIds as SXYH, d.[Desc] as RZYT,a.CollateralDesc as DYW,b.PublishDate,b.[Status] from RZDemandInfo a 
-left join RZFlow b on a.Id = b.DemandId
+join RZFlow b on a.Id = b.DemandId
 left join (select * from Lookup where Type = 8) c on a.TermId = c.Id
 left join (select * from Lookup where Type = 9) d on a.PurposeId = d.Id
-where b.EnterpriseId = {0} order by b.Id Desc", ent);
+where b.EnterpriseId = {0} and b.IsDeleted=0 order by b.Id Desc", ent);
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
             return reply;
@@ -145,50 +114,50 @@ where b.EnterpriseId = {0} order by b.Id Desc", ent);
             int djzzdcgsl = 0;
             double djzzdcgje = 0;
 
-            var RZsql = "select * from RZFlow";
+            var RZsql = "select * from RZFlow where IsDeleted=0";
             rzdt = DBHelper.GetDataSet(RZsql);
             fbrzsl = rzdt.Rows.Count;
-            RZsql = "select SUM(Quota) from RZDemandInfo";
+            RZsql = "select SUM(Quota) from RZDemandInfo r,RZFlow f where f.DemandId=r.Id and f.IsDeleted=0";
             rzdt = DBHelper.GetDataSet(RZsql);
             dr = rzdt.Rows[0];
             fbrzje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
 
-            RZsql = "select * from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status in (1,2)";
+            RZsql = "select * from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status in (1,2) and a.IsDeleted=0";
             rzdt = DBHelper.GetDataSet(RZsql);
             djrzsl = rzdt.Rows.Count;
-            RZsql = "select SUM(Quota) from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status in (1,2)";
+            RZsql = "select SUM(Quota) from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status in (1,2) and a.IsDeleted=0";
             rzdt = DBHelper.GetDataSet(RZsql);
             dr = rzdt.Rows[0];
             djrzje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
 
-            RZsql = "select * from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status = 3";
+            RZsql = "select * from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status = 3 and a.IsDeleted=0";
             rzdt = DBHelper.GetDataSet(RZsql);
             djcgsl = rzdt.Rows.Count;
-            RZsql = "select SUM(Quota) from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status = 3";
+            RZsql = "select SUM(Quota) from RZFlow a left join RZDemandInfo b on a.DemandId = b.Id where a.Status = 3 and a.IsDeleted=0";
             rzdt = DBHelper.GetDataSet(RZsql);
             dr = rzdt.Rows[0];
             djcgje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
 
-            var ZZDsql = "select * from ZZDFlow";
+            var ZZDsql = "select * from ZZDFlow where IsDeleted=0";
             zzddt = DBHelper.GetDataSet(ZZDsql);
             fbzzdsl = zzddt.Rows.Count;
-            ZZDsql = "select SUM(ThisQuota) from ZZDFlow";
+            ZZDsql = "select SUM(ThisQuota) from ZZDFlow where IsDeleted=0";
             zzddt = DBHelper.GetDataSet(ZZDsql);
             dr = zzddt.Rows[0];
             fbzzdje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
 
-            ZZDsql = "select * from ZZDFlow where Status in (1,2)";
+            ZZDsql = "select * from ZZDFlow where Status in (1,2) and IsDeleted=0";
             zzddt = DBHelper.GetDataSet(ZZDsql);
             djzzdsl = zzddt.Rows.Count;
-            ZZDsql = "select SUM(ThisQuota) from ZZDFlow where Status in (1,2)";
+            ZZDsql = "select SUM(ThisQuota) from ZZDFlow where Status in (1,2) and IsDeleted=0";
             zzddt = DBHelper.GetDataSet(ZZDsql);
             dr = zzddt.Rows[0];
             djzzdje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());
 
-            ZZDsql = "select * from ZZDFlow where Status = 3";
+            ZZDsql = "select * from ZZDFlow where Status = 3 and IsDeleted=0";
             zzddt = DBHelper.GetDataSet(ZZDsql);
             djzzdcgsl = zzddt.Rows.Count;
-            ZZDsql = "select SUM(ThisQuota) from ZZDFlow where Status = 3";
+            ZZDsql = "select SUM(ThisQuota) from ZZDFlow where Status = 3 and IsDeleted=0";
             zzddt = DBHelper.GetDataSet(ZZDsql);
             dr = zzddt.Rows[0];
             djzzdcgje = double.Parse(dr[0].ToString() == "" ? "0.0" : dr[0].ToString());

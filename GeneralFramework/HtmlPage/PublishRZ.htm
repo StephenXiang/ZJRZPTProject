@@ -12,6 +12,7 @@
     <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         var UserInfo;
+        var selectid;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#DywTR').hide();
@@ -19,6 +20,7 @@
             LoadRZDG();
         });
         function LoadRZDG() {
+            selectid = 0;
             $('#RZ_dg').datagrid({
                 url: '../../WebServer/PublishRZWebService.ashx?Method=GetRZLBJson',
                 queryParams: { UserName: UserInfo["name"] },
@@ -34,60 +36,60 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'RZED', title: '融资额度(单位：万元)', width: '300', align: 'center' },
-                                    { field: 'RZQX', title: '融资期限', width: '300', align: 'center' },
-                                    {
-                                        field: 'SXYH', title: '所选银行', width: '300', align: 'center', formatter:
-                                            function (value, row, index) {
-                                                if (value != "") {
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        async: false,
-                                                        dataType: "text",
-                                                        url: "../../WebServer/PublishRZWebService.ashx?Method=GetRZBankstr",
-                                                        data: { 'BankIds': value },
-                                                        success: function (text) {
-                                                            value = text;
-                                                        }
-                                                    });
-                                                    return value;
-                                                } else {
-                                                    return "无";
-                                                }
-                                            }
-                                    },
-                                    { field: 'RZYT', title: '融资用途', width: '300', align: 'center' },
-                                    {
-                                        field: 'DYW', title: '抵押物', width: '300', align: 'center', formatter:
-                                           function (value, row, index) {
-                                               if (value == "") {
-                                                   return "无";
-                                               }
-                                           }
-                                    },
-                                    {
-                                        field: 'PublishDate', title: '发布时间', width: '300', align: 'center', formatter:
-                                         function (value, row, index) {
-                                             return jsonDateFormat(value);
-                                         }
-                                    },
-                                    {
-                                        field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
-                                           function (value, row, index) {
-                                               if (value == 0) {
-                                                   return '待受理';
-                                               } else if (value == 1) {
-                                                   return '受理中';
-                                               } else if (value == 2) {
-                                                   return '已受理';
-                                               } else if (value == 3) {
-                                                   return '受理成功';
-                                               } else if (value == 4) {
-                                                   return '受理不成功';
-                                               }
-                                           }
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'RZED', title: '融资额度(单位：万元)', width: '300', align: 'center' },
+                    { field: 'RZQX', title: '融资期限', width: '300', align: 'center' },
+                    {
+                        field: 'SXYH', title: '所选银行', width: '300', align: 'center', formatter:
+                        function (value, row, index) {
+                            if (value != "") {
+                                $.ajax({
+                                    type: "POST",
+                                    async: false,
+                                    dataType: "text",
+                                    url: "../../WebServer/PublishRZWebService.ashx?Method=GetRZBankstr",
+                                    data: { 'BankIds': value },
+                                    success: function (text) {
+                                        value = text;
                                     }
+                                });
+                                return value;
+                            } else {
+                                return "无";
+                            }
+                        }
+                    },
+                    { field: 'RZYT', title: '融资用途', width: '300', align: 'center' },
+                    {
+                        field: 'DYW', title: '抵押物', width: '300', align: 'center', formatter:
+                        function (value, row, index) {
+                            if (value == "") {
+                                return "无";
+                            }
+                        }
+                    },
+                    {
+                        field: 'PublishDate', title: '发布时间', width: '300', align: 'center', formatter:
+                        function (value, row, index) {
+                            return jsonDateFormat(value);
+                        }
+                    },
+                    {
+                        field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
+                        function (value, row, index) {
+                            if (value == 0) {
+                                return '待受理';
+                            } else if (value == 1) {
+                                return '受理中';
+                            } else if (value == 2) {
+                                return '已受理';
+                            } else if (value == 3) {
+                                return '受理成功';
+                            } else if (value == 4) {
+                                return '受理不成功';
+                            }
+                        }
+                    }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布融资',
@@ -98,15 +100,43 @@
                     iconCls: 'icon-remove',
                     text: '删除融资',
                     handler: function () {
-
+                        deleteRZ();
                     }
                 }],
                 onClickRow: (function (index, data) {
-
+                    selectid = data.ID;
                 }),
                 onDblClickRow: (function (index, row) {
 
                 })
+            });
+        }
+
+        function deleteRZ() {
+            if (selectid == 0) {
+                alert('请先选择要删除的项');
+                return;
+            }
+            $.messager.confirm('提示', '确认删除当前选择项？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../../WebServer/PublishRZWebService.ashx?Method=Delete",
+                        data: { 'id': selectid },
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                LoadRZDG();
+                                $.messager.alert('提示', '融资信息删除成功', 'info');
+                            } else {
+                                $.messager.alert('提示', '融资信息删除失败，请重试', 'error');
+                            }
+                        },
+                        error: function (message) {
+                            $.messager.alert('提示', '融资信息删除失败，请重试', 'error');
+                        }
+                    });
+                };
             });
         }
         function jsonDateFormat(jsonDate) {
