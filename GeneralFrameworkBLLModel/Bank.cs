@@ -19,6 +19,12 @@ namespace GeneralFrameworkBLLModel
 
         public string ConnectorPhone { get; set; }
 
+        public byte[] logo1 { get; set; }
+
+        public byte[] logo2 { get; set; }
+
+        public string BankDesc { get; set; }
+
         public string MainBankId { get; set; }
     }
 }

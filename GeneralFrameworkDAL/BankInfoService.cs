@@ -12,11 +12,14 @@ namespace GeneralFrameworkDAL
     {
         public string SaveBankInfo(Bank bank)
         {
-            var sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId)values(@name,@address,@connector,@ConnectorPhone,@MainBankId)";
+            var sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId,Logo,Logo2,[Desc])values(@name,@address,@connector,@ConnectorPhone,@MainBankId,@logo,@logo2,@Desc)";
             var id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
                 new SqlParameter("@address", bank.Address.Trim()),
                 new SqlParameter("@connector", bank.Connector.Trim()),
                 new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                new SqlParameter("@logo", bank.logo1),
+                new SqlParameter("@logo2", bank.logo2),
+                new SqlParameter("@Desc", bank.BankDesc),
                 new SqlParameter("@MainBankId", bank.MainBankId)) as int?;
             if (id > 0)
             {
@@ -87,6 +90,18 @@ left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             var dt1 = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt1);
             return reply;
+        }
+
+        public byte[] GetLogo2ImgForId(string Id)
+        {
+            var sql = "select Logo2 from Bank where Id = '" + Id + "'";
+            return (byte[])DBHelper.GetScalar(sql);
+        }
+
+        public byte[] GetLogoImgForId(string Id)
+        {
+            var sql = "select Logo from Bank where Id = '" + Id + "'";
+            return (byte[])DBHelper.GetScalar(sql);
         }
     }
 }

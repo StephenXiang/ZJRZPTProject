@@ -38,12 +38,17 @@
                     $('#tiaojian').html(json[0].Tiaojian);
                     $('#kehu').html(json[0].Kehu);
                     $('#cailiao').html(json[0].Cailiao);
+                    $('#imgDiv').html(GetLogoImg(json[0].BankId));
                 }
             });
         }
 
         function fanhui() {
             window.history.back();
+        }
+        function GetLogoImg(BankId) {
+            var imghtml = "<img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
+            return imghtml;
         }
     </script>
 </head>
@@ -96,7 +101,7 @@
             <div class="prodes">
                 <div class="prodescon">
                     <div class="prodeshead">
-                        <div class="prodeshp"><img src="images/bankxq.jpg" /></div>
+                        <div class="prodeshp" id="imgDiv"></div>
                         <div class="prodeshf">
                             <p class="prodesname" id="jrcptitle">燕谷信保贷</p><p><b>发布机构</b>：<label id="bankname"> 常熟农商行</label></p>
                         </div>

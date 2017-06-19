@@ -46,6 +46,7 @@
     <Compile Include="IndexNewsInfo.cs" />
     <Compile Include="IndexTJInfo.cs" />
     <Compile Include="JRCPInfo.cs" />
+    <Compile Include="MainBank.cs" />
     <Compile Include="MessageInfo.cs" />
     <Compile Include="NewsInfo.cs" />
     <Compile Include="RzInfo.cs" />

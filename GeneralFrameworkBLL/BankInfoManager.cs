@@ -27,5 +27,14 @@ namespace GeneralFrameworkBLL
         {
             return bi.GetBankInfoList();
         }
+        public byte[] GetLogo2ImgForId(string Id)
+        {
+            return bi.GetLogo2ImgForId(Id);
+        }
+
+        public byte[] GetLogoImgForId(string Id)
+        {
+            return bi.GetLogoImgForId(Id);
+        }
     }
 }

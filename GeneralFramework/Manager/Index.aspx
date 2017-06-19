@@ -30,9 +30,7 @@
             });
             UserInfo = JSON.parse($.cookie('UserInfo'));
             $('#user_msg').html('镇江市965808企业融资服务平台欢迎您：' + UserInfo['name']);
-
-        })
-
+        });
         function CreateNav() {
             var toptitle;
             for (var i = 0; i < NavMenu.length; i++) {

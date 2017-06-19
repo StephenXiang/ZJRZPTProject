@@ -66,14 +66,36 @@ namespace GeneralFramework.WebServer
 
         public void SaveBankInfo()
         {
-            var data = _request;
-            var sr = new StreamReader(data.InputStream);
-            var stream = sr.ReadToEnd();
-            var javaScriptSerializer = new JavaScriptSerializer();
-            var efi = javaScriptSerializer.Deserialize<Bank>(stream);
-            _response.Write(_bi.SaveBankInfo(efi));
-        }
+            var fs = _request.Files;
+            var logo1 = fs["Logo1"];
+            var logo2 = fs["logo2"];
 
+            Bank BankInfo = new Bank
+            {
+                UserName = _request.Form[0],
+                MainBankId = _request.Form[1],
+                Name = _request.Form[2],
+                Address = _request.Form[3],
+                Connector = _request.Form[4],
+                ConnectorPhone = _request.Form[5],
+                BankDesc = _request.Form[6],
+                logo1 = StreamToBytes(logo1.InputStream),
+                logo2 = StreamToBytes(logo2.InputStream)
+            };
+            //var data = _request;
+            //var sr = new StreamReader(data.InputStream);
+            //var stream = sr.ReadToEnd();
+            //var javaScriptSerializer = new JavaScriptSerializer();
+            //var efi = javaScriptSerializer.Deserialize<Bank>(stream);
+            _response.Write(_bi.SaveBankInfo(BankInfo));
+        }
+        public byte[] StreamToBytes(Stream stream)
+        {
+            var bytes = new byte[stream.Length];
+            stream.Read(bytes, 0, bytes.Length);
+            stream.Seek(0, SeekOrigin.Begin);
+            return bytes;
+        }
         public void GetBankId()
         {
             string userName = _request["UserName"];
@@ -89,6 +111,24 @@ namespace GeneralFramework.WebServer
         public void GetBankInfoList()
         {
             _response.Write(_bi.GetBankInfoList());
+        }
+
+        public void LoadLogo2Img()
+        {
+            var code = _request.QueryString["Id"].ToString();
+            var bytes = _bi.GetLogo2ImgForId(code);
+            _response.BinaryWrite(bytes);
+            _response.Flush();
+            _response.End();
+        }
+
+        public void LoadLogoImg()
+        {
+            var code = _request.QueryString["Id"].ToString();
+            var bytes = _bi.GetLogoImgForId(code);
+            _response.BinaryWrite(bytes);
+            _response.Flush();
+            _response.End();
         }
     }
 }
