@@ -11,6 +11,7 @@
             loadIndexNewsInfo();
             loadIndexTJInfo();
             initLogin();
+            loadBankImgList();
         });
 
         function loadIndexNewsInfo() {
@@ -107,6 +108,33 @@
         function searchjrcp() {
             location.href = "HtmlWebSite/products.html?dkqx=" + encodeURI($('#dkqxcmb').val()) + "&dkje=" + encodeURI($('#dkjecmb').val()) + "&dbfs=" + encodeURI($('#dbfscmb').val()) + "";
         }
+
+        function loadBankImgList() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: true,
+                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfoList",
+                success: function (json) {
+                    var JRCPJSON = json;
+                    var count = 18;
+                    if (JRCPJSON.length < 18) {
+                        count = JRCPJSON.length;
+                    }
+                    var imghtml = "";
+                    for (var i = 0; i < count; i++) {
+                        imghtml = imghtml + "<div class='banklist'>" + GetLogoImg(JRCPJSON[i].Id) + "</div>"
+                        //<div class="banklist"><img src="HtmlWebSite/images/bank02.png" /></div>
+                    }
+                    $('#BankImgList').html(imghtml);
+                }
+            });
+        }
+
+        function GetLogoImg(BankId) {
+            var imghtml = "<img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
+            return imghtml;
+        }
     </script>
 </head>
 
@@ -144,7 +172,7 @@
             <div class="menusin"><a href="HtmlWebSite/gglist.html">通知公告</a></div>
             <div class="menusin"><a href="HtmlWebSite/products.html">金融产品</a></div>
             <div class="menusin"><a href="HtmlWebSite/bank.html">合作银行</a></div>
-            <div class="menusin"><a href="#">企业风采</a></div>
+            <div class="menusin"><a href="HtmlWebSite/Enterprise.html">企业风采</a></div>
         </div>
     </div>
 
@@ -154,8 +182,8 @@
 
             <div class="common1">
                 <div class="block1">
-                    <div class="wyrz"><a href="#" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"><img src="HtmlWebSite/images/wyrz.png" /></a></div>
-                    <div class="wyrz"><a href="#"><img src="HtmlWebSite/images/wyzz.png" /></a></div>
+                    <div class="wyrz"><a href="login.html" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"><img src="HtmlWebSite/images/wyrz.png" /></a></div>
+                    <div class="wyrz"><a href="login.html"><img src="HtmlWebSite/images/wyzz.png" /></a></div>
                 </div>
 
                 <div class="block2">
@@ -420,8 +448,8 @@
 
             <div class="common4">
                 <div class="c4head">合作银行</div>
-                <div class="bank">
-                    <div class="banklist"><img src="HtmlWebSite/images/bank01.png" /></div>
+                <div class="bank" id="BankImgList">
+                    <!--<div class="banklist"><img src="HtmlWebSite/images/bank01.png" /></div>
                     <div class="banklist"><img src="HtmlWebSite/images/bank02.png" /></div>
                     <div class="banklist"><img src="HtmlWebSite/images/bank01.png" /></div>
                     <div class="banklist"><img src="HtmlWebSite/images/bank02.png" /></div>
@@ -438,7 +466,7 @@
                     <div class="banklist"><img src="HtmlWebSite/images/bank01.png" /></div>
                     <div class="banklist"><img src="HtmlWebSite/images/bank02.png" /></div>
                     <div class="banklist"><img src="HtmlWebSite/images/bank01.png" /></div>
-                    <div class="banklist"><img src="HtmlWebSite/images/bank02.png" /></div>
+                    <div class="banklist"><img src="HtmlWebSite/images/bank02.png" /></div>-->
                 </div>
             </div>
 

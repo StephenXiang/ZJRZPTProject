@@ -6,10 +6,56 @@
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
     <script type="text/javascript">
+        var bankid = 0;
+        $(function () {
+            bankid = getQueryStringByName("bankid");
+            loadBankInfo();
+        });
+        function getQueryStringByName(name) {
+            var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+            if (result == null || result.length < 1) {
+                return "";
+            }
+            return result[1];
+        }
         function fanhui() {
             window.history.back();
         }
 
+        function loadBankInfo() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: true,
+                data: { BankId: bankid },
+                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfolbForBankId",
+                success: function (json) {
+                    $('#bankDesc').html(json[0].Desc);
+                    $('#BankName').html(json[0].Name);
+                    $('#EditDate').html(jsonDateFormat(json[0].EditDate));
+                    $('#imgDiv').html(GetLogoImg(bankid));
+                }
+            });
+        }
+        function jsonDateFormat(jsonDate) {
+            try {
+                var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var seconds = date.getSeconds();
+                var milliseconds = date.getMilliseconds();
+                return date.getFullYear() + "-" + month + "-" + day;
+            } catch (ex) {
+                return "";
+            }
+        }
+
+        function GetLogoImg(BankId) {
+            var imghtml = "<img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
+            return imghtml;
+        }
     </script>
 </head>
 
@@ -37,12 +83,12 @@
 
     <div class="main_menu">
         <div class="menu">
-            <div class="menusin"><a href="index.html">首页</a></div>
-            <div class="menusin"><a href="list.html">政策资讯</a></div>
-            <div class="menusin"><a href="#">通知公告</a></div>
-            <div class="menusin"><a href="products.html">金融产品</a></div>
-            <div class="menusin"><a href="bank.html">合作银行</a></div>
-            <div class="menusin"><a href="#">企业风采</a></div>
+            <div class="menusin"><a href="../index.html">首页</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/zclist.html">政策资讯</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/gglist.html">通知公告</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/products.html">金融产品</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/bank.html">合作银行</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/Enterprise.html">企业风采</a></div>
         </div>
     </div>
 
@@ -60,12 +106,12 @@
 
             <div class="bankdes">
                 <div class="bankdescon">
-                    <div class="bankdesh">太仓担保</div>
-                    <div class="bankdesd"><b>发布日期：</b> 2017-11-03 12:23:54</div>
+                    <div class="bankdesh" id="BankName">太仓担保</div>
+                    <div class="bankdesd"><b>发布日期：</b> <label id="EditDate"></label></div>
                     <div class="bankdesc" id="content">
                         <!--富文本直接取出值，放在ID为content层下面，下面文字和图的样式只是例子-->
-                        <div class="bankdesp"><img src="images/tcdb.jpg" /></div>
-                        <div class="bankdesf">
+                        <div class="bankdesp" id="imgDiv"></div>
+                        <div id="bankDesc" class="bankdesf">
                             太仓市担保有限公司成立于2010年1月18日，由政府出资组建，以促进中小企业发展为己任，整合社会金融资源，关注企业融资需求，解决中小企业融资难题，扶持具有良好发展潜力的优秀中小企业成长，致力于为客户创造价值，持续超越客户的期望，共同打造投资担保的“助业”品牌，公司以风险监控为中心、合作发展为先导、规范管理为基础，全方位的开展营销服务活动。经营宗旨：诚信为本、开明为怀、双赢为上、发展为宗。经营理念：开拓市场、创新服务、绩效挂钩、打造品牌。公司精神：守法敬业、勤勉高效、精诚友善、共创佳绩。公司自2012年7月变更及实际经营后，经上级主管部门指定的信用评级机构评定，2013、2014及2015连续三年的信用等级均为A-级。
                             公司具有健全的公司治理机制，实行董事会领导下的总经理负责制。公司内设综合业务部、风险管理部、财务资金部，另设监事对董事会和管理层进行监督，企业领导层组织结构较为合理，公司内部信息流通顺畅，内部监督制度完善，人力资源配置合理。太仓市担保有限公司拥有一支高素质、专业化的员工队伍，公司管理人员都具有多年金融机构从业经验。
                             目前，公司已先后与当地12家银行等金融单位建立了合作关系，与各银行的业务关系相对稳定，获得银行总授信12亿元。 中小企业和个体工商户是经济发展的重要组成部分，随着他们对资金的要求逐年增加，太仓市担保有限公司作为国有控股的担保机构，应该能够发挥应有融资担保功能，满足中小微企业日益增长的融资需要，促进地方经济发展。

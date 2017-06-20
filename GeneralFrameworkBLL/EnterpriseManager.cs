@@ -39,5 +39,13 @@ namespace GeneralFrameworkBLL
         {
             return _es.GetEnterpriseFinanceInfoByUserName(username);
         }
+        public string GetEnterpriseInfoList()
+        {
+            return _es.GetEnterpriseInfoList();
+        }
+        public string GetEnterpriseInfoById(string id)
+        {
+            return _es.GetEnterpriseInfoById(id);
+        }
     }
 }

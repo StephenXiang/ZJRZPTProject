@@ -208,6 +208,8 @@
     <Content Include="HtmlWebSite\bank.html" />
     <Content Include="HtmlWebSite\bank_view.html" />
     <Content Include="HtmlWebSite\css\index.css" />
+    <Content Include="HtmlWebSite\Enterprise.html" />
+    <Content Include="HtmlWebSite\Enterprise_view.html" />
     <Content Include="HtmlWebSite\gglist.html" />
     <Content Include="HtmlWebSite\ggview.html" />
     <Content Include="HtmlWebSite\images\12_388.png" />

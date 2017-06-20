@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -6,10 +6,10 @@
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
     <script type="text/javascript">
-        var zcNewId = 0;
+        var EnterId = 0;
         $(function () {
-            zcNewId = getQueryStringByName("id");
-            loadNewsDetail();
+            EnterId = getQueryStringByName("id");
+            loadBankInfo();
         });
         function getQueryStringByName(name) {
             var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
@@ -18,22 +18,30 @@
             }
             return result[1];
         }
+        function fanhui() {
+            window.history.back();
+        }
 
-        function loadNewsDetail() {
+        function loadBankInfo() {
             $.ajax({
                 type: "get",
                 dataType: "json",
                 async: true,
-                data: { Id: zcNewId },
-                url: "../../WebServer/PublishZCGGWebService.ashx?Method=GetZCNewsDetail",
+                data: { id: EnterId },
+                url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoById",
                 success: function (json) {
-                    $('#zcNewsTitle').html(json[0].NewsTitle);
-                    $('#zcNewsDetail').html(json[0].NewsContent);
-                    $('#PublishDate').html(jsonDateFormat(json[0].Createdate));
+                    $('#BankName').html(json[0].Name);
+                    $('#labMainProduction').html(json[0].MainProduction);
+                    $('#labRegFinance').html(json[0].zczj);
+                    $('#labBusiness').html(json[0].yyfw);
+                    $('#labCreateTime').html(jsonDateFormat(json[0].CreateTime));
+                    $('#labConectionPerson').html(json[0].JuridicalPerson);
+                    $('#labConectionTelephone').html(json[0].ConnectionTelephone);
+                    $('#labDesc').html(json[0].Desc);
+                    //$('#imgDiv').html(GetLogoImg(bankid));
                 }
             });
         }
-
         function jsonDateFormat(jsonDate) {
             try {
                 var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
@@ -48,9 +56,13 @@
                 return "";
             }
         }
+
+        function GetLogoImg(BankId) {
+            var imghtml = "<img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
+            return imghtml;
+        }
     </script>
 </head>
-
 <body>
     <div class="main_head">
         <div class="head">
@@ -89,22 +101,63 @@
         <div class="main">
 
             <div class="listhead">
-                <div class="listhl">政策资讯</div>
+                <div class="listhl">企业风采</div>
                 <div class="listhr">
                     <div class="listhrp"><img src="images/home.png" /></div>
-                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">政策资讯</font></div>
+                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">企业风采</font></div>
                 </div>
             </div>
 
-            <div class="viewhead">
-                <div class="viewtitle" id="zcNewsTitle">科技企业上市培育专题辅导讲座在南京举办</div>
-                <div class="viewdes">来源：系统&nbsp;&nbsp;&nbsp;&nbsp;发布日期：<label id="PublishDate"></label></div>
+            <div class="bankdes">
+                <div class="bankdescon">
+                    <div class="bankdesh" id="BankName">太仓担保</div>
+                    <div class="bankdesd" style="text-align:center;"></div>
+                    <div class="bankdesc" id="content">
+                        <table border="0" style="margin:auto; width:50%; border-collapse:separate; border-spacing:0px 6px;">
+                            <tr>
+                                <td style=" text-align:center;font-size:20px; width:50%">主要产品:</td>
+                                <td style=" text-align:center;font-size:15px;"><label id="labMainProduction" />无</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:center;font-size:20px;width:50%">注册资金:</td>
+                                <td style=" text-align:center;font-size:15px;"><label id="labRegFinance" />无</td>
+                            </tr>
+                            <tr>
+
+                                <td style=" text-align:center;font-size:20px;width:50%">营业范围:</td>
+                                <td style=" text-align:center;font-size:15px;"><label id="labBusiness" />无</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:center;font-size:20px;width:50%">成立时间:</td>
+                                <td style=" text-align:center;font-size:15px;"><label id="labCreateTime" />无</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:center;font-size:20px;width:50%">联系人姓名:</td>
+                                <td style=" text-align:center;font-size:15px;"><label id="labConectionPerson" />无</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:center;font-size:20px;width:50%">联系人电话:</td>
+                                <td style=" text-align:center;font-size:15px;"><label id="labConectionTelephone" />无</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:center;font-size:20px;width:50%">企业简介:</td>
+                                <td style=" text-align:center;font-size:15px;" colspan="5"><label id="labDesc" />无</td>
+                            </tr>
+                            <tr></tr>
+
+
+                        </table>
+                    </div>
+                    <div class="bankback">
+                        <a class="back-btn" id="back" onclick="fanhui()">返回</a>
+                    </div>
+                </div>
             </div>
-            <div class="viewcon" id="zcNewsDetail">
-                &nbsp; &nbsp;    4月28日上午，由江苏省高新技术创业服务中心、江苏股权交易中心和江苏省技术产权交易市场联合主办的科技企业上市培育专题辅导讲座在江苏省技术产权交易市场路演大厅成功举办。南京地区30余家科技型中小企业和10家科技企业孵化器、中介服务机构代表共计70人参加了本次培训活动。<br /><br />
-                &nbsp; &nbsp;4月28日上午，由江苏省高新技术创业服务中心、江苏股权交易中心和江苏省技术产权交易市场联合主办的科技企业上市培育专题辅导讲座在江苏省技术产权交易市场路演大厅成功举办。南京地区30余家科技型中小企业和10家科技企业孵化器、中介服务机构代表共计70人参加了本次培训活动。4月28日上午，由江苏省高新技术创业服务中心、江苏股权交易中心和江苏省技术产权交易市场联合主办的科技企业上市培育专题辅导讲座在江苏省技术产权交易市场路演大厅成功举办。南京地区30余家科技型中小企业和10家科技企业孵化器、中介服务机构代表共计70人参加了本次4月28日上午，由江苏省高新技术创业服务中心、江苏股权交易中心和江苏省技术产权交易市场联合主办的科技企业上市培育专题辅导讲座在江苏省技术产权交易市场路演大厅成功举办。南京地区30余家科技型中小企业和10家科技企业孵化器、中介服务机构代表共计70人参加了本次<br />
-                <img src="images/timg.jpg" />
-            </div>
+
+
+
+
+
         </div>
     </div>
 
@@ -190,7 +243,5 @@
     </div>
 
     <script type="text/javascript" src="js/login.js" language="javascript"></script>
-
-
 </body>
 </html>

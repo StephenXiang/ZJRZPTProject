@@ -229,5 +229,16 @@ namespace GeneralFramework.WebServer
             //返回一个json数组给前端
             //例：[{"year":"2015" "zzze":"125" , "fzze":"50" },{"year":"2016" "zzze":"125" , "fzze":"50" },{"year":"2017" "zzze":"125" , "fzze":"50" }]
         }
+
+        public void GetEnterpriseInfoList()
+        {
+            _response.Write(_em.GetEnterpriseInfoList());
+        }
+
+        public void GetEnterpriseInfoById()
+        {
+            string id = _request["id"].ToString();
+            _response.Write(_em.GetEnterpriseInfoById(id));
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace GeneralFrameworkDAL
 
         public string GetBankInfolbForBankId(string BankId)
         {
-            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,MainBankId,c.BankName  from Bank a 
+            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,MainBankId,c.BankName,a.[Desc],a.EditDate  from Bank a 
 left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt);
@@ -103,5 +103,6 @@ left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             var sql = "select Logo from Bank where Id = '" + Id + "'";
             return (byte[])DBHelper.GetScalar(sql);
         }
+
     }
 }

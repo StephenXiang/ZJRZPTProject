@@ -225,5 +225,23 @@ values(@eid,@fy,@fn,@fnl,@fnll)";
                 new SqlParameter("@fnll", llid));
             return id > 0;
         }
+
+        public string GetEnterpriseInfoList()
+        {
+            var sql = @"select Id,Name from Enterprise";
+            var dt1 = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.SerializeObject(dt1);
+            return reply;
+        }
+
+        public string GetEnterpriseInfoById(string id)
+        {
+            var sql = @"select  a.Name,a.MainProduction,c.[Desc] as zczj,b.[Desc] as yyfw,a.CreateTime,a.ConectionPerson,a.ConnectionTelephone,a.[Desc] from Enterprise a 
+left join (select * from Lookup where Name='营业范围' ) b on a.Business = b.Id
+left join (select * from Lookup where Name='注册资金额度' ) c on a.RegFinance = c.Id where a.Id ='" + id + "'";
+            var dt1 = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.SerializeObject(dt1);
+            return reply;
+        }
     }
 }

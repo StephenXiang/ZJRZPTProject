@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,19 +9,15 @@
         var PageIndex = 1;
         var PageSize = 10;
         var PageAllNum = 0;
-
         $(function () {
-
-
             loadjrcplist();
-
         });
         function loadjrcplist() {
             $.ajax({
                 type: "get",
                 dataType: "json",
                 async: true,
-                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfoList",
+                url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoList",
                 success: function (json) {
                     var JRCPJSON = json;
                     checkxiaoshu(JRCPJSON.length);
@@ -35,7 +31,7 @@
                         for (var i = 0; i < onePagesize; i++) {
                             $('#BankLi' + i + '').show();
                             $('#BankTitle' + i + '').html(JRCPJSON[i].Name);
-                            $('#BankLink' + i + '').attr("href", "bank_view.html?bankid=" + JRCPJSON[i].Id);
+                            $('#BankLink' + i + '').attr("href", "Enterprise_view.html?id=" + JRCPJSON[i].Id);
                         }
                         for (var l = PageSize; l > onePagesize; l--) {
                             $('#BankLi' + (l - 1) + '').hide();
@@ -53,7 +49,7 @@
                             j = i - ((PageIndex - 1) * PageSize)
                             $('#BankLi' + j + '').show();
                             $('#BankTitle' + j + '').html(JRCPJSON[i].Name);
-                            $('#BankLink' + j + '').attr("href", "bank_view.html?bankid=" + JRCPJSON[i].Id);
+                            $('#BankLink' + j + '').attr("href", "Enterprise_view.html?id=" + JRCPJSON[i].Id);
                         }
                         for (var k = 9; k > j; k--) {
                             $('#BankLi' + k + '').hide();
@@ -111,9 +107,7 @@
             }
         }
     </script>
-
 </head>
-
 <body>
     <div class="main_head">
         <div class="head">
@@ -152,10 +146,10 @@
         <div class="main">
 
             <div class="listhead">
-                <div class="listhl">合作银行</div>
+                <div class="listhl">企业风采</div>
                 <div class="listhr">
                     <div class="listhrp"><img src="images/home.png" /></div>
-                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">合作银行</font></div>
+                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">企业风采</font></div>
                 </div>
             </div>
 
