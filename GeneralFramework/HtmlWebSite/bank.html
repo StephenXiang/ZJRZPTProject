@@ -14,7 +14,7 @@
 
 
             loadjrcplist();
-
+            initLogin();
         });
         function loadjrcplist() {
             $.ajax({
@@ -115,11 +115,15 @@
 </head>
 
 <body>
-    <div class="main_head">
+    <!--<div class="main_head">
         <div class="head">
             <div class="head_l">
-                <div class="headpic"><img src="images/12_388.png" /></div>
-                <div class="head_l_con"><a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a></div>
+                <div id="head_l_info" class="head_l_con" style="display: none">
+                    <a id="logined-username" href="javascript:gotoUserBackgourd();"></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:exitLogin();">退出</a>
+                </div>
+                <div id="head_l_con" class="head_l_con">
+                    <a href="javascript:showDialog();">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:showDialogReg();">注册</a>
+                </div>
             </div>
             <div class="head_r">
                 <div class="head_rd">
@@ -128,7 +132,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="main_slider">
         <div class="sliderc">
@@ -209,7 +213,7 @@
             <div class="footsin">承办方：镇江市中小企业服务中心</div>
             <div class="footsin">服务热线：965808</div>
             <div class="footsin">Copyright©2017 All Rights Reserved</div>
-            <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+            <div class="footsin">技术支持：江苏易蝶软件科技有限公司</div>
         </div>
     </div>
 
@@ -244,10 +248,10 @@
 
             </div>
             <div>
-                <a class="ui-dialog-submit" href="#">登录</a>
+                <a class="ui-dialog-submit" href="#" onclick="login()">登录</a>
             </div>
             <div class="ui-dialog-l40">
-                <a href="#">立即注册</a>
+                <a href="#" onclick="toRegist()">立即注册</a>
             </div>
         </div>
     </div>
@@ -275,10 +279,10 @@
 
             </div>
             <div>
-                <a class="ui-dialog-submit" href="#">注册</a>
+                <a class="ui-dialog-submit" href="#" onclick="regist()">注册</a>
             </div>
             <div class="ui-dialog-l40">
-                <a href="#">立即登录</a>
+                <a href="#" onclick="toLogin()">立即登录</a>
             </div>
         </div>
     </div>

@@ -10,8 +10,10 @@
         $(function () {
             loadIndexNewsInfo();
             loadIndexTJInfo();
-            initLogin();
             loadBankImgList();
+            loadNewJRCP();
+            initLogin();
+
         });
 
         function loadIndexNewsInfo() {
@@ -106,7 +108,11 @@
         }
 
         function searchjrcp() {
-            location.href = "HtmlWebSite/products.html?dkqx=" + encodeURI($('#dkqxcmb').val()) + "&dkje=" + encodeURI($('#dkjecmb').val()) + "&dbfs=" + encodeURI($('#dbfscmb').val()) + "";
+            var cpmc = "0"
+            if ($('#searchcpmc').val() != "" && $('#searchcpmc').val() != null) {
+                cpmc = $('#searchcpmc').val();
+            }
+            location.href = "HtmlWebSite/products.html?dkqx=" + encodeURI($('#dkqxcmb').val()) + "&dkje=" + encodeURI($('#dkjecmb').val()) + "&dbfs=" + encodeURI($('#dbfscmb').val()) + "&cpmc=" + encodeURI(cpmc) + "";
         }
 
         function loadBankImgList() {
@@ -132,9 +138,26 @@
         }
 
         function GetLogoImg(BankId) {
-            var imghtml = "<img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
+            var imghtml = "<a href='HtmlWebSite/bank_view.html?bankid=" + BankId + "'><img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'></a>";
             return imghtml;
         }
+
+
+        function loadNewJRCP() {
+            $.ajax({
+                type: "get",
+                dataType: "text",
+                async: true,
+                url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetNewJRCP",
+                success: function (text) {
+                    if (text != 0) {
+                        $('#newjrcplink').attr('href', 'HtmlWebSite/products_view.html?jrcpid=' + text);
+                    }
+                }
+            });
+
+        }
+
     </script>
 </head>
 
@@ -152,8 +175,8 @@
             </div>
             <div class="head_r">
                 <div class="head_rd">
-                    <input type="text" class="head_rt" id="search" placeholder="请输入关键词" />
-                    <input type="submit" class="searchbtn" value="搜索" />
+                    <input type="text" class="head_rt" id="searchcpmc" placeholder="请输入关键词" />
+                    <input type="submit" class="searchbtn" value="搜索" onclick="searchjrcp()" />
                 </div>
             </div>
         </div>
@@ -483,7 +506,7 @@
             <div class="footsin">承办方：镇江市中小企业服务中心</div>
             <div class="footsin">服务热线：965808</div>
             <div class="footsin">Copyright©2017 All Rights Reserved</div>
-            <div class="footsin">技术支持：镇江易蝶软件科技有限公司</div>
+            <div class="footsin">技术支持：江苏易蝶软件科技有限公司</div>
         </div>
     </div>
 
@@ -497,8 +520,11 @@
 
     <!--飘窗-->
     <div class="newpro" id="newpro">
+
         <a class="close-btn" id="closeAd1">关闭</a>
-        <img src="HtmlWebSite/images/product.gif" />
+        <a id="newjrcplink">
+            <img src="HtmlWebSite/images/product_New.gif" />
+        </a>
     </div>
 
 

@@ -194,5 +194,22 @@ left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a
             DBHelper.Execute(sql);
             return true;
         }
+
+        public string GetNewJRCP()
+        {
+            string id = "0";
+            var sql = @"select top(1)Id from JRCPFlow where IsDeleted = 0 and Status = 1";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count == 0)
+            {
+                return id;
+            }
+            else
+            {
+                DataRow dr = dt.Rows[0];
+                id = dr[0].ToString();
+            }
+            return id;
+        }
     }
 }

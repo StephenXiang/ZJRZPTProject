@@ -37,5 +37,9 @@ namespace GeneralFrameworkBLL
         {
             return _js.Delete(id);
         }
+        public string GetNewJRCP()
+        {
+            return _js.GetNewJRCP();
+        }
     }
 }
