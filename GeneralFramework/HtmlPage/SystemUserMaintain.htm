@@ -69,7 +69,11 @@
                     iconCls: 'icon-add',
                     text: '增加用户',
                     handler: function () {
-                        openUserRoledlg();
+                        if (roleId == 1) {
+                            $.messager.alert('提示', '不允许新增系统管理员', 'info');
+                        } else {
+                            openUserRoledlg();
+                        }
                     }
                 }],
                 onClickRow: (function (index, data) {
