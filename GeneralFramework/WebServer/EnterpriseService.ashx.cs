@@ -240,5 +240,25 @@ namespace GeneralFramework.WebServer
             string id = _request["id"].ToString();
             _response.Write(_em.GetEnterpriseInfoById(id));
         }
+
+        public void GetEnterpriseDg()
+        {
+            string uname = _request["UserName"];
+            int page = int.Parse(_request["page"].ToString());
+            int rows = int.Parse(_request["rows"].ToString());
+            _response.Write(_em.GetEnterpriseDg(page, rows));
+        }
+
+        public void GetEnterpriseById()
+        {
+            int id = int.Parse(_request["id"].ToString());
+            _response.Write(_em.GetEnterpriseById(id));
+        }
+
+        public void GetFinanceInfoById()
+        {
+            int id = int.Parse(_request["id"].ToString());
+            _response.Write(_em.GetEnterpriseFinanceInfoById(id));
+        }
     }
 }

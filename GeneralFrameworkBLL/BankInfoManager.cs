@@ -37,6 +37,13 @@ namespace GeneralFrameworkBLL
             return bi.GetLogoImgForId(Id);
         }
 
+
+        public string GetBankDg(int page, int rows)
+        {
+            return bi.GetBankDg(page, rows);
+
+        }
+		
         public string GetMainBank(int page, int rows)
         {
             return bi.GetMainBank(page, rows);

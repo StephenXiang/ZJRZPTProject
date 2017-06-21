@@ -30,14 +30,14 @@
             thisyearMonth = thisYear + "-" + thisMonth;
         }
         $(function () {
-            loadEnterpriseFiancialInfo();
             $('#BusinessLicenseImgTD').hide();
             $('#UserNameTD').hide();
             $('#Enterprisedlg').dialog('close');
             $('#EnterpriseFinanceInfodlg').dialog('close');
             UserInfo = JSON.parse($.cookie('UserInfo'));
-            loadEnterpriseInfo();
             if (UserInfo["role"] == 4) {
+                loadEnterpriseInfo();
+                loadEnterpriseFiancialInfo();
                 $('#Enterprise_div').hide();
                 $('#EnterpriseFinanceInfoBtn').show();
             } else {
@@ -45,7 +45,8 @@
                 $('#EnterpriseFinanceInfoBtn').hide();
             }
             $('#Enterprise_dg').datagrid({
-                // url: '../../WebServer/UserLoginWebService.ashx?Method=GetUserTBJson',
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseDg',
+                queryParams: { UserName: UserInfo["name"] },
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
@@ -59,23 +60,24 @@
                 pageList: [10, 20, 30],
                 columns: [[
                     { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
-                    { field: 'UserRolesID', title: '企业名称', width: 150, align: 'center' },
-                    { field: 'UserDepartment', title: '融资额度', width: 150, align: 'center' },
-                    { field: 'UserID', title: '发布日期', width: 150, align: 'center' },
-                    {
-                        field: 'IsEnable', title: '审核', width: 150, align: 'center', formatter:
-                        function (value, row, index) {
-                            UserID = row.ID;
-                            if (value == 0) {
-                                return '<a href="#" onclick="UnlockAccount(0,' + row.ID + ')">停用</a>'
-                            } else if (value == 1) {
-                                return '<a href="#" onclick="UnlockAccount(1,' + row.ID + ')">启用</a>'
-                            }
-                        }
-                    }
-                ]]
+                    { field: 'Name', title: '企业名称', width: 150, align: 'center' },
+                    { field: 'EnterpriseType', title: '企业类型', width: 150, align: 'center' },
+                    { field: 'Profession', title: '行业分类', width: 150, align: 'center' },
+                    { field: 'MainProduction', title: '主要产品', width: 150, align: 'center' },
+                    { field: 'RegistType', title: '注册类型', width: 150, align: 'center' },
+                    { field: 'RegistRegion', title: '注册地区', width: 150, align: 'center' },
+                    { field: 'Desc', title: '企业简介', width: 150, align: 'center' },
+                ]],
+                onClickRow: (function (index, data) {
+                    loadEnterprise(data.ID);
+                    loadFinance(data.ID);
+                }),
+                onDblClickRow: (function (index, row) {
+
+                })
             });
         });
+
         function OPenEnterpriseFinanceInfodlg() {
             if (thisMonth == 0) {
                 thisMonthLab = (thisYear - 1) + "年" + "12月";
@@ -311,28 +313,7 @@
                 success: function (json) {
                     $('#EnterpriseFinanceInfoBtn').hide();
                     EnterpriseFiancia = json;
-                    var thisyearMonths = EnterpriseFiancia["thisyear"].split('-');
-                    $('#llYear').html(EnterpriseFiancia["llyear"] + "年");
-                    $('#lYear').html(EnterpriseFiancia["lyear"] + "年");
-                    $('#thisYearMonth').html(thisyearMonths[0] + "年" + thisyearMonths[1] + "月");
-                    $('#llzczeLab').html(EnterpriseFiancia["llzcze"] + "&nbsp万");
-                    $('#llfzzeLab').html(EnterpriseFiancia["llfzze"] + "&nbsp万");
-                    $('#llsyzqyLab').html(EnterpriseFiancia["llsyzqy"] + "&nbsp万");
-                    $('#llxssrLab').html(EnterpriseFiancia["llxssr"] + "&nbsp万");
-                    $('#llyszkLab').html(EnterpriseFiancia["llyszk"] + "&nbsp万");
-                    $('#lljlrLab').html(EnterpriseFiancia["lljlr"] + "&nbsp万");
-                    $('#lzczeLab').html(EnterpriseFiancia["lzcze"] + "&nbsp万");
-                    $('#lfzzeLab').html(EnterpriseFiancia["lzcze"] + "&nbsp万");
-                    $('#lsyzqyLab').html(EnterpriseFiancia["lsyzqy"] + "&nbsp万");
-                    $('#lxssrLab').html(EnterpriseFiancia["lxssr"] + "&nbsp万");
-                    $('#lyszkLab').html(EnterpriseFiancia["lyszk"] + "&nbsp万");
-                    $('#ljlrLab').html(EnterpriseFiancia["ljlr"] + "&nbsp万");
-                    $('#thiszczeLab').html(EnterpriseFiancia["thiszcze"] + "&nbsp万");
-                    $('#thisfzzeLab').html(EnterpriseFiancia["thisfzze"] + "&nbsp万");
-                    $('#thissyzqyLab').html(EnterpriseFiancia["thissyzqy"] + "&nbsp万");
-                    $('#thisxssrLab').html(EnterpriseFiancia["thisxssr"] + "&nbsp万");
-                    $('#thisyszkLab').html(EnterpriseFiancia["thisyszk"] + "&nbsp万");
-                    $('#thisjlrLab').html(EnterpriseFiancia["thisjlr"] + "&nbsp万");
+                    loadFinanceJson(json);
                 },
                 error: function (json) {
                     if (UserInfo["role"] == 4) {
@@ -340,6 +321,60 @@
                     }
                 }
             });
+        }
+
+        function loadEnterprise(data) {
+            $.ajax({
+                type: "Post",
+                dataType: "json",
+                async: false,
+                data: { id: data},
+                url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseById",
+                success: function (json) {
+                    loadEnterpriseJson(json);
+                },
+                error: function (json) {
+                }
+            });
+        }
+
+        function loadFinance(data) {
+            $.ajax({
+                type: "get",
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetFinanceInfoById',
+                data: { id: data },
+                dataType: "json",
+                success: function (json) {
+                    loadFinanceJson(json);
+                },
+                error: function (json) {
+                }
+            });
+        }
+
+        function loadFinanceJson(json) {
+            var thisyearMonths = json["thisyear"].split('-');
+            $('#llYear').html(json["llyear"] + "年");
+            $('#lYear').html(json["lyear"] + "年");
+            $('#thisYearMonth').html(thisyearMonths[0] + "年" + thisyearMonths[1] + "月");
+            $('#llzczeLab').html(json["llzcze"] + "&nbsp万");
+            $('#llfzzeLab').html(json["llfzze"] + "&nbsp万");
+            $('#llsyzqyLab').html(json["llsyzqy"] + "&nbsp万");
+            $('#llxssrLab').html(json["llxssr"] + "&nbsp万");
+            $('#llyszkLab').html(json["llyszk"] + "&nbsp万");
+            $('#lljlrLab').html(json["lljlr"] + "&nbsp万");
+            $('#lzczeLab').html(json["lzcze"] + "&nbsp万");
+            $('#lfzzeLab').html(json["lzcze"] + "&nbsp万");
+            $('#lsyzqyLab').html(json["lsyzqy"] + "&nbsp万");
+            $('#lxssrLab').html(json["lxssr"] + "&nbsp万");
+            $('#lyszkLab').html(json["lyszk"] + "&nbsp万");
+            $('#ljlrLab').html(json["ljlr"] + "&nbsp万");
+            $('#thiszczeLab').html(json["thiszcze"] + "&nbsp万");
+            $('#thisfzzeLab').html(json["thisfzze"] + "&nbsp万");
+            $('#thissyzqyLab').html(json["thissyzqy"] + "&nbsp万");
+            $('#thisxssrLab').html(json["thisxssr"] + "&nbsp万");
+            $('#thisyszkLab').html(json["thisyszk"] + "&nbsp万");
+            $('#thisjlrLab').html(json["thisjlr"] + "&nbsp万");
         }
 
         function loadEnterpriseInfo() {
@@ -358,35 +393,38 @@
                             }
                         });
                     } else {
-                        var Code = "";
-                        $('#labEnterpriseName').html(Enterprise["Name"]);
-                        $('#labCode').html(Enterprise["Code"]);
-                        $('#labRegistType').html(Enterprise["RegistType"]);
-                        $('#labProfession').html(Enterprise["Profession"]);
-                        $('#labEnterpriseType').html(Enterprise["EnterpriseType"]);
-                        $('#labRegistRegion').html(Enterprise["RegistRegion"]);
-                        $('#labHuanping').html(Enterprise["Huanping"]);
-                        $('#labRegFinance').html(Enterprise["RegFinance"]);
-                        $('#labRegFinanceMt').html(Enterprise["RegFinanceMt"]);
-                        $('#labBusiness').html(Enterprise["Business"]);
-                        $('#labMainProduction').html(Enterprise["MainProduction"]);
-                        $('#labCreateTime').html(Enterprise["CreateTime"]);
-                        $('#labJuridicalPerson').html(Enterprise["JuridicalPerson"]);
-                        $('#labConectionPerson').html(Enterprise["ConectionPerson"]);
-                        $('#labConectionTelephone').html(Enterprise["ConnectionTelephone"]);
-                        $('#labDesc').html(Enterprise["Desc"]);
-                        Code = Enterprise["Code"];
-                        if (Code == undefined || Code == "") {
-                            $('#BusinessLicenseImgTD').hide();
-                        } else {
-                            $('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
-                            $('#BusinessLicenseImgTD').show();
-                        }
-
+                        loadEnterpriseJson(Enterprise);
                         //$('#editEnterprisrInfoBtn').hide();
                     }
                 }
             });
+        }
+
+        function loadEnterpriseJson(json) {
+            var Code = "";
+            $('#labEnterpriseName').html(json["Name"]);
+            $('#labCode').html(json["Code"]);
+            $('#labRegistType').html(json["RegistType"]);
+            $('#labProfession').html(json["Profession"]);
+            $('#labEnterpriseType').html(json["EnterpriseType"]);
+            $('#labRegistRegion').html(json["RegistRegion"]);
+            $('#labHuanping').html(json["Huanping"]);
+            $('#labRegFinance').html(json["RegFinance"]);
+            $('#labRegFinanceMt').html(json["RegFinanceMt"]);
+            $('#labBusiness').html(json["Business"]);
+            $('#labMainProduction').html(json["MainProduction"]);
+            $('#labCreateTime').html(json["CreateTime"]);
+            $('#labJuridicalPerson').html(json["JuridicalPerson"]);
+            $('#labConectionPerson').html(json["ConectionPerson"]);
+            $('#labConectionTelephone').html(json["ConnectionTelephone"]);
+            $('#labDesc').html(json["Desc"]);
+            Code = json["Code"];
+            if (Code == undefined || Code == "") {
+                $('#BusinessLicenseImgTD').hide();
+            } else {
+                $('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                $('#BusinessLicenseImgTD').show();
+            }
         }
 
         function checkMobile(str) {
@@ -397,6 +435,7 @@
                 return false;
             }
         }
+
         function checkPhone(str) {
             var re = /^0\d{2,3}-?\d{7,8}$/;
             if (re.test(str)) {

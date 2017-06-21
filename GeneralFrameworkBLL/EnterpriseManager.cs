@@ -47,5 +47,20 @@ namespace GeneralFrameworkBLL
         {
             return _es.GetEnterpriseInfoById(id);
         }
+
+        public string GetEnterpriseDg(int page,int rows)
+        {
+            return _es.GetEnterpriseDg(page, rows);
+        }
+
+        public string GetEnterpriseById(int id)
+        {
+            return _es.GetEnterpriseInfoForUserName(null, id);
+        }
+
+        public string GetEnterpriseFinanceInfoById(int id)
+        {
+            return _es.GetEnterpriseFinanceInfoByUserName(null, id);
+        }
     }
 }

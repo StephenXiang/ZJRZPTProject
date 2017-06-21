@@ -17,18 +17,21 @@
         $(function () {
             $('#UserNameTD').hide();
             $('#Bankdlg').dialog('close');
-            BankInfoID = GetBankId();
-            if (BankInfoID == "") {
-                $.messager.confirm('提示', '您还没有登记银行信息！是否现在登记？', function (r) {
-                    if (r) {
-                        openBankdlg();
-                    }
-                });
 
+            if (UserInfo["role"] == 3) {
+                BankInfoID = GetBankId();
+                if (BankInfoID == "") {
+                    $.messager.confirm('提示', '您还没有登记银行信息！是否现在登记？', function (r) {
+                        if (r) {
+                            openBankdlg();
+                        }
+                    });
+                } else {
+                    LoadBankDG(BankInfoID);
+                }
             } else {
-                LoadBankDG(BankInfoID);
+                loadBankAllDg();
             }
-
         });
 
         function LoadBankDG(bankId) {
@@ -56,6 +59,38 @@
                 ]]
             });
         }
+
+        function loadBankAllDg() {
+            $('#Bank_dg').datagrid({
+                url: '../../WebServer/BankInfoWebService.ashx?Method=GetBankDg',
+                queryParams: { UserName: UserInfo["name"] },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '银行列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'Id', title: 'ID', width: 150, hidden: true, align: 'center' },
+                    { field: 'Name', title: '银行名称', width: 150, align: 'center' },
+                    { field: 'Address', title: '银行地址', width: 150, align: 'center' },
+                    { field: 'Connector', title: '联系人', width: 150, align: 'center' },
+                    { field: 'ConnectorPhone', title: '电话', width: 150, align: 'center' },
+                    { field: 'BankName', title: '归属总行', width: 150, align: 'center' }
+                ]],
+                onClickRow: (function (index, data) {
+                }),
+                onDblClickRow: (function (index, row) {
+
+                })
+            });
+        }
+
         function GetBankId() {
             var bankid = "";
             $.ajax({

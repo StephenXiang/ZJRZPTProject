@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using GeneralFrameworkDAL.JSON;
 
 namespace GeneralFrameworkDAL
 {
@@ -68,6 +69,15 @@ namespace GeneralFrameworkDAL
 left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt);
+            return reply;
+        }
+
+        public string GetBankDg(int page, int rows)
+        {
+            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,MainBankId,c.BankName,a.EditDate from Bank a 
+left join MainBank c on a.MainBankId = c.id";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
             return reply;
         }
 

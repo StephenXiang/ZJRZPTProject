@@ -131,6 +131,14 @@ namespace GeneralFramework.WebServer
             _response.End();
         }
 
+        public void GetBankDg()
+        {
+            string uname = _request["UserName"];
+            int page = int.Parse(_request["page"].ToString());
+            int rows = int.Parse(_request["rows"].ToString());
+            _response.Write(_bi.GetBankDg(page, rows));
+        }
+		
         public void GetMainBank()
         {
             int page = int.Parse(_request["page"]);

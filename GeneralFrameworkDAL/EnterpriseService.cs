@@ -69,7 +69,26 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
             return DBHelper.GetSingle(sql);
         }
 
-        public string GetEnterpriseInfoForUserName(string UserName)
+        public string GetEnterpriseDg(int page, int rows)
+        {
+            var sql = @"select a.ID,a.Name,a.Code,c.[Desc] as RegistType,d.[Desc] as Profession,e.[Desc] as EnterpriseType,
+                            f.[Desc] as RegistRegion,g.[Desc] as Huanping,h.[Desc] as RegFinance,i.[Desc] as RegFinanceMt,j.[Desc] as Business,
+                            a.MainProduction,a.CreateTime,a.JuridicalPerson,a.ConectionPerson,a.ConnectionTelephone,a.[Desc] from Enterprise a 
+                            left join SysUser b on a.ID = b.EnterpriseId 
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 1) c on a.RegistTypeId = c.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 2) d on a.ProfessionId = d.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 3) e on a.EnterpriseTypeId = e.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 4) f on a.RegistRegionId = f.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 5) g on a.HuanpingId = g.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 12) h on a.RegFinance = h.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 6) i on a.RegFinanceMt = i.Id
+                            left join (select Id,[Desc],[Type] from Lookup where [Type] = 7) j on a.Business = j.Id";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
+            return reply;
+        }
+
+        public string GetEnterpriseInfoForUserName(string UserName, int? enterpriseId = null)
         {
             string reply = null;
             string sql = @"select a.Name,a.BusinessLicense,a.Code,c.[Desc] as RegistType,d.[Desc] as Profession,e.[Desc] as EnterpriseType,
@@ -84,7 +103,7 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 12) h on a.RegFinance = h.Id
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 6) i on a.RegFinanceMt = i.Id
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 7) j on a.Business = j.Id
-                            where b.UserName = '" + UserName + "'";
+                            where " + (enterpriseId == null ? ("b.UserName = '" + UserName + "'") : ("a.ID=" + enterpriseId));
             DataTable dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
@@ -127,7 +146,7 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
             return (byte[])DBHelper.GetScalar(sql);
         }
 
-        public string GetEnterpriseFinanceInfoByUserName(string userName)
+        public string GetEnterpriseFinanceInfoByUserName(string userName, int? enterpriseId = null)
         {
             string reply = null;
             var sql = string.Format(@"select
@@ -139,7 +158,7 @@ join SysUser u on u.EnterpriseId=rzf.EnterpriseId
 left join RZFinanceYear ty on ty.Id=rzf.Finance
 left join RZFinanceYear ly on ly.Id=rzf.FinanceLY
 left join RZFinanceYear lly on lly.Id=rzf.FinanceLLY
-where u.UserName='{0}'", userName.Trim());
+where {0}", enterpriseId == null ? string.Format("u.UserName='{0}'", userName.Trim()) : string.Format("rzf.EnterpriseId={0}", enterpriseId));
             var dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
