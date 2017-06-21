@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -519,13 +519,44 @@
     </a>
 
     <!--飘窗-->
-    <div class="newpro" id="newpro">
+    <!--<div class="newpro" id="newpro">
 
         <a class="close-btn" id="closeAd1">关闭</a>
         <a id="newjrcplink">
             <img src="HtmlWebSite/images/product_New.gif" />
         </a>
+    </div>-->
+    <!--飘窗-->
+    <div id="newpro" style="position:absolute;">
+        <a class="close-btn" id="closeAd1">关闭</a>
+        <a id="newjrcplink">
+            <img src="HtmlWebSite/images/product_New.gif" />
+        </a>
     </div>
+    <script>
+        var x = 50, y = 60
+        var xin = true, yin = true
+        var step = 1
+        var delay = 10
+        var obj = document.getElementById("newpro")
+        function floatwww_qpsh_com() {
+            var L = T = 0
+
+            var R = document.body.clientWidth - obj.offsetWidth
+            var B = document.body.clientHeight - obj.offsetHeight
+            obj.style.left = x + document.body.scrollLeft
+            obj.style.top = y + document.body.scrollTop
+            x = x + step * (xin ? 1 : -1)
+            if (x < L) { xin = true; x = L }
+            if (x > R) { xin = false; x = R }
+            y = y + step * (yin ? 1 : -1)
+            if (y < T) { yin = true; y = T }
+            if (y > B) { yin = false; y = B }
+        }
+        var itl = setInterval("floatwww_qpsh_com()", delay);
+        obj.onmouseover = function () { clearInterval(itl) }
+        obj.onmouseout = function () { itl = setInterval("floatwww_qpsh_com()", delay) }
+    </script>
 
 
     <!--登录弹窗-->
