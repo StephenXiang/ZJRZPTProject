@@ -36,5 +36,19 @@ namespace GeneralFrameworkBLL
         {
             return bi.GetLogoImgForId(Id);
         }
+
+        public string GetMainBank(int page, int rows)
+        {
+            return bi.GetMainBank(page, rows);
+        }
+
+        public bool AddMainBank(string bankname)
+        {
+            return bi.AddMainBank(bankname);
+        }
+        public bool DelMainBank(int mainBankId)
+        {
+            return bi.DelMainBank(mainBankId);
+        }
     }
 }

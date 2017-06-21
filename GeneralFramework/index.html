@@ -1,4 +1,4 @@
-﻿<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -148,7 +148,7 @@
                 type: "get",
                 dataType: "text",
                 async: true,
-                url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetNewJRCP",
+                url: "../WebServer/PublishFinancialProductsWebService.ashx?Method=GetNewJRCP",
                 success: function (text) {
                     if (text != 0) {
                         $('#newjrcplink').attr('href', 'HtmlWebSite/products_view.html?jrcpid=' + text);
@@ -542,10 +542,11 @@
         function floatwww_qpsh_com() {
             var L = T = 0
 
-            var R = document.body.clientWidth - obj.offsetWidth
-            var B = document.body.clientHeight - obj.offsetHeight
-            obj.style.left = x + document.body.scrollLeft
-            obj.style.top = y + document.body.scrollTop
+            var R = document.documentElement.clientWidth - obj.offsetWidth;
+            var B = document.documentElement.clientHeight - obj.offsetHeight;
+            obj.style.left = x + document.documentElement.scrollLeft + "px";
+            obj.style.top = y + document.documentElement.scrollTop + "px";
+
             x = x + step * (xin ? 1 : -1)
             if (x < L) { xin = true; x = L }
             if (x > R) { xin = false; x = R }
@@ -572,7 +573,7 @@
         </div>
         <div class="ui-dialog-content">
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input id="login-username" class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+                <input id="login-username" class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="用户名" value="" />
             </div>
             <div class="ui-dialog-l40 ui-dialog-pt15">
                 <input id="login-passwords" class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />

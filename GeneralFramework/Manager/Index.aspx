@@ -42,6 +42,19 @@
                 });
             }
             loadclick();
+            if (NavMenu.length == 1) {
+                var tab = $("#NavMenu").tabs("select", toptitle);
+                $("#NavMenu").tabs('update', {
+                    tab: tab,
+                    options: {
+                        title: toptitle,
+                        content: createFrame(searchUrl(toptitle)),
+                        closable: false,
+                        fit: true,
+                        selected: true
+                    }
+                });
+            }
         }
         function loadclick() {
             $('#NavMenu').tabs({

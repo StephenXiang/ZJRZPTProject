@@ -130,5 +130,24 @@ namespace GeneralFramework.WebServer
             _response.Flush();
             _response.End();
         }
+
+        public void GetMainBank()
+        {
+            int page = int.Parse(_request["page"]);
+            int rows = int.Parse(_request["rows"]);
+            _response.Write(_bi.GetMainBank(page, rows));
+        }
+
+        public void AddMainBank()
+        {
+            string bankname = _request["bankname"].ToString();
+            _response.Write(_bi.AddMainBank(bankname));
+        }
+
+        public void DelMainBank()
+        {
+            int mainbanid = int.Parse(_request["bankid"]);
+            _response.Write(_bi.DelMainBank(mainbanid));
+        }
     }
 }

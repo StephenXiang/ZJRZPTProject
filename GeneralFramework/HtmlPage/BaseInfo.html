@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>基础信息</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript">
+        var MainBankId = 0;
+        $(function () {
+            $('#FPdlg').dialog('close');
+            LoadBankDG();
+        });
+        function LoadBankDG() {
+            $('#Bank_dg').datagrid({
+                url: '../../WebServer/BankInfoWebService.ashx?Method=GetMainBank',
+                //queryParams: { BankId: bankId },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '主行信息列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                                    { field: 'Id', title: 'ID', width: '100', hidden: false, align: 'center' },
+                                    { field: 'BankName', title: '银行名称', width: '450', align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '新增主行',
+                    handler: function () {
+                        OpenFpdlg();
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除主行',
+                    handler: function () {
+                        DelMainbank();
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    MainBankId = data.Id;
+                }),
+                onDblClickRow: (function (index, row) {
+
+                })
+            });
+        }
+
+        function OpenFpdlg() {
+            $('#bankname').textbox('setValue', '');
+            $('#FPdlg').dialog('open');
+        }
+
+        function SaveMainBank() {
+            if ($('#bankname').textbox('getValue') == "") {
+                $.messager.alert('提示', '银行名称必须填写', 'info');
+                return;
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "../../WebServer/BankInfoWebService.ashx?Method=AddMainBank",
+                    data: { 'bankname': $('#bankname').textbox('getValue') },
+                    dataType: "text",
+                    success: function (text) {
+                        if (text == "True") {
+                            $('#FPdlg').dialog('close');
+                            $.messager.alert('提示', '主行信息添加成功', 'info');
+                            LoadBankDG();
+                        } else {
+                            $.messager.alert('提示', '主行信息添加失败，请重试', 'error');
+                        }
+                    },
+                    error: function (message) {
+                        $.messager.alert('提示', '主行信息添加失败，请重试', 'error');
+                    }
+                });
+            }
+        }
+
+        function DelMainbank() {
+            if (MainBankId == 0 || MainBankId == undefined) {
+                $.messager.alert('提示', '请选择要删除的银行', 'info');
+            } else {
+                $.messager.confirm('提示', '确认删除当前选择项？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../../WebServer/BankInfoWebService.ashx?Method=DelMainBank",
+                            data: { 'bankid': MainBankId },
+                            dataType: "text",
+                            success: function (text) {
+                                if (text == "True") {
+                                    $.messager.alert('提示', '银行信息删除成功', 'info');
+                                    LoadBankDG();
+                                } else {
+                                    $.messager.alert('提示', '银行信息删除失败，请重试', 'error');
+                                }
+                            },
+                            error: function (message) {
+                                $.messager.alert('提示', '银行信息删除失败，请重试', 'error');
+                            }
+                        });
+                    };
+                });
+
+            }
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <table id="Bank_dg" data-options="
+                iconCls: 'icon-save'
+            "></table>
+    </div>
+    <div id="FPdlg" class="easyui-dialog" title="添加主行" style="text-align: center;
+        width: 400px; height: 150px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#FPdlg-buttons'
+            ">
+        <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+            <tr>
+                <td style=" text-align:right;">银行名称:</td>
+                <td style=" text-align:left;">&nbsp;&nbsp;<input id="bankname" name=" bankname" class="f1 easyui-textbox" style="width:80%;"></td>
+            </tr>
+        </table>
+    </div>
+    <div id="FPdlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveMainBank()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#FPdlg').dialog('close');">
+            关闭
+        </a>
+    </div>
+</body>
+</html>

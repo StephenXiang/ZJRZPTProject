@@ -104,5 +104,44 @@ left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             return (byte[])DBHelper.GetScalar(sql);
         }
 
+
+        public string GetMainBank(int page, int rows)
+        {
+            var sql = @"select Id,BankName from MainBank order by Id Desc";
+            var dt = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JSON.JsonHelper.GetPagedTable(dt, page, rows));
+            return reply;
+        }
+
+        public bool AddMainBank(string bankname)
+        {
+            var sql = @"select Id,BankName from MainBank where BankName ='" + bankname + "'";
+            var dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count > 0)
+            {
+                return false;
+            }
+            else
+            {
+                sql = "insert into MainBank(BankName)values('" + bankname + "')";
+                var ent = DBHelper.GetScalar(sql) as int?;
+                if (ent == -1) return false;
+            }
+            return true;
+        }
+
+        public bool DelMainBank(int mainBankId)
+        {
+            var sql = "delete MainBank where Id = '" + mainBankId + "'";
+            var ent = DBHelper.GetScalar(sql) as int?;
+            if (ent == -1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }
