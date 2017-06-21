@@ -70,6 +70,7 @@
                 ]],
                 onClickRow: (function (index, data) {
                     loadEnterprise(data.ID);
+                    $('#enterpriseInfo').show();
                     loadFinance(data.ID);
                 }),
                 onDblClickRow: (function (index, row) {
@@ -311,9 +312,14 @@
                 data: { UserName: UserInfo["name"] },
                 dataType: "json",
                 success: function (json) {
-                    $('#EnterpriseFinanceInfoBtn').hide();
                     EnterpriseFiancia = json;
-                    loadFinanceJson(json);
+                    if (EnterpriseFiancia.llyear == "" || EnterpriseFiancia.lyear == "" || EnterpriseFiancia.thisyear == "") {
+                        $('#EnterpriseFinanceInfoBtn').show();
+                    } else {
+                        $('#EnterpriseFinanceInfoBtn').hide();
+                        loadFinanceJson(json);
+                    }
+
                 },
                 error: function (json) {
                     if (UserInfo["role"] == 4) {
@@ -328,7 +334,7 @@
                 type: "Post",
                 dataType: "json",
                 async: false,
-                data: { id: data},
+                data: { id: data },
                 url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseById",
                 success: function (json) {
                     loadEnterpriseJson(json);
@@ -463,7 +469,7 @@
                 buttons: '#RZ_dg-buttons'
             "></table>
     </div>
-    <div class="easyui-panel" title="企业信息" style="width:100%;height:420px;padding:10px;">
+    <div id="enterpriseInfo" class="easyui-panel" title="企业信息" style="width:100%;height:420px;padding:10px;">
         <div class="easyui-layout" data-options="fit:true">
             <div data-options="region:'west',split:false" style="width:40%;padding:10px;">
                 <h2> 企业信息</h2>

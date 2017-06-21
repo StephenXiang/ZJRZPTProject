@@ -94,7 +94,15 @@
                     iconCls: 'icon-add',
                     text: '发布融资',
                     handler: function () {
-                        openPublishRZdlg();
+                        if (loadEnterpriseInfo() == true) {
+                            if (loadEnterpriseFiancialInfo() == true) {
+                                openPublishRZdlg();
+                            } else {
+                                $.messager.alert('提示', '您未填写财务信息，不允许发布融资', 'info');
+                            }
+                        } else {
+                            $.messager.alert('提示', '您未填写企业基本信息，不允许发布融资', 'info');
+                        }
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -299,6 +307,47 @@
                 return false
             }
             return true;
+        }
+
+        function loadEnterpriseInfo() {
+            var isok = false;
+            $.ajax({
+                type: "Post",
+                dataType: "json",
+                async: false,
+                data: { UserName: UserInfo["name"] },
+                url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoForUserName",
+                success: function (json) {
+                    Enterprise = json;
+                    if (Enterprise["DataCount"] == 0 && UserInfo["role"] == 4) {
+                        isok = false;
+                    } else {
+                        isok = true;
+                        //$('#editEnterprisrInfoBtn').hide();
+                    }
+                }
+            });
+            return isok;
+        }
+
+        function loadEnterpriseFiancialInfo() {
+            var isok2 = false;
+            $.ajax({
+                type: "get",
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseFinanceInfoForUserName',
+                data: { UserName: UserInfo["name"] },
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    EnterpriseFiancia = json;
+                    if (EnterpriseFiancia.llyear == "" || EnterpriseFiancia.lyear == "" || EnterpriseFiancia.thisyear == "") {
+                        isok2 = false;
+                    } else {
+                        isok2 = true;
+                    }
+                }
+            });
+            return isok2;
         }
     </script>
 </head>
