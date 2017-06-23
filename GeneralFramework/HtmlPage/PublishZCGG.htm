@@ -16,6 +16,9 @@
     <script charset="utf-8" src="../kindeditor-4.1.7/plugins/code/prettify.js"></script>
     <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
+        $.parser.onComplete = function () {
+            $('#loading').remove();
+        }
         var editor1 = '';
         var editor2 = '';
         var UserInfo;
@@ -266,6 +269,9 @@
     </script>
 </head>
 <body class="easyui-layout">
+    <div id="loading" style="position:absolute;z-index:1000;top:0px;left:0px;width:100%;height:100%;background:#ffffff;">
+        <font color="#15428B">加载中....</font>
+    </div>
     <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
         <div>
             <table id="ZC_dg" data-options="
