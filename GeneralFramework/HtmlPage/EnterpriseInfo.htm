@@ -98,49 +98,57 @@
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetRegistType',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#ProfessionCmb').combobox({
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetProfessionType',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#EnterpriseTypeCmb').combobox({
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseType',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#RegistRegionCmb').combobox({
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#HuanpingCmb').combobox({
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetHuanPingType',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#RegFinanceCmb').combobox({
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetRegFinance',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#RegFinanceMtCmb').combobox({
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetMoneyType',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#BusinessCmb').combobox({
                 //width: 145,
                 url: '../../WebServer/EnterpriseService.ashx?Method=GetBusinessType',
                 valueField: 'ID',
-                textField: 'TypeName'
+                textField: 'TypeName',
+                editable: false
             });
             $('#UserNametxt').textbox("setValue", UserInfo["name"]);
 
@@ -245,11 +253,17 @@
             if ($('#EnterpriseName').val().trim() == "") {
                 $.messager.alert('提示', '企业名称不得为空', 'info');
             }
+            else if (!/^[\u0391-\uFFE5]+$/i.test($('#EnterpriseName').val().trim())) {
+                $.messager.alert('提示', '企业名称必须是中文', 'info');
+            }
             else if ($('#Code').val() == "") {
                 $.messager.alert('提示', '信用代码不得为空', 'info');
             }
             else if ($('#Code').val().trim().length != 18) {
                 $.messager.alert('提示', '信用代码不得大于或小于18位', 'info');
+            }
+            else if (!/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/.test($('#Code').val().trim())) {
+                $.messager.alert('提示', '信用代码格式有误', 'info');
             }
             else if ($('#BusinessLicenseFile').textbox('getValue') == "") {
                 $.messager.alert('提示', '请上传营业执照', 'info');
@@ -452,6 +466,7 @@
         }
 
         function checkNum(id) {
+            return /^[0-9]{1,6}([.]{1}[0-9]{1})?$/.test($('#' + id).val());
             var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
             var obj = document.getElementById(id);
             if (!reg.test(obj.value)) {

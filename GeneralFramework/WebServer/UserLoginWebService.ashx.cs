@@ -100,13 +100,12 @@ namespace GeneralFramework.WebServer
 
         public void ExitLogin()
         {
-            var userName = Request.Form["UserName"];
             Session.Clear();
         }
 
         public void IsLogined()
         {
-            var userName = Request.Form["UserName"];
+            var userName = Request["UserName"];
             var sessionun = Session["UserName"] ?? "";
             Response.Write(userName != null && userName == sessionun.ToString());
         }

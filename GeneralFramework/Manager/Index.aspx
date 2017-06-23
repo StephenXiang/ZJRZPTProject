@@ -120,6 +120,12 @@
             }
         }
 
+        function exit() {
+            $.removeCookie('UserInfo');
+            $.ajax({ url: "../../WebServer/UserLoginWebService.ashx?Method=ExitLogin", async: false });
+            window.location.href = "../login.html";
+        }
+
     </script>
 </head>
 <body class="easyui-layout">
@@ -135,7 +141,7 @@
             <div id="time" style="text-align: right; float: left;">
             </div>
             <div id="Logout" style="text-align: right; float: right; height: 20px; margin-right: 10px;">
-                <a href="#" onclick="OpenUserDialog()">修改密码</a>&nbsp;&nbsp;&nbsp; <a href="../login.html">退出系统</a>
+                <a href="#" onclick="OpenUserDialog()">修改密码</a>&nbsp;&nbsp;&nbsp; <a href="#" onclick="exit()">退出系统</a>
             </div>
         </div>
         <div style="margin: 20px 0;">

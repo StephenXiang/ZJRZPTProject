@@ -179,7 +179,20 @@ $(".prosine").click(function () {
 function initLogin() {
     var userInfo = JSON.parse($.cookie('UserInfo'));
     if (userInfo != null) {
-        showLoginedInfo(userInfo["name"]);
+        var uname = userInfo["name"];
+        $.ajax({
+            type: "get",
+            dataType: "text",
+            async: true,
+            data: { 'UserName': uname },
+            url: "../../WebServer/UserLoginWebService.ashx?Method=IsLogined",
+            success: function (text) {
+                if (text == "True") {
+                    showLoginedInfo(uname);
+                } else {
+                }
+            }
+        });
     }
 }
 

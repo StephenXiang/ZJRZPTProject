@@ -582,6 +582,7 @@
     <Content Include="jquery-easyui-1.5.1\demo\window\modalwindow.html" />
     <Content Include="jquery-easyui-1.5.1\demo\window\windowlayout.html" />
     <Content Include="jquery-easyui-1.5.1\easyloader.js" />
+    <Content Include="jquery-easyui-1.5.1\jquery.easyui.extend.js" />
     <Content Include="jquery-easyui-1.5.1\jquery.easyui.min.js" />
     <Content Include="jquery-easyui-1.5.1\jquery.easyui.mobile.js" />
     <Content Include="jquery-easyui-1.5.1\jquery.min.js" />
