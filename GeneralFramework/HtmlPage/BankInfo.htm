@@ -18,6 +18,7 @@
         UserInfo = JSON.parse($.cookie('UserInfo'));
         var BankInfoID;
         $(function () {
+            $('#Logo1').filebox
             $('#UserNameTD').hide();
             $('#Bankdlg').dialog('close');
 
@@ -212,6 +213,7 @@
                 return false;
             }
         }
+
     </script>
 </head>
 <body class="easyui-layout">
@@ -258,11 +260,11 @@
                     </tr>
                     <tr>
                         <td style=" text-align:right;">log1(140*42):</td>
-                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo1" name="Logo1" data-options="buttonText:'选择',prompt:'请选择文件...(白底,JPG格式)'" class="f1 easyui-filebox" style="width:90%;" /></td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo1" name="Logo1" data-options="buttonText:'选择',prompt:'请选择文件...(白底,JPG格式)',accept:'image/jpeg'" class="f1 easyui-filebox" style="width:90%;" /></td>
                     </tr>
                     <tr>
                         <td style=" text-align:right;">log2(124*46):</td>
-                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo2" name="Logo2" data-options="buttonText:'选择',prompt:'请选择文件...(透明,PNG格式)'" class="f1 easyui-filebox" style="width:90%;" /></td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo2" name="Logo2" data-options="buttonText:'选择',prompt:'请选择文件...(透明,PNG格式)',accept:'image/png'" class="f1 easyui-filebox" style="width:90%;" /></td>
                     </tr>
                     <tr>
                         <td style=" text-align:right;">银行简介:</td>

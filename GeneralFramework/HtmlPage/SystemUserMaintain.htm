@@ -228,7 +228,7 @@
                                 data: JSON.stringify(GetDataJson()),
                                 dataType: "text",
                                 success: function (text) {
-                                    if (text = "True") {
+                                    if (text == "True") {
                                         loadUserDG(roleId);
                                         $('#UserRoledlg').dialog('close');
                                         $.messager.alert('提示', '用户添加成功，初始密码为：888888', 'info');
@@ -253,7 +253,7 @@
                             data: JSON.stringify(GetDataJson()),
                             dataType: "text",
                             success: function (text) {
-                                if (text = "True") {
+                                if (text == "True") {
                                     loadUserDG(roleId);
                                     $('#UserRoledlg').dialog('close');
                                     $.messager.alert('提示', '用户添加成功,初始密码为：888888', 'info');

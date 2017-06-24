@@ -15,21 +15,26 @@
         var NavMenu;
         var UserInfo;
         $(function () {
-            $('#dlg').dialog('close');
-            $.ajax({
-                type: "Get",
-                dataType: "json",
-                async: false,
-                url: "../../WebServer/NavMenuWebService.ashx?Method=GetNavMenuJson",
-                success: function (json) {
-                    if (json != "") {
-                        NavMenu = json;
-                        CreateNav();
+            if ($.cookie('UserInfo') != undefined && $.cookie('UserInfo') != "" && $.cookie('UserInfo') != null) {
+                $('#dlg').dialog('close');
+                $.ajax({
+                    type: "Get",
+                    dataType: "json",
+                    async: false,
+                    url: "../../WebServer/NavMenuWebService.ashx?Method=GetNavMenuJson",
+                    success: function (json) {
+                        if (json != "") {
+                            NavMenu = json;
+                            CreateNav();
+                        }
                     }
-                }
-            });
-            UserInfo = JSON.parse($.cookie('UserInfo'));
-            $('#user_msg').html('镇江市965808企业融资服务平台欢迎您：' + UserInfo['name']);
+                });
+                UserInfo = JSON.parse($.cookie('UserInfo'));
+                $('#user_msg').html('镇江市965808企业融资服务平台欢迎您：' + UserInfo['name']);
+
+            } else {
+                window.location.href = "../../login.html";
+            }
         });
         function CreateNav() {
             var toptitle;
@@ -121,10 +126,11 @@
         }
 
         function exit() {
-            $.removeCookie('UserInfo');
             $.ajax({ url: "../../WebServer/UserLoginWebService.ashx?Method=ExitLogin", async: false });
             window.location.href = "../login.html";
         }
+
+
 
     </script>
 </head>

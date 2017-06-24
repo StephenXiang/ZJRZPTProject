@@ -46,21 +46,67 @@
             } else {
                 $('#Enterprise_div').show();
                 $('#EnterpriseFinanceInfoBtn').hide();
+                loadEnterprise_dg();
             }
+
+
         });
 
+        function loadEnterprise_dg() {
+            $('#Enterprise_dg').datagrid({
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseDg',
+                queryParams: { UserName: UserInfo["name"] },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '企业列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: 150, hidden: true, align: 'center' },
+                    { field: 'Name', title: '企业名称', width: 150, align: 'center' },
+                    { field: 'EnterpriseType', title: '企业类型', width: 150, align: 'center' },
+                    { field: 'Profession', title: '行业分类', width: 150, align: 'center' },
+                    { field: 'MainProduction', title: '主要产品', width: 150, align: 'center' },
+                    { field: 'RegistType', title: '注册类型', width: 150, align: 'center' },
+                    { field: 'RegistRegion', title: '注册地区', width: 150, align: 'center' },
+                    { field: 'Desc', title: '企业简介', width: 150, align: 'center' },
+                ]],
+                onClickRow: (function (index, data) {
+                    loadEnterprise(data.ID);
+                    $('#enterpriseInfo').show();
+                    loadFinance(data.ID);
+                }),
+                onDblClickRow: (function (index, row) {
+
+                })
+            });
+        }
+
         function OPenEnterpriseFinanceInfodlg() {
-            if (thisMonth == 0) {
+            if ($('#labEnterpriseName').html() == "无" || $('#labEnterpriseName').html() == "" || $('#labEnterpriseName').html() == null) {
+                $.messager.confirm('提示', '必须先等级企业基本信息！是否现在登记？', function (r) {
+                    if (r) {
+                        OpenEnterprisrdlg();
+                    }
+                });
+            }
+            else if (thisMonth == 0) {
                 thisMonthLab = (thisYear - 1) + "年" + "12月";
             } else {
                 thisMonthLab = (thisYear) + "年" + thisMonth + "月";
+                lastYearLab = thisYear - 1;
+                lastLastYearLab = thisYear - 2;
+                $('#ThisMonth').html(thisMonthLab);
+                $('#LastYear').html(lastYearLab + "年");
+                $('#LastLastYear').html(lastLastYearLab + "年");
+                $('#EnterpriseFinanceInfodlg').dialog('open');
             }
-            lastYearLab = thisYear - 1;
-            lastLastYearLab = thisYear - 2;
-            $('#ThisMonth').html(thisMonthLab);
-            $('#LastYear').html(lastYearLab + "年");
-            $('#LastLastYear').html(lastLastYearLab + "年");
-            $('#EnterpriseFinanceInfodlg').dialog('open');
         }
 
         function OpenEnterprisrdlg() {
@@ -173,7 +219,7 @@
                             data: JSON.stringify(GetJsonData()),
                             dataType: "text",
                             success: function (text) {
-                                if (text = "True") {
+                                if (text == "True") {
                                     loadEnterpriseFiancialInfo();
                                     $('#EnterpriseFinanceInfodlg').dialog('close');
                                     $.messager.alert('提示', '财务信息保存成功', 'info');
@@ -631,7 +677,7 @@
         </div>
     </div>
 
-    <div id="Enterprisedlg" class="easyui-dialog" title="企业信息编辑" style="text-align: center; display:none;
+    <div id="Enterprisedlg" class="easyui-dialog" title="企业信息编辑" style="text-align: center;
         width: 600px; height:480px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#Enterprisedlg-buttons'
@@ -657,7 +703,7 @@
                 <tr>
                     <td style=" text-align:right;">*营业执照:</td>
                     <td></td>
-                    <td style=" text-align:left;"><input id="BusinessLicenseFile" name="BusinessLicenseFile" data-options="buttonText:'选择',prompt:'请选择文件...'" class="f1 easyui-filebox" style="width:95%;" /></td>
+                    <td style=" text-align:left;"><input id="BusinessLicenseFile" name="BusinessLicenseFile" data-options="buttonText:'选择',prompt:'请选择JPEG格式图像文件...',accept:'image/jpeg'" class="f1 easyui-filebox" style="width:95%;" /></td>
                     <td style=" text-align:right;">登记注册类型:</td>
                     <td style=" text-align:left;"><select id="RegistTypeCmb" class=" easyui-combobox" name="RegistTypeCmb" label="" style="width:95%"></select></td>
                 </tr>
@@ -726,7 +772,7 @@
         </a>
     </div>
 
-    <div id="EnterpriseFinanceInfodlg" class="easyui-dialog" title="企业财务信息编辑" style="text-align: center;display:none;
+    <div id="EnterpriseFinanceInfodlg" class="easyui-dialog" title="企业财务信息编辑" style="text-align: center;
         width: 800px; height:450px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#EnterpriseFinanceInfodlg-buttons'
