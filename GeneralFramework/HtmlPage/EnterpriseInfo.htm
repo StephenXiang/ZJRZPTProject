@@ -90,7 +90,7 @@
 
         function OPenEnterpriseFinanceInfodlg() {
             if ($('#labEnterpriseName').html() == "无" || $('#labEnterpriseName').html() == "" || $('#labEnterpriseName').html() == null) {
-                $.messager.confirm('提示', '必须先等级企业基本信息！是否现在登记？', function (r) {
+                $.messager.confirm('提示', '必须先登记企业基本信息！是否现在登记？', function (r) {
                     if (r) {
                         OpenEnterprisrdlg();
                     }
