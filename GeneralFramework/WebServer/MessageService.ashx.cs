@@ -96,14 +96,15 @@ namespace GeneralFramework.WebServer
             var title = Request["title"].ToString();
             var mobile = Request["mobile"].ToString();
             var content = Request["content"].ToString();
-            if (_mm.AddMsg(title, content, uname, mobile))
-            {
-                Response.Write("<script language=javascript>alert('提示', '发布留言成功！请耐心等待回复', 'info');</script>");
-            }
-            else
-            {
-                Response.Write("<script language=javascript>alert('提示', '发布留言失败，请重试', 'error');</script>");
-            }
+            Response.Write(_mm.AddMsg(title, content, uname, mobile));
+            //if (_mm.AddMsg(title, content, uname, mobile))
+            //{
+            //    Response.Write("<script language=javascript>alert('提示', '发布留言成功！请耐心等待回复', 'info');</script>");
+            //}
+            //else
+            //{
+            //    Response.Write("<script language=javascript>alert('提示', '发布留言失败，请重试', 'error');</script>");
+            //}
             //var sr = new StreamReader(data.InputStream);
             //var stream = sr.ReadToEnd();
             //var javaScriptSerializer = new JavaScriptSerializer();

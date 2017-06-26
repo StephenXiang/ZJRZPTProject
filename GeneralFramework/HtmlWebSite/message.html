@@ -6,9 +6,52 @@
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript">
 
+
+    </script>
+    <script type="text/javascript">
         $(function () {
             initLogin();
         });
+
+        function checkform() {
+            var title = $.trim($("#title").val());
+            var uname = $.trim($("#uname").val());
+            var mobile = $.trim($("#mobile").val());
+            var content = $.trim($("#content").val());
+            var temp_mobile = /^((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8}$/;
+            if (!temp_mobile.test(mobile)) {
+                alert("手机格式不正确"); return false;
+            }
+            if (uname == "" || uname == null) {
+                alert("联系人不能为空"); return false;
+            }
+            if (content == "" || content == null) {
+                alert("留言内容不能为空"); return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "../../WebServer/MessageService.ashx?Method=AddMessage",
+                data: { 'uname': uname, 'mobile': mobile, 'title': title, 'content': content },
+                dataType: "text",
+                success: function (text) {
+                    if (text === "True") {
+                        alert('发布留言成功！请耐心等待回复');
+                        $("#title").val("");
+                        $("#uname").val("");
+                        $("#mobile").val("");
+                        $("#content").val("");
+                    } else {
+                        alert('发布留言失败，请重试');
+                        return false;
+                    }
+                },
+                error: function (message) {
+                    alert('发布留言失败，请重试');
+                    return false;
+                }
+            });
+            return true;
+        }
     </script>
 
 </head>
@@ -55,30 +98,30 @@
         <div class="main">
 
             <div class="msg">在线留言</div>
-            <form action="../../WebServer/MessageService.ashx?Method=AddMessage" method="post" id="message" name="message" onsubmit="return checkform();">
-                <div class="msgcon">
-                    <div class="msgsin">
-                        <div class="msgf">标题：</div>
-                        <div class="msgt"><input type="text" name="title" id="title" class="msginput" placeholder="请输入标题" /></div>
-                    </div>
-                    <div class="msgsin">
-                        <div class="msgf">手机号：</div>
-                        <div class="msgt"><input type="text" name="mobile" id="mobile" class="msginput" placeholder="请输入您的手机号" /></div>
-                    </div>
-                    <div class="msgsin">
-                        <div class="msgf">联系人：</div>
-                        <div class="msgt"><input type="text" name="uname" id="uname" class="msginput" placeholder="请输入您的姓名" /></div>
-                    </div>
-                    <div class="msgsin">
-                        <div class="msgf">留言内容：</div>
-                        <div class="msgt">
-                            <textarea placeholder="请输入内容" class="msgarea" id="content" name="content"></textarea>
-                        </div>
-                    </div>
-                    <div class="msgsin"><input type="submit" class="msgsub" value="提交" /></div>
-
+            <!--<form id="message" name="message">-->
+            <div class="msgcon">
+                <div class="msgsin">
+                    <div class="msgf">标题：</div>
+                    <div class="msgt"><input type="text" name="title" id="title" class="msginput" placeholder="请输入标题" /></div>
                 </div>
-            </form>
+                <div class="msgsin">
+                    <div class="msgf">手机号：</div>
+                    <div class="msgt"><input type="text" name="mobile" id="mobile" class="msginput" placeholder="请输入您的手机号" /></div>
+                </div>
+                <div class="msgsin">
+                    <div class="msgf">联系人：</div>
+                    <div class="msgt"><input type="text" name="uname" id="uname" class="msginput" placeholder="请输入您的姓名" /></div>
+                </div>
+                <div class="msgsin">
+                    <div class="msgf">留言内容：</div>
+                    <div class="msgt">
+                        <textarea placeholder="请输入内容" class="msgarea" id="content" name="content"></textarea>
+                    </div>
+                </div>
+                <div class="msgsin"><input type="button" class="msgsub" value="提交" onclick="checkform()" /></div>
+
+            </div>
+            <!--</form>-->
 
         </div>
     </div>
@@ -165,52 +208,5 @@
     </div>
 
     <script type="text/javascript" src="js/login.js" language="javascript"></script>
-
-
-
-
-    <script language="javascript">
-        function checkform() {
-            var title = $.trim($("#title").val());
-            var uname = $.trim($("#uname").val());
-            var mobile = $.trim($("#mobile").val());
-            var content = $.trim($("#content").val());
-            var temp_mobile = /^((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8}$/;
-            if (!temp_mobile.test(mobile)) {
-                alert("手机格式不正确"); return false;
-            }
-            if (uname == "" || uname == null) {
-                alert("联系人不能为空"); return false;
-            }
-            if (content == "" || content == null) {
-                alert("留言内容不能为空"); return false;
-            }
-            //$.ajax({
-            //    type: "POST",
-            //    url: "../../WebServer/MessageService.ashx?Method=AddMessage",
-            //    contentType: "application/json; charset=utf-8",
-            //    data: { 'UserName': uname, 'UserPhone': mobile, 'Title': title, 'Content': content },
-            //    dataType: "text",
-            //    success: function (text) {
-            //        if (text === "True") {
-            //            $.messager.alert('提示', '发布留言成功！请耐心等待回复', 'info');
-            //            $("#title").val("");
-            //            $("#uname").val("");
-            //            $("#mobile").val("");
-            //            $("#content").val("");
-            //        } else {
-            //            $.messager.alert('提示', '发布留言失败，请重试', 'error');
-            //            return false;
-            //        }
-            //    },
-            //    error: function (message) {
-            //        $.messager.alert('提示', '发布留言失败，请重试', 'error');
-            //        return false;
-            //    }
-            //});
-            return true;
-        }
-    </script>
-
 </body>
 </html>
