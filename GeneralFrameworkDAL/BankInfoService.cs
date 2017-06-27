@@ -96,10 +96,25 @@ left join MainBank c on a.MainBankId = c.id";
 
         public string GetBankInfoList()
         {
-            var sql = @"select Id,Name from Bank";
+            var sql = @"select Id,Name,MainBankId from Bank";
             var dt1 = DBHelper.GetDataSet(sql);
+            DataTable dt = new DataTable();
+            dt = GetDistinctSelf(dt1, "MainBankId");
             var reply = JSON.JsonHelper.SerializeObject(dt1);
             return reply;
+        }
+
+        public DataTable GetDistinctSelf(DataTable SourceDt, string filedName)
+        {
+            for (int i = SourceDt.Rows.Count - 2; i > 0; i--)
+            {
+                DataRow[] rows = SourceDt.Select(string.Format("{0}='{1}'", filedName, SourceDt.Rows[i][filedName]));
+                if (rows.Length > 1)
+                {
+                    SourceDt.Rows.RemoveAt(i);
+                }
+            }
+            return SourceDt;
         }
 
         public byte[] GetLogo2ImgForId(string Id)

@@ -1296,6 +1296,7 @@
     <Content Include="kindeditor-4.1.7\themes\qq\editor.gif" />
     <Content Include="kindeditor-4.1.7\themes\qq\qq.css" />
     <Content Include="kindeditor-4.1.7\themes\simple\simple.css" />
+    <Content Include="Manager\test.aspx" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Styles\Loginstyle.css" />
     <Content Include="images\banner1.jpg" />
@@ -1326,6 +1327,13 @@
     </Compile>
     <Compile Include="HtmlPage\ZZDExamineApprove.aspx.designer.cs">
       <DependentUpon>ZZDExamineApprove.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\test.aspx.cs">
+      <DependentUpon>test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\test.aspx.designer.cs">
+      <DependentUpon>test.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebServer\MessageService.ashx.cs">
       <DependentUpon>MessageService.ashx</DependentUpon>

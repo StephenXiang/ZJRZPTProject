@@ -31,7 +31,7 @@
                 data: { BankId: bankid },
                 url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfolbForBankId",
                 success: function (json) {
-                    $('#bankDesc').html(json[0].Desc);
+                    $('#bankDesc').html("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + json[0].Desc);
                     $('#BankName').html(json[0].Name);
                     $('#EditDate').html(jsonDateFormat(json[0].EditDate));
                     $('#imgDiv').html(GetLogoImg(bankid));
