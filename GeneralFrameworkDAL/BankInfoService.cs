@@ -13,15 +13,33 @@ namespace GeneralFrameworkDAL
     {
         public string SaveBankInfo(Bank bank)
         {
-            var sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId,Logo,Logo2,[Desc])values(@name,@address,@connector,@ConnectorPhone,@MainBankId,@logo,@logo2,@Desc)";
-            var id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
-                new SqlParameter("@address", bank.Address.Trim()),
-                new SqlParameter("@connector", bank.Connector.Trim()),
-                new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
-                new SqlParameter("@logo", bank.logo1),
-                new SqlParameter("@logo2", bank.logo2),
-                new SqlParameter("@Desc", bank.BankDesc),
-                new SqlParameter("@MainBankId", bank.MainBankId)) as int?;
+            string sql = string.Empty;
+            int? id = 0;
+            if (bank.iszzd == 1)
+            {
+                sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId,Logo,Logo2,[Desc],iszzd)values(@name,@address,@connector,@ConnectorPhone,@MainBankId,@logo,@logo2,@Desc,@iszzd)";
+                id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
+                    new SqlParameter("@address", bank.Address.Trim()),
+                    new SqlParameter("@connector", bank.Connector.Trim()),
+                    new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                    new SqlParameter("@logo", bank.logo1),
+                    new SqlParameter("@logo2", bank.logo2),
+                    new SqlParameter("@Desc", bank.BankDesc),
+                    new SqlParameter("@MainBankId", bank.MainBankId),
+                    new SqlParameter("@iszzd", bank.iszzd)) as int?;
+            }
+            else
+            {
+                sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId,[Desc],iszzd)values(@name,@address,@connector,@ConnectorPhone,@MainBankId,@Desc,@iszzd)";
+                id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
+                    new SqlParameter("@address", bank.Address.Trim()),
+                    new SqlParameter("@connector", bank.Connector.Trim()),
+                    new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                    new SqlParameter("@Desc", bank.BankDesc),
+                    new SqlParameter("@MainBankId", bank.MainBankId),
+                    new SqlParameter("@iszzd", bank.iszzd)) as int?;
+            }
+
             if (id > 0)
             {
                 sql = string.Format(@"select Id from Bank where Name = '{0}'", bank.Name);
@@ -96,7 +114,7 @@ left join MainBank c on a.MainBankId = c.id";
 
         public string GetBankInfoList()
         {
-            var sql = @"select Id,Name,MainBankId from Bank";
+            var sql = @"select Id,Name,MainBankId from Bank where iszzd = 1";
             var dt1 = DBHelper.GetDataSet(sql);
             DataTable dt = new DataTable();
             dt = GetDistinctSelf(dt1, "MainBankId");
