@@ -17,6 +17,8 @@
         var UserInfo;
         var selectid;
         var selectstatus;
+        var selectRow;
+        var isedit;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZZDdlg').dialog('close');
@@ -24,6 +26,7 @@
         });
 
         function LoadZZDDG() {
+            selectRow = '';
             selectid = 0;
             selectstatus = 0;
             $('#ZZD_dg').datagrid({
@@ -42,6 +45,8 @@
                 pageList: [10, 20, 30],
                 columns: [[
                     { field: 'ZZDID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'ZZDBkid', title: 'ZZDBkid', width: '10', hidden: true, align: 'center' },
+                    { field: 'ZZDMBKid', title: 'ZZDMBKid', width: '10', hidden: true, align: 'center' },
                     { field: 'ZZDBk', title: '原贷款银行', width: '200', align: 'center' },
                     { field: 'ZZDManager', title: '客户经理姓名', width: '200', align: 'center' },
                     { field: 'ZZDManagerPhone', title: '客户经理联系电话', width: '200', align: 'center' },
@@ -76,6 +81,7 @@
                     handler: function () {
                         if (loadEnterpriseInfo() == true) {
                             if (loadEnterpriseFiancialInfo() == true) {
+                                isedit = false;
                                 OpenZZDDlg();
                             } else {
                                 $.messager.alert('提示', '您未填写财务信息，不允许发布周转贷', 'info');
@@ -84,6 +90,16 @@
                             $.messager.alert('提示', '您未填写企业基本信息，不允许发布周转贷', 'info');
                         }
 
+                    }
+                }, '-', {
+                    iconCls: 'icon-edit',
+                    text: '编辑周转贷',
+                    handler: function () {
+                        if (selectstatus > 0) {
+                            $.messager.alert('提示', '当前周转贷申请已受理，不允许编辑', 'info');
+                        } else {
+                            editZzd();
+                        }
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -99,6 +115,7 @@
                 onClickRow: (function (index, data) {
                     selectid = data.ZZDID;
                     selectstatus = data.ZZDStatus;
+                    selectRow = data;
                 }),
                 onDblClickRow: (function (index, row) {
 
@@ -134,6 +151,15 @@
             });
         }
 
+        function editZzd() {
+            if (selectid == 0) {
+                alert('请先选择要编辑的项');
+                return;
+            }
+            isedit = true;
+            OpenZZDDlg();
+        }
+
         function jsonDateFormat(jsonDate) {
             try {
                 var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
@@ -162,6 +188,24 @@
                 valueField: 'ID',
                 textField: 'TypeName'
             });
+            if (isedit) {
+                $('#ydkyhcmb').combobox('setValues', selectRow.ZZDBkid);
+                $('#zbhcmb').combobox('setValues', selectRow.ZZDMBKid);
+                $('#khjlxm').textbox('setValue', selectRow.ZZDManager);
+                $('#khjllxdh').textbox('setValue', selectRow.ZZDManagerPhone);
+                $('#ydkje').textbox('setValue', selectRow.ZZDOriginalQuota);
+                $('#dkdqsj').textbox('setValue', selectRow.ZZDExpirationDate);
+                $('#bcdkje').textbox('setValue', selectRow.ZZDThisQuota);
+            }
+            else {
+                $('#ydkyhcmb').combobox('setValues', []);
+                $('#zbhcmb').combobox('setValues', []);
+                $('#khjlxm').textbox('setValue', '');
+                $('#khjllxdh').textbox('setValue', '');
+                $('#ydkje').textbox('setValue', '');
+                $('#dkdqsj').textbox('setValue', '');
+                $('#bcdkje').textbox('setValue', '');
+            }
             $('#ZZDdlg').dialog('open');
         }
 
@@ -227,6 +271,7 @@
         function GetJsonData() {
             var ZZDInfoJson =
                 {
+                    "Id": isedit ? selectid : 0,
                     "UserName": UserInfo["name"],
                     "ydkyh": $('#ydkyhcmb').combobox('getValue'),
                     "khjlxm": $('#khjlxm').val().trim(),

@@ -18,6 +18,8 @@ namespace GeneralFrameworkDAL
 
         public bool SaveRzInfo(RzInfo rzi)
         {
+            if (rzi.Id > 0)
+                return UpdateRzInfo(rzi);
             bool isDyw = false;
             if (rzi.dywdesc.Trim() != "" && rzi.dywdesc != null)
             {
@@ -76,12 +78,40 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
             return efc > 0;
         }
 
+        public bool UpdateRzInfo(RzInfo rzi)
+        {
+            bool isDyw = false;
+            if (rzi.dywdesc.Trim() != "" && rzi.dywdesc != null)
+            {
+                isDyw = true;
+            }
+            var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", rzi.UserName.Trim());
+            var ent = DBHelper.GetScalar(sql) as int?;
+            if (ent == null) return false;
+            sql = @"
+update RZDemandInfo set Quota=@qua,TermId=@tem,PurposeId=@pup,HadCollateral=@hc,CollateralDesc=@cd where Id in (select DemandId from RZFlow where Id = @rzid)";
+            DBHelper.Execute(sql,
+                new SqlParameter("@qua", rzi.RZED),
+                new SqlParameter("@tem", rzi.RZQX),
+                new SqlParameter("@pup", rzi.RZQT),
+                new SqlParameter("@hc", isDyw),
+                new SqlParameter("@rzid", rzi.Id),
+                new SqlParameter("@cd", rzi.dywdesc.Trim()));
+            sql = @"update RZFlow set BankIds=@bks where Id=@rzid";
+            var efc = DBHelper.Execute(sql,
+                new SqlParameter("@bks", rzi.RZYH),
+                new SqlParameter("@rzid", rzi.Id));
+            return efc > 0;
+        }
+
         public string GetRZLBJson(string UserName, int page, int rows)
         {
             var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", UserName);
             var ent = DBHelper.GetScalar(sql) as int?;
             if (ent == null) return "";
-            sql = string.Format(@"select b.Id as ID,a.Quota as RZED,c.[Desc] as RZQX,b.BankIds as SXYH, d.[Desc] as RZYT,a.CollateralDesc as DYW,b.PublishDate,b.[Status] from RZDemandInfo a 
+            sql = string.Format(@"select b.Id as ID,a.Quota as RZED,c.[Desc] as RZQX,b.BankIds as SXYH, d.[Desc] as RZYT,a.CollateralDesc as DYW,
+a.TermId as RZQXid,a.PurposeId as RZYTid,
+b.PublishDate,b.[Status] from RZDemandInfo a 
 join RZFlow b on a.Id = b.DemandId
 left join (select * from Lookup where Type = 8) c on a.TermId = c.Id
 left join (select * from Lookup where Type = 9) d on a.PurposeId = d.Id

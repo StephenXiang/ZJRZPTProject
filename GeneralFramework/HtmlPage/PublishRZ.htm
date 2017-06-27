@@ -17,13 +17,36 @@
         var UserInfo;
         var selectid;
         var selectstatus;
+        var selectRow;
+        var isedit;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#DywTR').hide();
             $('#PulishRZdlg').dialog('close');
+
+            $('#RZYHcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzBanks',
+                valueField: 'ID',
+                textField: 'TypeName',
+                multiple: true
+            });
+            $('#RZQXcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzqxType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
+            $('#RZYTcmb').combobox({
+                //width: 145,
+                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzytType',
+                valueField: 'ID',
+                textField: 'TypeName'
+            });
             LoadRZDG();
         });
         function LoadRZDG() {
+            selectRow = '';
             selectstatus = '';
             selectid = 0;
             $('#RZ_dg').datagrid({
@@ -42,6 +65,8 @@
                 pageList: [10, 20, 30],
                 columns: [[
                     { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'RZQXid', title: 'RZQXid', width: '10', hidden: true, align: 'center' },
+                    { field: 'RZYTid', title: 'RZYTid', width: '10', hidden: true, align: 'center' },
                     { field: 'RZED', title: '融资额度(单位：万元)', width: '300', align: 'center' },
                     { field: 'RZQX', title: '融资期限', width: '300', align: 'center' },
                     {
@@ -99,12 +124,23 @@
                     handler: function () {
                         if (loadEnterpriseInfo() == true) {
                             if (loadEnterpriseFiancialInfo() == true) {
+                                isedit = false;
                                 openPublishRZdlg();
                             } else {
                                 $.messager.alert('提示', '您未填写财务信息，不允许发布融资', 'info');
                             }
                         } else {
                             $.messager.alert('提示', '您未填写企业基本信息，不允许发布融资', 'info');
+                        }
+                    }
+                }, '-', {
+                    iconCls: 'icon-edit',
+                    text: '编辑融资',
+                    handler: function () {
+                        if (selectstatus > 0) {
+                            $.messager.alert('提示', '当前融资申请银行已受理，不允许编辑', 'info');
+                        } else {
+                            editRz();
                         }
                     }
                 }, '-', {
@@ -116,13 +152,12 @@
                         } else {
                             deleteRZ();
                         }
-
-
                     }
                 }],
                 onClickRow: (function (index, data) {
                     selectid = data.ID;
                     selectstatus = data.Status;
+                    selectRow = data;
                 }),
                 onDblClickRow: (function (index, row) {
 
@@ -157,6 +192,16 @@
                 };
             });
         }
+
+        function editRz() {
+            if (selectid == 0) {
+                alert('请先选择要编辑的项');
+                return;
+            }
+            isedit = true;
+            openPublishRZdlg();
+        }
+
         function jsonDateFormat(jsonDate) {
             try {
                 var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
@@ -172,25 +217,36 @@
             }
         }
         function openPublishRZdlg() {
-            $('#RZYHcmb').combobox({
-                //width: 145,
-                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzBanks',
-                valueField: 'ID',
-                textField: 'TypeName',
-                multiple: true
-            });
-            $('#RZQXcmb').combobox({
-                //width: 145,
-                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzqxType',
-                valueField: 'ID',
-                textField: 'TypeName'
-            });
-            $('#RZYTcmb').combobox({
-                //width: 145,
-                url: '../../WebServer/PublishRZWebService.ashx?Method=GetRzytType',
-                valueField: 'ID',
-                textField: 'TypeName'
-            });
+            if (isedit) {
+                $('#RZEDtext').textbox('setValue', selectRow.RZED);
+                $('#RZYHcmb').combobox('setValues', selectRow.SXYH);
+                $('#RZQXcmb').combobox('setValues', selectRow.RZQXid);
+                $('#RZYTcmb').combobox('setValues', selectRow.RZYTid);
+                $('#dywtext').textbox('setValue', selectRow.DYW);
+
+                if (selectRow.DYW == "") {
+                    $('input:radio[name="isDyw"]').eq(0).attr("checked", "checked");
+                    $('input:radio[name="isDyw"]').eq(1).removeAttr("checked");
+                    $('input:radio[name="isDyw"]').eq(0).click();
+                }
+                else {
+                    $('input:radio[name="isDyw"]').eq(1).attr("checked", "checked");
+                    $('input:radio[name="isDyw"]').eq(0).removeAttr("checked");
+                    $('input:radio[name="isDyw"]').eq(1).click();
+                }
+                dywchange();
+            }
+            else {
+                $('#RZEDtext').textbox('setValue', '');
+                $('#RZYHcmb').combobox('setValues', []);
+                $('#RZQXcmb').combobox('setValues', []);
+                $('#RZYTcmb').combobox('setValues', []);
+                $('#dywtext').textbox('setValue', '');
+                $('input:radio[name="isDyw"]').eq(0).attr("checked", "checked");
+                $('input:radio[name="isDyw"]').eq(1).removeAttr("checked");
+                $('input:radio[name="isDyw"]').eq(0).click();
+                dywchange();
+            }
             $('#PulishRZdlg').dialog('open');
         }
 
@@ -299,14 +355,16 @@
             } else {
                 RZYHstr = RZYHArr[0];
             }
+            var isdyw = $('input:radio[name="isDyw"]:checked').val();
             var RZInfoJson =
                 {
+                    "Id": isedit ? selectid : 0,
                     "UserName": UserInfo["name"],
                     "RZED": $('#RZEDtext').val().trim(),
                     "RZYH": RZYHstr,
                     "RZQX": $('#RZQXcmb').combobox('getValue'),
                     "RZQT": $('#RZYTcmb').combobox('getValue'),
-                    "dywdesc": $('#dywtext').val()
+                    "dywdesc": isdyw == 0 ? "" : $('#dywtext').val()
                 };
             return RZInfoJson;
         }

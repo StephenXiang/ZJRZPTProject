@@ -7,6 +7,7 @@ namespace GeneralFrameworkBLLModel
 {
     public class ZzdInfo
     {
+        public int Id;
         public string UserName;
         public int ydkyh;
         public string khjlxm;
