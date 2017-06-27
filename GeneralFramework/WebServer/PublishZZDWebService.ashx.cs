@@ -64,15 +64,20 @@ namespace GeneralFramework.WebServer
                 return false;
             }
         }
-
+        public void GetMainBank()
+        {
+            Response.Write(_zm.GetMainBank());
+        }
         public void GetZzdBanks()
         {
-            Response.Write(_zm.GetBanks());
+            var mainbankid = Request.QueryString["mainbankid"].ToString();
+            Response.Write(_zm.GetBanks(mainbankid));
         }
 
         public void GetZzdMastBanks()
         {
-            Response.Write(_zm.GetMastBanks());
+            var mainbankid = Request.QueryString["mainbankid"].ToString();
+            Response.Write(_zm.GetMastBanks(mainbankid));
         }
 
         public void SaveZZDInfo()

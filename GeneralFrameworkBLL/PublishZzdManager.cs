@@ -15,14 +15,14 @@ namespace GeneralFrameworkBLL
             return _zs.Save(zi);
         }
 
-        public string GetBanks()
+        public string GetBanks(string mainbankid)
         {
-            return _zs.GetBanks();
+            return _zs.GetBanks(mainbankid);
         }
 
-        public string GetMastBanks()
+        public string GetMastBanks(string mainbankid)
         {
-            return _zs.GetMastBanks();
+            return _zs.GetMastBanks(mainbankid);
         }
 
         public string GetZZDLBJson(string user, int page, int rows)
@@ -33,6 +33,10 @@ namespace GeneralFrameworkBLL
         public bool Delete(int id)
         {
             return _zs.Delete(id);
+        }
+        public string GetMainBank()
+        {
+            return _zs.GetMainBank();
         }
     }
 }
