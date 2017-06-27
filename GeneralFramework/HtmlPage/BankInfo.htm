@@ -298,6 +298,7 @@
         function redioselect() {
             var selected = $("input[name='rd']:checked").val();
             if (selected == 0) {
+                $('#BankDesc').textbox('setValue', '周转贷银行');
                 $('#log1tr').hide();
                 $('#log2tr').hide();
             } else {

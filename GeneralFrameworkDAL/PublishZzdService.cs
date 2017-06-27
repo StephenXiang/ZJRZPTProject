@@ -9,16 +9,23 @@ namespace GeneralFrameworkDAL
 {
     public class PublishZzdService
     {
-        public string GetBanks()
+        public string GetMainBank()
         {
-            var sql = "select Id as ID,[Name] as TypeName from [Bank]";
+            var sql = "select Id as ID,BankName as TypeName from MainBank";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.ConvertJosnData(dt);
         }
 
-        public string GetMastBanks()
+        public string GetBanks(string mainbankid)
         {
-            var sql = "select Id as ID,[Name] as TypeName from [Bank]";
+            var sql = "select Id as ID,[Name] as TypeName from [Bank] where iszzd = 0 and MainBankId = '" + mainbankid + "' ";
+            var dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.ConvertJosnData(dt);
+        }
+
+        public string GetMastBanks(string mainbankid)
+        {
+            var sql = "select Id as ID,[Name] as TypeName from [Bank] where 1=1 and MainBankId = '" + mainbankid + "'";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.ConvertJosnData(dt);
         }
