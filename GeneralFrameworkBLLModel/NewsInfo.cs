@@ -16,5 +16,7 @@ namespace GeneralFrameworkBLLModel
         public string NewsType;
         public int Relation_Firm;
         public DateTime Createdate;
+
+        public byte[] image;
     }
 }

@@ -254,6 +254,9 @@
     <Content Include="HtmlWebSite\images\wyzz.png" />
     <Content Include="HtmlWebSite\images\zz1.png" />
     <Content Include="HtmlWebSite\images\zz2.png" />
+    <Content Include="HtmlWebSite\images\全市金融支持实体经济推进会.jpg" />
+    <Content Include="HtmlWebSite\tplist.html" />
+    <Content Include="HtmlWebSite\tpview.html" />
     <Content Include="HtmlWebSite\zclist.html" />
     <Content Include="index.html" />
     <Content Include="HtmlWebSite\js\jquery-1.9.1.min.js" />

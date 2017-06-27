@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>镇江市融资服务平台</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <script type="text/javascript">
+
+        var PageIndex = 1;
+        var PageSize = 7;
+        var PageAllNum = 0;
+        $(function () {
+            loadNewsList();
+        });
+
+        function loadNewsList() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: true,
+                data: { NewsType: "tp", PageIndex: PageIndex, PageSize: PageSize },
+                url: "../../WebServer/PublishZCGGWebService.ashx?Method=GetZCNewsList",
+                success: function (json) {
+                    var ZCNewsInfoJson = json;
+                    checkxiaoshu(ZCNewsInfoJson.length);
+                    if (PageIndex == 1) {
+                        if (ZCNewsInfoJson.length >= PageSize) {
+                            for (var i = 0; i < PageSize; i++) {
+                                var NewsContent = "";
+                                NewsContent = ZCNewsInfoJson[i].NewsContent;
+                                var dd = NewsContent.replace(/<\/?.+?>/g, "");
+                                var dds = dd.replace(/ /g, "");//dds为得到后的内容
+                                if (dds.length > 139) {
+                                    NewsContent = dds.substring(0, 139) + "...";
+                                } else {
+                                    NewsContent = dds;
+                                }
+                                $('#zcNewsDiv' + i + '').show();
+                                $('#zcNews' + i + '').text(ZCNewsInfoJson[i].NewsTitle);
+                                $('#zcNews' + i + '').attr("href", "tpview.html?id=" + ZCNewsInfoJson[i].Id);
+                                $('#zcNewsContent' + i + '').html(NewsContent);
+                                $('#zcNewsCreateDate' + i + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
+                            }
+                        } else {
+                            var j = ZCNewsInfoJson.length - 1;
+                            for (var i = 0; i < ZCNewsInfoJson.length; i++) {
+                                var NewsContent = "";
+                                NewsContent = ZCNewsInfoJson[i].NewsContent;
+                                var dd = NewsContent.replace(/<\/?.+?>/g, "");
+                                var dds = dd.replace(/ /g, "");//dds为得到后的内容
+                                if (dds.length > 139) {
+                                    NewsContent = dds.substring(0, 139) + "...";
+                                } else {
+                                    NewsContent = dds;
+                                }
+                                $('#zcNewsDiv' + i + '').show();
+                                $('#zcNews' + i + '').text(ZCNewsInfoJson[i].NewsTitle);
+                                $('#zcNews' + i + '').attr("href", "tpview.html?id=" + ZCNewsInfoJson[i].Id);
+                                $('#zcNewsContent' + i + '').html(NewsContent);
+                                $('#zcNewsCreateDate' + i + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
+                            }
+                            for (var k = 6; k > j; k--) {
+                                $('#zcNewsDiv' + k + '').hide();
+                            }
+                        }
+
+                    } else {
+                        var twopagesize = 0;
+                        if ((PageIndex * PageSize) > ZCNewsInfoJson.length) {
+                            twopagesize = ZCNewsInfoJson.length;
+                        }
+                        else {
+                            twopagesize = PageIndex * PageSize;
+                        }
+                        var j = 0;
+                        for (var i = ((PageIndex - 1) * PageSize) ; i < twopagesize; i++) {
+                            var NewsContent = "";
+                            NewsContent = ZCNewsInfoJson[i].NewsContent;
+                            var dd = NewsContent.replace(/<\/?.+?>/g, "");
+                            var dds = dd.replace(/ /g, "");//dds为得到后的内容
+                            if (dds.length > 139) {
+                                NewsContent = dds.substring(0, 139) + "...";
+                            } else {
+                                NewsContent = dds;
+                            }
+                            j = i - ((PageIndex - 1) * PageSize)
+                            $('#zcNewsDiv' + j + '').show();
+                            $('#zcNews' + j + '').text(ZCNewsInfoJson[i].NewsTitle);
+                            $('#zcNews' + j + '').attr("href", "ggview.html?id=" + ZCNewsInfoJson[i].Id);
+                            $('#zcNewsContent' + j + '').html(NewsContent);
+                            $('#zcNewsCreateDate' + j + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
+                        }
+                        for (var k = 6; k > j; k--) {
+                            $('#zcNewsDiv' + k + '').hide();
+                        }
+                    }
+                }
+            });
+        }
+
+        function jsonDateFormat(jsonDate) {
+            try {
+                var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var seconds = date.getSeconds();
+                var milliseconds = date.getMilliseconds();
+                return date.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+            } catch (ex) {
+                return "";
+            }
+        }
+
+        function NextPage() {
+            if (PageIndex == PageAllNum) {
+                alert("已经是尾页");
+            } else {
+                PageIndex = PageIndex + 1;
+                loadNewsList();
+            }
+        }
+
+        function prePage() {
+            if (PageIndex == 1) {
+                alert("已经是首页");
+            } else {
+                PageIndex = PageIndex - 1;
+                loadNewsList();
+            }
+        }
+
+        function checkxiaoshu(totalnum) {
+            var num = totalnum / PageSize;
+            var reg = /.*\..*/;
+            if (reg.test(num)) {
+                var nums = num.toString().split('.');
+                PageAllNum = parseInt(nums[0]) + 1;
+            } else {
+                PageAllNum = num
+            }
+        }
+        function shouye() {
+            if (PageIndex == 1) {
+                alert("已经是首页");
+            } else {
+                PageIndex = 1;
+                loadNewsList();
+            }
+        }
+
+        function weiye() {
+            if (PageIndex == PageAllNum) {
+                alert("已经是尾页");
+            } else {
+                PageIndex = PageAllNum;
+                loadNewsList();
+            }
+        }
+    </script>
+
+</head>
+<body>
+    <div class="main_slider">
+        <div class="sliderc">
+            <div class="slider_font"><img src="images/font.png" /></div>
+        </div>
+    </div>
+
+    <div class="main_menu">
+        <div class="menu">
+            <div class="menusin"><a href="../index.html">首页</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/zclist.html">政策资讯</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/gglist.html">通知公告</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/products.html">金融产品</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/bank.html">合作银行</a></div>
+            <div class="menusin"><a href="../HtmlWebSite/Enterprise.html">企业风采</a></div>
+        </div>
+    </div>
+
+
+    <div class="main_relative">
+        <div class="main">
+            <div class="listhead">
+                <div class="listhl">图片新闻</div>
+                <div class="listhr">
+                    <div class="listhrp"><img src="images/home.png" /></div>
+                    <div class="listhrf">您所在的位置：首页 > <font color="#5ea4ff">图片新闻</font></div>
+                </div>
+            </div>
+
+            <div id="zcNewsDiv0" class="listsin">
+                <div class="listshadow"><img src="images/listshadow.png" /></div>
+                <div class="listtitle"><a id="zcNews0"></a></div>
+                <div class="listcon" id="zcNewsContent0"></div>
+                <div class="listdown">
+                    <div class="listdate" id="zcNewsCreateDate0"></div>
+
+                </div>
+            </div>
+            <div id="zcNewsDiv1" class="listsin">
+                <div class="listshadow"><img src="images/listshadow.png" /></div>
+                <div class="listtitle"><a id="zcNews1"></a></div>
+                <div class="listcon" id="zcNewsContent1"></div>
+                <div class="listdown">
+                    <div class="listdate" id="zcNewsCreateDate1"></div>
+
+                </div>
+            </div>
+            <div id="zcNewsDiv2" class="listsin">
+                <div class="listshadow"><img src="images/listshadow.png" /></div>
+                <div class="listtitle"><a id="zcNews2"></a></div>
+                <div class="listcon" id="zcNewsContent2"></div>
+                <div class="listdown">
+                    <div class="listdate" id="zcNewsCreateDate2"></div>
+
+                </div>
+            </div>
+            <div id="zcNewsDiv3" class="listsin">
+                <div class="listshadow"><img src="images/listshadow.png" /></div>
+                <div class="listtitle"><a id="zcNews3"></a></div>
+                <div class="listcon" id="zcNewsContent3"></div>
+                <div class="listdown">
+                    <div class="listdate" id="zcNewsCreateDate3"></div>
+
+                </div>
+            </div>
+            <div id="zcNewsDiv4" class="listsin">
+                <div class="listshadow"><img src="images/listshadow.png" /></div>
+                <div class="listtitle"><a id="zcNews4"></a></div>
+                <div class="listcon" id="zcNewsContent4"></div>
+                <div class="listdown">
+                    <div class="listdate" id="zcNewsCreateDate4"></div>
+
+                </div>
+            </div>
+            <div id="zcNewsDiv5" class="listsin">
+                <div class="listshadow"><img src="images/listshadow.png" /></div>
+                <div class="listtitle"><a id="zcNews5"></a></div>
+                <div class="listcon" id="zcNewsContent5"></div>
+                <div class="listdown">
+                    <div class="listdate" id="zcNewsCreateDate5"></div>
+
+                </div>
+            </div>
+            <div id="zcNewsDiv6" class="listsin">
+                <div class="listshadow"><img src="images/listshadow.png" /></div>
+                <div class="listtitle"><a id="zcNews6"></a></div>
+                <div class="listcon" id="zcNewsContent6"></div>
+                <div class="listdown">
+                    <div class="listdate" id="zcNewsCreateDate6"></div>
+
+                </div>
+            </div>
+
+
+            <div class="listpage">
+                <div class="page">
+                    <a href="#" onclick="shouye()">首页</a>
+                    <a href="#" onclick="prePage()">上一页</a>
+
+                    <a href="#" onclick="NextPage()">下一页</a>
+                    <a href="#" onclick="weiye()">尾页</a>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+    <div class="foot">
+        <div class="footcon">
+            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
+            <div class="footsin">承办方：镇江市中小企业服务中心</div>
+            <div class="footsin">服务热线：965808</div>
+            <div class="footsin">Copyright©2017 All Rights Reserved</div>
+            <div class="footsin">技术支持：江苏易蝶软件科技有限公司</div>
+        </div>
+    </div>
+
+
+    <a href="message.html">
+        <div class="kf">
+            <div class="kfbg"><img src="images/liuyan.png" /></div>
+            <div class="kfcon">在线留言</div>
+        </div>
+    </a>
+</body>
+</html>

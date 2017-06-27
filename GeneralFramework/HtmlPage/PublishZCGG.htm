@@ -24,13 +24,15 @@
         var UserInfo;
         var newsZcId;
         var newsGgId;
+        var newstpId;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZCdlg').dialog('close');
             $('#GGdlg').dialog('close');
+            $('#tpdlg').dialog('close');
             loadZCDG();
             loadGGDG();
-
+            loadImageNews_dg();
             KindEditor.ready(function (K) {
                 editor1 = K.create('#contentZC', {
                     cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
@@ -53,6 +55,26 @@
 
             KindEditor.ready(function (K) {
                 editor2 = K.create('#contentGG', {
+                    cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
+                    uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
+                    fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
+                    allowFileManager: true,
+                    afterCreate: function () {
+                        var self = this;
+                        K.ctrl(document, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                    }
+                });
+            });
+
+            KindEditor.ready(function (K) {
+                editor3 = K.create('#contenttp', {
                     cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
                     uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
                     fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
@@ -154,6 +176,82 @@
             });
         }
 
+        function loadImageNews_dg() {
+            newstpId = '';
+            $('#ImageNews_dg').datagrid({
+                url: '../../WebServer/PublishZCGGWebService.ashx?Method=GettpDG',
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '图片新闻列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: 10, hidden: true, align: 'center' },
+                    { field: 'NewsTitle', title: '图片新闻标题', width: 450, align: 'center' },
+                    { field: 'Createdate', title: '创建时间', width: 250, align: 'center' },
+                    { field: 'CreateUser', title: '创建人员', width: 250, align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '发布图片新闻',
+                    handler: function () {
+                        $('#CreateUser').textbox('setValue', UserInfo["name"]);
+                        $('#tpdlg').dialog('open');
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除图片新闻',
+                    handler: function () {
+                        Deltp();
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    newstpId = data.ID;
+                }),
+                onDblClickRow: (function (index, row) {
+                })
+            });
+        }
+
+        function savetp() {
+            if ($('#NewsTitle').val() === '') {
+                $.messager.alert('提示', '必须填写图片新闻标题！', 'info');
+            }
+            else if ($('#imagetp').textbox('getValue') == "") {
+                $.messager.alert('提示', '请上传新闻图片', 'info');
+            }
+            else if (editor3.html() === '') {
+                $.messager.alert('提示', '图片新闻内容必须填写！', 'info');
+            } else {
+
+                $('#contenttp').val(encodeURIComponent(editor3.html()));
+                var formData = new FormData($("#ff")[0]);
+                $.ajax({
+                    url: "../../WebServer/PublishZCGGWebService.ashx?Method=Addtp",
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data > 0) {
+                            loadImageNews_dg();
+                            $.messager.alert('提示', '保存成功', 'info');
+                            $('#tpdlg').dialog('close');
+                        } else {
+                            $.messager.alert('提示', '保存失败', 'error');
+                        }
+                    }
+                });
+            }
+        }
+
         function saveZC() {
             if ($('#titleZC').val() === '') {
                 $.messager.alert('提示', '必须填写政策标题！', 'info');
@@ -214,6 +312,33 @@
                 });
             }
         }
+        function Deltp() {
+            if (newstpId === '') {
+                $.messager.alert('提示', '请选择需要删除的图片新闻！', 'info');
+            } else {
+                $.messager.confirm('确认', '您确认想要删除该篇图片新闻吗？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "text",
+                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                            data: { 'newsId': newstpId },
+                            success: function (text) {
+                                if (text > 0) {
+                                    $.messager.alert('提示', '图片新闻删除成功！', 'info');
+                                    loadImageNews_dg();
+                                    newsZcId = '';
+                                }
+                            },
+                            error: function () {
+                                $.messager.alert('错误提示', '图片新闻删除出错，请重试或联系系统管理员！', 'error');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
         function DelZC() {
             if (newsZcId === '') {
                 $.messager.alert('提示', '请选择需要删除的政策记录！', 'info');
@@ -285,6 +410,12 @@
                 buttons: '#GG_dg-buttons'
             "></table>
         </div>
+        <div>
+            <table id="ImageNews_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#ImageNews_dg-buttons'
+            "></table>
+        </div>
         <div id="ZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
              data-options="
                 iconCls: 'icon-save',
@@ -316,6 +447,38 @@
                     <td style=" text-align:left;"><textarea id="contentGG" name="content1" style="width:100%; height:350px;"></textarea></td>
                 </tr>
             </table>
+        </div>
+        <div id="tpdlg" class="easyui-dialog" title="图片新闻编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
+             data-options="
+                iconCls: 'icon-save',
+                buttons: '#tpdlg-buttons'
+            ">
+            <form id="ff" method="post">
+                <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                    <tr id="UserNameTD" style="display:none;">
+                        <td style=" text-align:right;">*用户名称:</td>
+                        <td style=" text-align:left;"><input id="CreateUser" name="CreateUser" class="f1 easyui-textbox" style="width:95%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">标题:</td>
+                        <td style=" text-align:left;"><input id="titletp" name="titletp" class="f1 easyui-textbox" style="width:80%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">新闻图片:</td>
+                        <td style=" text-align:left;"><input id="imagetp" name="imagetp" data-options="buttonText:'选择',prompt:'请选择JPEG格式图像文件...',accept:'image/jpeg'" class="f1 easyui-filebox" style="width:80%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">详细内容:</td>
+                        <td style=" text-align:left;"><textarea id="contenttp" name="contenttp" style="width:100%; height:320px;"></textarea></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="tpdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="savetp()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#tpdlg').dialog('close');">
+                关闭
+            </a>
         </div>
         <div id="ZCdlg-buttons">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveZC()">保存</a>

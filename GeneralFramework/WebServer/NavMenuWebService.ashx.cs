@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.SessionState;
 using GeneralFrameworkBLL;
 using System.Reflection;
+using System.Web.Script.Serialization;
 
 namespace GeneralFramework.WebServer
 {
@@ -60,13 +61,24 @@ namespace GeneralFramework.WebServer
 
         public void GetNavMenuJson()
         {
-            string UserName = Session["UserName"].ToString();
-            Response.Write(NavMenuManager.GetNavMenuJson(UserName));
+            string UserName = HttpUtility.UrlDecode(HttpContext.Current.Request.Cookies["UserInfo"].Value);
+            var javaScriptSerializer = new JavaScriptSerializer();
+            var efi = javaScriptSerializer.Deserialize<UserInfo>(UserName);
+            Response.Write(NavMenuManager.GetNavMenuJson(efi.name));
         }
 
         public void GetSysMatMenuJson()
         {
             Response.Write(NavMenuManager.GetSysMatMenuJson());
+        }
+
+        //{"name":"jxw","status":true,"role":2,"msg":"密码错误！"}
+        public class UserInfo
+        {
+            public string name;
+            public bool status;
+            public int role;
+            public string msg;
         }
     }
 }

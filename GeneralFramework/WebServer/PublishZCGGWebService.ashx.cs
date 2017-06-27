@@ -80,6 +80,14 @@ namespace GeneralFramework.WebServer
             Response.Write(_nm.GetNewsDg("gg", page, rows));
         }
 
+        public void GettpDG()
+        {
+            var userName = Request["UserName"];
+            var page = int.Parse(Request["page"].ToString());
+            var rows = int.Parse(Request["rows"].ToString());
+            Response.Write(_nm.GetNewsDg("tp", page, rows));
+        }
+
         public void AddZC()
         {
             var data = Request;
@@ -101,6 +109,31 @@ namespace GeneralFramework.WebServer
             news.NewsType = "gg";
             Response.Write(_nm.AddNews(news));
         }
+
+        public void Addtp()
+        {
+            var fs = Request.Files;
+            var file = fs[0];
+            var data = Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+            NewsInfo news = new NewsInfo();
+            news.CreateUser = data["CreateUser"];
+            news.NewsTitle = data["titletp"];
+            news.NewsContent = HttpUtility.UrlDecode(data["contenttp"]);
+            news.NewsType = "tp";
+            news.image = StreamToBytes(file.InputStream);
+            Response.Write(_nm.AddNews(news));
+        }
+
+        private static byte[] StreamToBytes(Stream stream)
+        {
+            var bytes = new byte[stream.Length];
+            stream.Read(bytes, 0, bytes.Length);
+            stream.Seek(0, SeekOrigin.Begin);
+            return bytes;
+        }
+
 
         public void GetNews()
         {
@@ -129,10 +162,24 @@ namespace GeneralFramework.WebServer
             Response.Write(_nm.GetZCNewsList(newstype, PageIndex, PageSize));
         }
 
+        public void GetNewsImage()
+        {
+            var newsId = Request.QueryString["newsid"].ToString();
+            var bytes = _nm.GetNewsImage(int.Parse(newsId));
+            Response.BinaryWrite(bytes);
+            Response.Flush();
+            Response.End();
+        }
+
         public void GetZCNewsDetail()
         {
             var Id = int.Parse(Request["Id"]);
             Response.Write(_nm.GetZCNewsDetail(Id));
+        }
+
+        public void GetDefaultNewsImage()
+        {
+            Response.Write(_nm.GetDefaultNewsImage());
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Data;
 using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace GeneralFrameworkDAL
 {
@@ -21,13 +22,43 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
             return json;
         }
 
+
         public int AddNews(NewsInfo news)
         {
-            var sql = "insert into NewsInFo(NewsTitle,NewsContent,NewsLink,NewsType,Relation_Firm,CreateUser)values('" +
-                      news.NewsTitle + "','" + news.NewsContent + "','" + news.NewsLink + "','" + news.NewsType + "','" + news.Relation_Firm + "','" + news.CreateUser + "')";
+            string sql = string.Empty;
+            if (news.NewsType != "tp")
+            {
+                sql = "insert into NewsInFo(NewsTitle,NewsContent,NewsLink,NewsType,Relation_Firm,CreateUser)values('" +
+                          news.NewsTitle + "','" + news.NewsContent + "','" + news.NewsLink + "','" + news.NewsType + "','" + news.Relation_Firm + "','" + news.CreateUser + "')";
+            }
+            else
+            {
+                //sql = "insert into NewsInFo(NewsTitle,NewsContent,NewsLink,NewsType,Relation_Firm,CreateUser,[image])values('" +
+                //          news.NewsTitle + "','" + news.NewsContent + "','" + news.NewsLink + "','" + news.NewsType + "','" + news.Relation_Firm + "','" + news.CreateUser + "','" + news.image + "')";
+                sql = @"insert into NewsInFo(NewsTitle,NewsContent,NewsLink,NewsType,Relation_Firm,CreateUser,[image])values
+                            (@NewsTitle,@NewsContent,@NewsLink,@NewsType,@Relation_Firm,@CreateUser,@image)";
+                news.NewsLink = "";
+                var id = DBHelper.Execute(sql,
+                    new SqlParameter("@NewsTitle", news.NewsTitle.Trim()),
+                    new SqlParameter("@NewsContent", news.NewsContent.Trim()),
+                    new SqlParameter("@NewsLink", news.NewsLink),
+                    new SqlParameter("@NewsType", news.NewsType),
+                    new SqlParameter("@Relation_Firm", news.Relation_Firm),
+                    new SqlParameter("@CreateUser", news.CreateUser),
+                    new SqlParameter("@image", news.image)) as int?;
+                if (id > 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
             var i = DBHelper.GetNonQuery(sql);
             return i;
         }
+
 
         public int EditNews(NewsInfo news)
         {
@@ -59,6 +90,12 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
                 NewsContent = dr["NewsContent"].ToString(),
             };
             return newsContent;
+        }
+
+        public byte[] GetNewsImage(int Newsid)
+        {
+            string sql = "select [image] from NewsInFo where ID = '" + Newsid + "'";
+            return (byte[])DBHelper.GetScalar(sql);
         }
 
         public string GetIndexNewsInfo(string NewsType)
@@ -102,6 +139,13 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
         public string GetZCNewsDetail(int Id)
         {
             var sql = "select Id,NewsTitle,NewsContent,Createdate from NewsInFo where ID ='" + Id + "'";
+            var dt = DBHelper.GetDataSet(sql);
+            return JsonHelper.SerializeObject(dt);
+        }
+
+        public string GetDefaultNewsImage()
+        {
+            var sql = "select top(1) ID from NewsInFo where NewsType = 'tp'  and IsDeleted != 1 order by Createdate desc";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
         }

@@ -45,5 +45,15 @@ namespace GeneralFrameworkBLL
         {
             return _ns.GetZCNewsDetail(Id);
         }
+
+        public byte[] GetNewsImage(int Newsid)
+        {
+            return _ns.GetNewsImage(Newsid);
+        }
+
+        public string GetDefaultNewsImage()
+        {
+            return _ns.GetDefaultNewsImage();
+        }
     }
 }

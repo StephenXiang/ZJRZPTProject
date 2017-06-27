@@ -12,9 +12,23 @@
             loadIndexTJInfo();
             loadBankImgList();
             loadNewJRCP();
+            loadNewsImage();
             initLogin();
 
         });
+
+        function loadNewsImage() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: true,
+                url: "../../WebServer/PublishZCGGWebService.ashx?Method=GetDefaultNewsImage",
+                success: function (json) {
+                    $('#imgnewsdiv').html(GetImageNewsHtml(json[0].ID));
+                    //GetImageNewsHtml
+                }
+            });
+        }
 
         function loadIndexNewsInfo() {
             $.ajax({
@@ -142,6 +156,11 @@
             return imghtml;
         }
 
+        function GetImageNewsHtml(newsid) {
+            var imghtml = "<a href='HtmlWebSite/tpview.html?id=" + newsid + "'><img width='360' height='240'  src='../WebServer/PublishZCGGWebService.ashx?Method=GetNewsImage&newsid=" + newsid + "'></a>";
+            return imghtml;
+        }
+
 
         function loadNewJRCP() {
             $.ajax({
@@ -213,9 +232,11 @@
                     <div class="b1c">
                         <div class="b1ch">
                             <div class="b1cht">图片新闻</div>
-                            <div class="b1chm"><a href="#">更多</a></div>
+                            <div class="b1chm"><a href="HtmlWebSite/tplist.html">更多</a></div>
                         </div>
-                        <div class="b1cp"><img src="HtmlWebSite/images/news.png" /></div>
+                        <div id="imgnewsdiv" class="b1cp">
+                            <!--<img src="HtmlWebSite/images/news.png" />-->
+                        </div>
                     </div>
                 </div>
 
