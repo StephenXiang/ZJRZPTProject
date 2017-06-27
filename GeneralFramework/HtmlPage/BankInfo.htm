@@ -144,11 +144,45 @@
             else if (checkMobile($('#ConnectorPhonetext').val()) == false && checkPhone($('#ConnectorPhonetext').val()) == false) {
                 $.messager.alert('提示', '联系电话格式不正确', 'info');
             }
-            else if ($('#Logo1').textbox('getValue') == "") {
-                $.messager.alert('提示', '请上传log1,白底，JPG格式，140*42像素', 'info');
-            }
-            else if ($('#Logo2').textbox('getValue') == "") {
-                $.messager.alert('提示', '请上传请上传log2,透明背景，JPG格式，124*46像素', 'info');
+            else if ($("input[name='rd']:checked").val() == 1) {
+                if ($('#Logo1').textbox('getValue') == "") {
+                    $.messager.alert('提示', '请上传log1,白底，JPG格式，140*42像素', 'info');
+                }
+                else if ($('#Logo2').textbox('getValue') == "") {
+                    $.messager.alert('提示', '请上传请上传log2,透明背景，JPG格式，124*46像素', 'info');
+                }
+                else if ($('#BankDesc').val() == "") {
+                    $.messager.alert('提示', '请填写银行简介', 'info');
+                }
+                else {
+                    $.messager.confirm('提示', '请确认您所填写的银行信息真实有效！是否现在保存？', function (r) {
+                        if (r) {
+                            var formData = new FormData($("#Bankff")[0]);
+                            $.ajax({
+                                url: "../../WebServer/BankInfoWebService.ashx?Method=SaveBankInfo",
+                                type: 'POST',
+                                data: formData,
+                                async: false,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                //dataType: "text",
+                                success: function (data) {
+                                    if (data != "") {
+                                        $('#Bankdlg').dialog('close');
+                                        $.messager.alert('提示', '银行信息保存成功', 'info');
+                                        LoadBankDG(data);
+                                    } else {
+                                        $.messager.alert('提示', '银行信息保存失败，请重试', 'error');
+                                    }
+                                },
+                                error: function (data) {
+                                    $.messager.alert('提示', '银行信息保存失败', 'info');
+                                }
+                            });
+                        }
+                    });
+                }
             }
             else if ($('#BankDesc').val() == "") {
                 $.messager.alert('提示', '请填写银行简介', 'info');
@@ -214,6 +248,16 @@
             }
         }
 
+        function redioselect() {
+            var selected = $("input[name='rd']:checked").val();
+            if (selected == 0) {
+                $('#log1tr').hide();
+                $('#log2tr').hide();
+            } else {
+                $('#log1tr').show();
+                $('#log2tr').show();
+            }
+        }
     </script>
 </head>
 <body class="easyui-layout">
@@ -228,7 +272,7 @@
             "></table>
         </div>
         <div id="Bankdlg" class="easyui-dialog" title="编辑银行信息" style="text-align: center;
-        width: 450px; height: 450px; padding: 10px" data-options="
+        width: 450px; height: 460px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#Bankdlg-buttons'
             ">
@@ -259,17 +303,26 @@
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="ConnectorPhonetext" name=" ConnectorPhonetext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
                     </tr>
                     <tr>
+                        <td style=" text-align:right;">是否接受周转贷:</td>
+                        <td style=" text-align:left;">
+                            &nbsp;&nbsp;&nbsp;<input type="radio" name="rd" value='0' onclick="redioselect()">是
+                            <input type="radio" name="rd" value='1' checked="checked" onclick="redioselect()">否
+                        </td>
+                    </tr>
+                    <tr id="log1tr">
                         <td style=" text-align:right;">log1(140*42):</td>
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo1" name="Logo1" data-options="buttonText:'选择',prompt:'请选择文件...(白底,JPG格式)',accept:'image/jpeg'" class="f1 easyui-filebox" style="width:90%;" /></td>
                     </tr>
-                    <tr>
+                    <tr id="log2tr">
                         <td style=" text-align:right;">log2(124*46):</td>
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo2" name="Logo2" data-options="buttonText:'选择',prompt:'请选择文件...(透明,PNG格式)',accept:'image/png'" class="f1 easyui-filebox" style="width:90%;" /></td>
                     </tr>
+
                     <tr>
                         <td style=" text-align:right;">银行简介:</td>
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankDesc" name="BankDesc" class="easyui-textbox" style="width:90%;height:100px" data-options="multiline:true" /></td>
                     </tr>
+
                 </table>
             </form>
         </div>

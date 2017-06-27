@@ -66,28 +66,48 @@ namespace GeneralFramework.WebServer
 
         public void SaveBankInfo()
         {
-            var fs = _request.Files;
-            var logo1 = fs["Logo1"];
-            var logo2 = fs["logo2"];
 
-            Bank BankInfo = new Bank
+            if (int.Parse(_request.Form[6]) == 1)
             {
-                UserName = _request.Form[0],
-                MainBankId = _request.Form[1],
-                Name = _request.Form[2],
-                Address = _request.Form[3],
-                Connector = _request.Form[4],
-                ConnectorPhone = _request.Form[5],
-                BankDesc = _request.Form[6],
-                logo1 = StreamToBytes(logo1.InputStream),
-                logo2 = StreamToBytes(logo2.InputStream)
-            };
+                var fs = _request.Files;
+                var logo1 = fs["Logo1"];
+                var logo2 = fs["logo2"];
+                Bank BankInfo = new Bank
+                {
+                    UserName = _request.Form[0],
+                    MainBankId = _request.Form[1],
+                    Name = _request.Form[2],
+                    Address = _request.Form[3],
+                    Connector = _request.Form[4],
+                    ConnectorPhone = _request.Form[5],
+                    iszzd = int.Parse(_request.Form[6]),
+                    BankDesc = _request.Form[7],
+                    logo1 = StreamToBytes(logo1.InputStream),
+                    logo2 = StreamToBytes(logo2.InputStream)
+                };
+                _response.Write(_bi.SaveBankInfo(BankInfo));
+            }
+            else
+            {
+                Bank BankInfo = new Bank
+                {
+                    UserName = _request.Form[0],
+                    MainBankId = _request.Form[1],
+                    Name = _request.Form[2],
+                    Address = _request.Form[3],
+                    Connector = _request.Form[4],
+                    ConnectorPhone = _request.Form[5],
+                    iszzd = int.Parse(_request.Form[6]),
+                    BankDesc = _request.Form[7]
+                };
+                _response.Write(_bi.SaveBankInfo(BankInfo));
+            }
             //var data = _request;
             //var sr = new StreamReader(data.InputStream);
             //var stream = sr.ReadToEnd();
             //var javaScriptSerializer = new JavaScriptSerializer();
             //var efi = javaScriptSerializer.Deserialize<Bank>(stream);
-            _response.Write(_bi.SaveBankInfo(BankInfo));
+
         }
         public byte[] StreamToBytes(Stream stream)
         {
@@ -138,7 +158,7 @@ namespace GeneralFramework.WebServer
             int rows = int.Parse(_request["rows"].ToString());
             _response.Write(_bi.GetBankDg(page, rows));
         }
-		
+
         public void GetMainBank()
         {
             int page = int.Parse(_request["page"]);

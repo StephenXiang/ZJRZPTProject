@@ -26,5 +26,7 @@ namespace GeneralFrameworkBLLModel
         public string BankDesc { get; set; }
 
         public string MainBankId { get; set; }
+
+        public int iszzd { get; set; }
     }
 }
