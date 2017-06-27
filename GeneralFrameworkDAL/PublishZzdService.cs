@@ -25,6 +25,7 @@ namespace GeneralFrameworkDAL
 
         public bool Save(ZzdInfo zi)
         {
+            if (zi.Id > 0) return Update(zi);
             var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", zi.UserName.Trim());
             var ent = DBHelper.GetScalar(sql) as int?;
             if (ent == null) return false;
@@ -73,12 +74,31 @@ values(@ent,@bk,@mbk,@ma,@map,@oq,@q,@ed,0,@date)";
             return efc > 0;
         }
 
+        public bool Update(ZzdInfo zi)
+        {
+            var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", zi.UserName.Trim());
+            var ent = DBHelper.GetScalar(sql) as int?;
+            if (ent == null) return false;
+            sql = @"
+update ZZDFlow set BankId=@bk,MastBankId=@mbk,Manager=@ma,ManagerPhone=@map,OriginalQuota=@oq,ThisQuota=@q,ExpirationDate=@ed where Id=@zzdid";
+            var efc = DBHelper.Execute(sql,
+                new SqlParameter("@zzdid", zi.Id),
+                new SqlParameter("@bk", zi.ydkyh),
+                new SqlParameter("@mbk", zi.zbh),
+                new SqlParameter("@ma", zi.khjlxm),
+                new SqlParameter("@map", zi.khjllxdh),
+                new SqlParameter("@oq", zi.ydkje),
+                new SqlParameter("@q", zi.bcdkje),
+                new SqlParameter("@ed", zi.dkdqsj));
+            return efc > 0;
+        }
+
         public string GetZZDLBJson(string UserName, int page, int rows)
         {
             var sql = string.Format(@"select EnterpriseId from SysUser where UserName='{0}'", UserName);
             var ent = DBHelper.GetScalar(sql) as int?;
             if (ent == null) return "";
-            sql = string.Format(@"select f.Id as ZZDID,b.Name as ZZDBk,b2.Name as ZZDMBK,
+            sql = string.Format(@"select f.Id as ZZDID,b.Name as ZZDBk,b2.Name as ZZDMBK,b.Id as ZZDBkid,b2.Id as ZZDMBKid,
 Manager as ZZDManager,ManagerPhone as ZZDManagerPhone,
 OriginalQuota as ZZDOriginalQuota,
 ThisQuota as ZZDThisQuota,
