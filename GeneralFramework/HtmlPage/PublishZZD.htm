@@ -16,6 +16,7 @@
         }
         var UserInfo;
         var selectid;
+        var selectstatus;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZZDdlg').dialog('close');
@@ -24,6 +25,7 @@
 
         function LoadZZDDG() {
             selectid = 0;
+            selectstatus = 0;
             $('#ZZD_dg').datagrid({
                 url: '../../WebServer/PublishZZDWebService.ashx?Method=GetZZDLBJson',
                 queryParams: { UserName: UserInfo["name"] },
@@ -74,10 +76,10 @@
                     handler: function () {
                         if (loadEnterpriseInfo() == true) {
                             if (loadEnterpriseFiancialInfo() == true) {
-                        OpenZZDDlg();
+                                OpenZZDDlg();
                             } else {
                                 $.messager.alert('提示', '您未填写财务信息，不允许发布周转贷', 'info');
-                    }
+                            }
                         } else {
                             $.messager.alert('提示', '您未填写企业基本信息，不允许发布周转贷', 'info');
                         }
@@ -87,11 +89,16 @@
                     iconCls: 'icon-remove',
                     text: '删除周转贷',
                     handler: function () {
-                        deleteZZD();
+                        if (selectstatus > 0) {
+                            $.messager.alert('提示', '当前周转贷申请已受理，不允许删除', 'info');
+                        } else {
+                            deleteZZD();
+                        }
                     }
                 }],
                 onClickRow: (function (index, data) {
                     selectid = data.ZZDID;
+                    selectstatus = data.ZZDStatus;
                 }),
                 onDblClickRow: (function (index, row) {
 

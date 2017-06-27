@@ -16,6 +16,7 @@
         }
         var UserInfo;
         var selectid;
+        var selectstatus;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#DywTR').hide();
@@ -23,6 +24,7 @@
             LoadRZDG();
         });
         function LoadRZDG() {
+            selectstatus = '';
             selectid = 0;
             $('#RZ_dg').datagrid({
                 url: '../../WebServer/PublishRZWebService.ashx?Method=GetRZLBJson',
@@ -97,10 +99,10 @@
                     handler: function () {
                         if (loadEnterpriseInfo() == true) {
                             if (loadEnterpriseFiancialInfo() == true) {
-                        openPublishRZdlg();
+                                openPublishRZdlg();
                             } else {
                                 $.messager.alert('提示', '您未填写财务信息，不允许发布融资', 'info');
-                    }
+                            }
                         } else {
                             $.messager.alert('提示', '您未填写企业基本信息，不允许发布融资', 'info');
                         }
@@ -109,11 +111,18 @@
                     iconCls: 'icon-remove',
                     text: '删除融资',
                     handler: function () {
-                        deleteRZ();
+                        if (selectstatus > 0) {
+                            $.messager.alert('提示', '当前融资申请银行已受理，不允许删除', 'info');
+                        } else {
+                            deleteRZ();
+                        }
+
+
                     }
                 }],
                 onClickRow: (function (index, data) {
                     selectid = data.ID;
+                    selectstatus = data.Status;
                 }),
                 onDblClickRow: (function (index, row) {
 
