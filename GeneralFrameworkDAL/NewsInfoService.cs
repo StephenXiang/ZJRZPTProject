@@ -4,6 +4,7 @@ using GeneralFrameworkBLLModel;
 using GeneralFrameworkDAL.JSON;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Web;
 
 namespace GeneralFrameworkDAL
 {
@@ -11,13 +12,19 @@ namespace GeneralFrameworkDAL
     {
         public string GetNewsDg(string type, int page, int rows)
         {
-            var sqlCount = "select * from NewsInFo";
+            var sqlCount = "select * from NewsInFo where NewsType = '" + type + "' and IsDeleted= 0 ";
             var countDt = DBHelper.GetDataSet(sqlCount);
             var sql = string.Format(@"
-select top {0} ID,NewsTitle,NewsLink,NewsType,Relation_Firm,Createdate,CreateUser from (
+select top {0} ID,NewsTitle,NewsContent,NewsLink,NewsType,Relation_Firm,Createdate,CreateUser from (
 select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo where NewsType='{2}' and IsDeleted=0) as r where r.rowId>{1}
 ", rows, (page - 1) * rows, type);
             var dt = DBHelper.GetDataSet(sql);
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                DataRow dr = dt.Rows[i];
+                string content = HttpUtility.UrlEncode(dr["NewsContent"].ToString());
+                dt.Rows[i]["NewsContent"] = content;
+            }
             var json = JsonHelper.TableToJson(countDt.Rows.Count, dt);
             return json;
         }

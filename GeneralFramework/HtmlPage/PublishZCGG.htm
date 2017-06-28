@@ -32,6 +32,8 @@
             $('#GGdlg').dialog('close');
             $('#tpdlg').dialog('close');
             $('#qyfcdlg').dialog('close');
+            $('#editZCdlg').dialog('close');
+            $('#editGGdlg').dialog('close');
             loadZCDG();
             loadGGDG();
             loadImageNews_dg();
@@ -57,7 +59,47 @@
             });
 
             KindEditor.ready(function (K) {
+                editor5 = K.create('#editcontentZC', {
+                    cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
+                    uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
+                    fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
+                    allowFileManager: true,
+                    afterCreate: function () {
+                        var self = this;
+                        K.ctrl(document, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                    }
+                });
+            });
+
+            KindEditor.ready(function (K) {
                 editor2 = K.create('#contentGG', {
+                    cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
+                    uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
+                    fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
+                    allowFileManager: true,
+                    afterCreate: function () {
+                        var self = this;
+                        K.ctrl(document, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                    }
+                });
+            });
+
+            KindEditor.ready(function (K) {
+                editor6 = K.create('#editcontentGG', {
                     cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
                     uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
                     fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
@@ -137,8 +179,11 @@
                 columns: [[
                     { field: 'ID', title: 'ID', width: 10, hidden: true, align: 'center' },
                     { field: 'NewsTitle', title: '政策标题', width: 450, align: 'center' },
-                    { field: 'Createdate', title: '创建时间', width: 250, align: 'center' },
-                    { field: 'CreateUser', title: '创建人员', width: 250, align: 'center' }
+                    {
+                        field: 'NewsContent', title: '政策内容', hidden: true, width: 450, align: 'center'
+                    },
+        { field: 'Createdate', title: '创建时间', width: 250, align: 'center' },
+        { field: 'CreateUser', title: '创建人员', width: 250, align: 'center' }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布政策',
@@ -156,9 +201,14 @@
                     newsZcId = data.ID;
                 }),
                 onDblClickRow: (function (index, row) {
+                    newsZcId = row.ID;
+                    $('#edittitleZC').textbox('setValue', row.NewsTitle);
+                    editor5.html(decodeURIComponent(row.NewsContent));
+                    $('#editZCdlg').dialog('open');
                 })
             });
         }
+
 
         function loadGGDG() {
             newsGgId = '';
@@ -197,6 +247,10 @@
                     newsGgId = data.ID;
                 }),
                 onDblClickRow: (function (index, row) {
+                    newsGgId = row.ID;
+                    $('#edittitleGG').textbox('setValue', row.NewsTitle);
+                    editor6.html(decodeURIComponent(row.NewsContent));
+                    $('#editGGdlg').dialog('open');
                 })
             });
         }
@@ -353,6 +407,41 @@
             }
         }
 
+        function editzc() {
+            if (newsZcId == '' || newsZcId == "0") {
+                $.messager.alert('提示', '获取政策编号失败，请重新单击要编辑的政策信息！', 'info');
+            }
+            else if ($('#edittitleZC').textbox('getValue') === '') {
+                $.messager.alert('提示', '必须填写政策标题！', 'info');
+            }
+            else if (editor5.html() === '') {
+                $.messager.alert('提示', '政策内容必须填写！', 'info');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "../../WebServer/PublishZCGGWebService.ashx?Method=EditNewsInfo",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        "NewsId": newsZcId,
+                        "NewsContent": editor5.html(),
+                        "NewsTitle": $('#edittitleZC').textbox('getValue'),
+                        "NewsType": "zc"
+                    }),
+                    dataType: "text",
+                    success: function (text) {
+                        if (text > 0) {
+                            $('#editZCdlg').dialog('close');
+                            $.messager.alert('提示', '政策编辑成功！', 'info');
+                            loadZCDG();
+                        }
+                    },
+                    error: function (message) {
+                        $.messager.alert('错误提示', '政策编辑出错，请重试或联系系统管理员！', 'error');
+                    }
+                });
+            }
+        }
+
         function saveZC() {
             if ($('#titleZC').val() === '') {
                 $.messager.alert('提示', '必须填写政策标题！', 'info');
@@ -413,6 +502,42 @@
                 });
             }
         }
+
+        function editgg() {
+            if (newsGgId == '' || newsGgId == "0") {
+                $.messager.alert('提示', '获取公告编号失败，请重新单击要编辑的公告信息！', 'info');
+            }
+            else if ($('#edittitleGG').textbox('getValue') === '') {
+                $.messager.alert('提示', '必须填写政公告！', 'info');
+            }
+            else if (editor6.html() === '') {
+                $.messager.alert('提示', '公告内容必须填写！', 'info');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "../../WebServer/PublishZCGGWebService.ashx?Method=EditNewsInfo",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        "NewsId": newsGgId,
+                        "NewsContent": editor6.html(),
+                        "NewsTitle": $('#edittitleGG').textbox('getValue'),
+                        "NewsType": "gg"
+                    }),
+                    dataType: "text",
+                    success: function (text) {
+                        if (text > 0) {
+                            $('#editGGdlg').dialog('close');
+                            $.messager.alert('提示', '公告编辑成功！', 'info');
+                            loadGGDG();
+                        }
+                    },
+                    error: function (message) {
+                        $.messager.alert('错误提示', '公告编辑出错，请重试或联系系统管理员！', 'error');
+                    }
+                });
+            }
+        }
+
         function Delqy() {
             if (newsqyId === '') {
                 $.messager.alert('提示', '请选择需要删除的企业风采！', 'info');
@@ -573,6 +698,24 @@
                 </tr>
             </table>
         </div>
+
+        <div id="editZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
+             data-options="
+                iconCls: 'icon-save',
+                buttons: '#editZCdlg-buttons'
+            ">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">标题:</td>
+                    <td style=" text-align:left;"><input id="edittitleZC" name="edittitleZC" class="f1 easyui-textbox" style="width: 80%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">详细内容:</td>
+                    <td style=" text-align:left;"><textarea id="editcontentZC" name="editcontentZC" style="width:100%; height:350px;"></textarea></td>
+                </tr>
+            </table>
+        </div>
+
         <div id="GGdlg" class="easyui-dialog" title="公告编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
              data-options="
                 iconCls: 'icon-save',
@@ -589,6 +732,24 @@
                 </tr>
             </table>
         </div>
+
+        <div id="editGGdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
+             data-options="
+                iconCls: 'icon-save',
+                buttons: '#editGGdlg-buttons'
+            ">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr>
+                    <td style=" text-align:right;">标题:</td>
+                    <td style=" text-align:left;"><input id="edittitleGG" name="edittitleGG" class="f1 easyui-textbox" style="width: 80%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">详细内容:</td>
+                    <td style=" text-align:left;"><textarea id="editcontentGG" name="editcontentGG" style="width:100%; height:350px;"></textarea></td>
+                </tr>
+            </table>
+        </div>
+
         <div id="tpdlg" class="easyui-dialog" title="图片新闻编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
              data-options="
                 iconCls: 'icon-save',
@@ -659,12 +820,26 @@
                 关闭
             </a>
         </div>
+        <div id="editZCdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="editzc()">编辑</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#editZCdlg').dialog('close');">
+                关闭
+            </a>
+        </div>
+
         <div id="GGdlg-buttons">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveGG()">保存</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#GGdlg').dialog('close');">
                 关闭
             </a>
         </div>
+        <div id="editGGdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="editgg()">编辑</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#editGGdlg').dialog('close');">
+                关闭
+            </a>
+        </div>
+
     </div>
 </body>
 </html>

@@ -96,6 +96,16 @@ namespace GeneralFramework.WebServer
             Response.Write(_nm.GetNewsDg("qy", page, rows));
         }
 
+        public void EditNewsInfo()
+        {
+            var data = Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+            var javaScriptSerializer = new JavaScriptSerializer();
+            var news = javaScriptSerializer.Deserialize<NewsInfo>(stream);
+            Response.Write(_nm.EditNews(news));
+        }
+
         public void AddZC()
         {
             var data = Request;
@@ -205,5 +215,7 @@ namespace GeneralFramework.WebServer
         {
             Response.Write(_nm.GetDefaultNewsImage());
         }
+
+
     }
 }
