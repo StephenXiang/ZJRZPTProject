@@ -67,10 +67,10 @@
                     { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
                     { field: 'RZQXid', title: 'RZQXid', width: '10', hidden: true, align: 'center' },
                     { field: 'RZYTid', title: 'RZYTid', width: '10', hidden: true, align: 'center' },
-                    { field: 'RZED', title: '融资额度(单位：万元)', width: '300', align: 'center' },
-                    { field: 'RZQX', title: '融资期限', width: '300', align: 'center' },
+                    { field: 'RZED', title: '融资额度(单位：万元)', width: 150, align: 'center' },
+                    { field: 'RZQX', title: '融资期限', width: 150, align: 'center' },
                     {
-                        field: 'SXYH', title: '所选银行', width: '300', align: 'center', formatter:
+                        field: 'SXYH', title: '所选银行', width: 150, align: 'center', formatter:
                         function (value, row, index) {
                             if (value != "") {
                                 $.ajax({
@@ -89,9 +89,9 @@
                             }
                         }
                     },
-                    { field: 'RZYT', title: '融资用途', width: '300', align: 'center' },
+                    { field: 'RZYT', title: '融资用途', width: 150, align: 'center' },
                     {
-                        field: 'DYW', title: '抵押物', width: '300', align: 'center', formatter:
+                        field: 'DYW', title: '抵押物', width: 150, align: 'center', formatter:
                         function (value, row, index) {
                             if (value == "") {
                                 return "无";
@@ -100,7 +100,7 @@
                         }
                     },
                     {
-                        field: 'PublishDate', title: '发布时间', width: '300', align: 'center'
+                        field: 'PublishDate', title: '发布时间', width: 150, align: 'center'
                     },
                     {
                         field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
@@ -117,7 +117,9 @@
                                 return '受理不成功';
                             }
                         }
-                    }
+                    }, {
+                        field: 'SLBankName', title: '受理银行', width: 150, align: 'center'
+                    },
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布融资',

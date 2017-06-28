@@ -68,9 +68,11 @@ where BankIds like '%" + BankId + "%' and a.IsDeleted=0";
             }
             if (RoleId == 1 || RoleId == 2)    // 系统用户或政府部门
             {
-                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds from RZFlow a 
+                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds,d.Name as SLBankName,b.CreditAmount,b.CreditDate from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
-left join Enterprise c on a.EnterpriseId = c.ID where a.IsDeleted=0";
+left join Enterprise c on a.EnterpriseId = c.ID
+left join Bank d on a.SLBankId = d.Id 
+where a.IsDeleted=0";
                 var banks = BankInfoService.GetBanks();
                 var dt1 = DBHelper.GetDataSet(sql);
                 if (dt1.Rows.Count == 0)
