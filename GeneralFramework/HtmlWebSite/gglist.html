@@ -26,21 +26,44 @@
                     var ZCNewsInfoJson = json;
                     checkxiaoshu(ZCNewsInfoJson.length);
                     if (PageIndex == 1) {
-                        for (var i = 0; i < PageSize; i++) {
-                            var NewsContent = "";
-                            NewsContent = ZCNewsInfoJson[i].NewsContent;
-                            var dd = NewsContent.replace(/<\/?.+?>/g, "");
-                            var dds = dd.replace(/ /g, "");//dds为得到后的内容
-                            if (dds.length > 139) {
-                                NewsContent = dds.substring(0, 139) + "...";
-                            } else {
-                                NewsContent = dds;
+                        if (ZCNewsInfoJson.length >= PageSize) {
+                            for (var i = 0; i < PageSize; i++) {
+                                var NewsContent = "";
+                                NewsContent = ZCNewsInfoJson[i].NewsContent;
+                                var dd = NewsContent.replace(/<\/?.+?>/g, "");
+                                var dds = dd.replace(/ /g, "");//dds为得到后的内容
+                                if (dds.length > 139) {
+                                    NewsContent = dds.substring(0, 139) + "...";
+                                } else {
+                                    NewsContent = dds;
+                                }
+                                $('#zcNewsDiv' + i + '').show();
+                                $('#zcNews' + i + '').text(ZCNewsInfoJson[i].NewsTitle);
+                                $('#zcNews' + i + '').attr("href", "ggview.html?id=" + ZCNewsInfoJson[i].Id);
+                                $('#zcNewsContent' + i + '').html(NewsContent);
+                                $('#zcNewsCreateDate' + i + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
                             }
-                            $('#zcNewsDiv' + i + '').show();
-                            $('#zcNews' + i + '').text(ZCNewsInfoJson[i].NewsTitle);
-                            $('#zcNews' + i + '').attr("href", "ggview.html?id=" + ZCNewsInfoJson[i].Id);
-                            $('#zcNewsContent' + i + '').html(NewsContent);
-                            $('#zcNewsCreateDate' + i + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
+                        } else {
+                            var j = ZCNewsInfoJson.length - 1;
+                            for (var i = 0; i < ZCNewsInfoJson.length; i++) {
+                                var NewsContent = "";
+                                NewsContent = ZCNewsInfoJson[i].NewsContent;
+                                var dd = NewsContent.replace(/<\/?.+?>/g, "");
+                                var dds = dd.replace(/ /g, "");//dds为得到后的内容
+                                if (dds.length > 139) {
+                                    NewsContent = dds.substring(0, 139) + "...";
+                                } else {
+                                    NewsContent = dds;
+                                }
+                                $('#zcNewsDiv' + i + '').show();
+                                $('#zcNews' + i + '').text(ZCNewsInfoJson[i].NewsTitle);
+                                $('#zcNews' + i + '').attr("href", "tpview.html?id=" + ZCNewsInfoJson[i].Id);
+                                $('#zcNewsContent' + i + '').html(NewsContent);
+                                $('#zcNewsCreateDate' + i + '').html(jsonDateFormat(ZCNewsInfoJson[i].Createdate));
+                            }
+                            for (var k = 6; k > j; k--) {
+                                $('#zcNewsDiv' + k + '').hide();
+                            }
                         }
                     } else {
                         var twopagesize = 0;
