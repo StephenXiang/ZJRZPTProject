@@ -20,7 +20,10 @@
             $('#DetialInfo').hide();
             $('#statusdiv').hide();
             $('#rziddiv').hide();
+            $('#statusdiv2').hide();
+            $('#rziddiv2').hide();
             $('#RZFeedBackdlg').dialog('close');
+            $('#RZSLdlg').dialog('close');
             loadrzdg();
         });
 
@@ -43,7 +46,7 @@
                                     { field: 'Id', title: 'ID', width: 150, hidden: true, align: 'center' },
                                     { field: 'EnterpriseId', title: '企业ID', width: 0, hidden: true, align: 'center' },
                                     { field: 'Name', title: '企业名称', width: 150, align: 'center' },
-                                    { field: 'Quota', title: '融资额度', width: 150, align: 'center' },
+                                    { field: 'Quota', title: '融资额度(单位:万元)', width: 150, align: 'center' },
                                     { field: 'PublishDate', title: '发布日期', width: 150, align: 'center' },
                                     {
                                         field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
@@ -60,7 +63,12 @@
                                                   return '受理不成功';
                                               }
                                           }
-                                    }
+                                    },
+                                     { field: 'SLBankId', title: '受理银行', width: 150, hidden: true, align: 'center' },
+                                     { field: 'SLBankName', title: '受理银行', width: 150, align: 'center' },
+                                     { field: 'CreditAmount', title: '授信金额(单位:万元)', width: 150, align: 'center' },
+                                     { field: 'CreditDate', title: '放款日期', width: 150, align: 'center' }
+
                 ]],
                 onClickRow: (function (index, row) {
                     if (row.Status == 0) {
@@ -85,20 +93,43 @@
                             }
                         });
                     } else if (row.Status == 2) {
-                        $.messager.defaults = { ok: "是", cancel: "否" };
-                        $.messager.confirm('提示', '该企业的融资请求是否受理成功？', function (r) {
-                            if (r) {
-                                EditRZStatus('3', row.Id);
-                            } else {
-                                $.messager.defaults = { ok: "确定", cancel: "取消" };
-                                $('#statustext').textbox('setValue', '4');
-                                $('#rzidtext').textbox("setValue", row.Id);
-                                $('#RZFeedBackdlg').dialog('open');
-                            }
-                        });
+                        var BenBankId = GetBankId();
+                        if (BenBankId == row.SLBankId) {
+                            $.messager.defaults = { ok: "是", cancel: "否" };
+                            $.messager.confirm('提示', '该企业的融资请求是否受理成功？', function (r) {
+                                if (r) {
+                                    //EditRZStatus('3', row.Id);
+                                    $('#statustext2').textbox('setValue', '3');
+                                    $('#rzidtext2').textbox("setValue", row.Id);
+                                    $('#RZSLdlg').dialog('open');
+                                } else {
+                                    $.messager.defaults = { ok: "确定", cancel: "取消" };
+                                    $('#statustext').textbox('setValue', '4');
+                                    $('#rzidtext').textbox("setValue", row.Id);
+                                    $('#RZFeedBackdlg').dialog('open');
+                                }
+                            });
+                        } else {
+                            $.messager.alert('提示', '当前融资申请已被' + row.SLBankName + '受理!', "info");
+                        }
                     }
                 })
             });
+        }
+
+        function GetBankId() {
+            var id = "";
+            $.ajax({
+                type: "get",
+                async: false,
+                url: "../../WebServer/RZExamineApproveWebService.ashx?Method=GetBankIdByUserName",
+                data: { UserName: UserInfo["name"] },
+                dataType: "text",
+                success: function (text) {
+                    id = text;
+                }
+            });
+            return id;
         }
 
         function EditRZStatus(status, rzid) {
@@ -116,6 +147,44 @@
                     }
                 }
             });
+        }
+
+        function EditRZStatusSLCG() {
+            if ($('#statustext2').textbox("getValue") == "") {
+                $.messager.alert('提示', '单据状态获取失败!', "info");
+                $('#RZFeedBackdlg').dialog('close');
+            }
+            else if ($('#rzidtext2').textbox("getValue") == "") {
+                $.messager.alert('提示', '单据编号获取失败!!', "info");
+                $('#RZFeedBackdlg').dialog('close');
+            }
+            else if ($('#sljetext').textbox("getValue") == "") {
+                $.messager.alert('提示', '授信金额必须填写!', "info");
+            }
+            else if (checkNum("sljetext") == false) {
+                $.messager.alert('提示', '授信金额只能输入数字!', "info");
+            }
+            else if ($('#slrq').datebox('getValue') == "") {
+                $.messager.alert('提示', '放款日期必须选择!', "info");
+            }
+            else {
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: "../../WebServer/RZExamineApproveWebService.ashx?Method=EditRZStatusSLCG",
+                    data: { status: $('#statustext2').textbox("getValue"), rzid: $('#rzidtext2').textbox("getValue"), slje: $('#sljetext').textbox("getValue"), slrq: $('#slrq').datebox('getValue'), UserName: UserInfo["name"] },
+                    dataType: "text",
+                    success: function (text) {
+                        if (text == "True") {
+                            $('#RZSLdlg').dialog('close');
+                            $.messager.alert('提示', '融资数据处理成功!', "info");
+                            loadrzdg();
+                        } else {
+                            $.messager.alert('提示', '融资数据状态修改失败!', "info");
+                        }
+                    }
+                });
+            }
         }
 
         function EditRZStatusAndFeedback() {
@@ -140,6 +209,7 @@
                     success: function (text) {
                         if (text == "True") {
                             $('#RZFeedBackdlg').dialog('close');
+                            $.messager.alert('提示', '融资数据处理成功!', "info");
                             loadrzdg();
                         } else {
                             $.messager.alert('提示', '融资数据状态修改失败!', "info");
@@ -255,6 +325,15 @@
                     }
                 }
             });
+        }
+
+        function checkNum(id) {
+            var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
+            var obj = document.getElementById(id);
+            if (!reg.test(obj.value)) {
+                return false;
+            }
+            return true;
         }
     </script>
 
@@ -496,6 +575,36 @@
     <div id="RZFeedBackdlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="EditRZStatusAndFeedback()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#RZFeedBackdlg').dialog('close')">
+            关闭
+        </a>
+    </div>
+
+    <div id="RZSLdlg" class="easyui-dialog" title="受理成功" style="text-align: center;
+        width: 300px; height:200px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#RZSLdlg-buttons'
+            ">
+        <div id="statusdiv2" style="margin-bottom:20px">
+            <input class="easyui-textbox" id="statustext2" name="statustext2" style="width:80%; height:80px;" data-options="label:'状态:'">
+        </div>
+        <div id="rziddiv2" style="margin-bottom:20px">
+            <input class="easyui-textbox" id="rzidtext2" name="rzidtext2" style="width:80%; height:80px;" data-options="label:'融资ID:'">
+        </div>
+
+        <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+            <tr>
+                <td style=" text-align:right;">授信金额:</td>
+                <td style=" text-align:left;"><input id="sljetext" name="sljetext" class="easyui-textbox" label="" style="width:80%">万元</td>
+            </tr>
+            <tr>
+                <td style=" text-align:right;">放款日期:</td>
+                <td style=" text-align:left;"><select id="slrq" name="slrq" class="easyui-datebox" label="" style="width:80%"></select></td>
+            </tr>
+        </table>
+    </div>
+    <div id="RZSLdlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="EditRZStatusSLCG()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#RZSLdlg').dialog('close')">
             关闭
         </a>
     </div>

@@ -30,9 +30,11 @@ namespace GeneralFrameworkDAL
 
             if (BankId != 0)
             {
-                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds from RZFlow a 
+                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds,a.SLBankId,d.Name as SLBankName,b.CreditAmount,b.CreditDate from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
-left join Enterprise c on a.EnterpriseId = c.ID where BankIds like '%" + BankId + "%' and a.IsDeleted=0";
+left join Enterprise c on a.EnterpriseId = c.ID
+left join Bank d on a.SLBankId = d.Id 
+where BankIds like '%" + BankId + "%' and a.IsDeleted=0";
                 var dt1 = DBHelper.GetDataSet(sql);
                 if (dt1.Rows.Count == 0)
                 {
@@ -78,9 +80,10 @@ left join Enterprise c on a.EnterpriseId = c.ID where a.IsDeleted=0";
                 dt1.Columns.Add("Banks");
                 foreach (DataRow dr in dt1.Rows)
                 {
-                    dr["Banks"] = string.Join(",",
-                        dr["BankIds"].ToString().Split(',').Select(int.Parse)
-                            .Select(p => banks.ContainsKey(p) ? banks[p] : ""));
+                    //dr["Banks"] = string.Join(",",
+                    //    dr["BankIds"].ToString().Split(',').Select(int.Parse)
+                    //        .Select(p => banks.ContainsKey(p) ? banks[p] : ""));
+                    dr["Banks"] = GetBankNamesByBankIds(dr["BankIds"].ToString());
                 }
                 return JsonHelper.TableToJson(dt1.Rows.Count, GetPagedTable(dt1, page, rows));
             }
@@ -224,12 +227,14 @@ where a.Id = {0}", RZID);
             }
         }
 
-        public bool EditRZStatus(string status, string rzid, string UserName, int i = 0)
+
+
+        public bool EditRZStatus(string status, string rzid, string UserName, string slje = null, string slrq = null, int i = 0)
         {
             string sql = string.Empty;
             if (status == "2")
             {
-                sql = @"update  RZFlow set [Status] = @status,BankIds = @BankId where Id = @rzid";
+                sql = @"update  RZFlow set [Status] = @status,SLBankId = @BankId where Id = @rzid";
             }
             else
             {
@@ -240,6 +245,11 @@ where a.Id = {0}", RZID);
             {
                 if (status == "3")
                 {
+                    sql = "select DemandId from RZFlow where Id = '" + rzid + "'";
+                    DataTable demandiddt = DBHelper.GetDataSet(sql);
+                    DataRow dr = demandiddt.Rows[0];
+                    sql = "update RZDemandInfo set CreditAmount = @slje,CreditDate=@slrq where Id=@id";
+                    sid = DBHelper.Execute(sql, new SqlParameter("@slje", slje), new SqlParameter("@slrq", slrq), new SqlParameter("@id", dr[0].ToString()));
                     List<string> phonelist = new List<string>();
                     sql = string.Format(@"select b.ConnectionTelephone from RZFlow a left join Enterprise b on a.EnterpriseId = b.ID where a.Id = {0}", rzid);
                     DataTable yhdt = DBHelper.GetDataSet(sql);

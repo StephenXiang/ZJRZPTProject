@@ -80,7 +80,7 @@ namespace GeneralFramework.WebServer
             string status = Request["status"];
             string zzdid = Request["rzid"];
             string UserName = Request["UserName"];
-            Response.Write(rm.EditRZStatus(status, zzdid, UserName, 0));
+            Response.Write(rm.EditRZStatus(status, zzdid, UserName, null, null, 0));
         }
         public void EditRZStatusAndFeedback()
         {
@@ -88,6 +88,29 @@ namespace GeneralFramework.WebServer
             string rzid = Request["rzid"];
             string liyou = Request["Feedback"];
             Response.Write(rm.EditRZStatus(status, rzid, liyou));
+        }
+
+        public void EditRZStatusSLCG()
+        {
+            string status = Request["status"];
+            string rzid = Request["rzid"];
+            string jine = Request["slje"];
+            string fddate = Request["slrq"];
+            string UserName = Request["UserName"];
+            if (status == "" || rzid == "")
+            {
+                Response.Write(false);
+            }
+            else
+            {
+                Response.Write(rm.EditRZStatus(status, rzid, UserName, jine, fddate, 0));
+            }
+        }
+
+        public void GetBankIdByUserName()
+        {
+            string UserName = Request["UserName"];
+            Response.Write(rm.GetBankIdByUserName(UserName));
         }
     }
 }
