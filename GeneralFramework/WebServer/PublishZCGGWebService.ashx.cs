@@ -88,6 +88,14 @@ namespace GeneralFramework.WebServer
             Response.Write(_nm.GetNewsDg("tp", page, rows));
         }
 
+        public void GetqyfcDG()
+        {
+            var userName = Request["UserName"];
+            var page = int.Parse(Request["page"].ToString());
+            var rows = int.Parse(Request["rows"].ToString());
+            Response.Write(_nm.GetNewsDg("qy", page, rows));
+        }
+
         public void AddZC()
         {
             var data = Request;
@@ -122,6 +130,22 @@ namespace GeneralFramework.WebServer
             news.NewsTitle = data["titletp"];
             news.NewsContent = HttpUtility.UrlDecode(data["contenttp"]);
             news.NewsType = "tp";
+            news.image = StreamToBytes(file.InputStream);
+            Response.Write(_nm.AddNews(news));
+        }
+
+        public void Addqyfc()
+        {
+            var fs = Request.Files;
+            var file = fs[0];
+            var data = Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+            NewsInfo news = new NewsInfo();
+            news.CreateUser = data["qyfcCreateUser"];
+            news.NewsTitle = data["qyfctitletp"];
+            news.NewsContent = HttpUtility.UrlDecode(data["qyfccontenttp"]);
+            news.NewsType = "qy";
             news.image = StreamToBytes(file.InputStream);
             Response.Write(_nm.AddNews(news));
         }

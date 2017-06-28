@@ -26,7 +26,7 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
         public int AddNews(NewsInfo news)
         {
             string sql = string.Empty;
-            if (news.NewsType != "tp")
+            if (news.NewsType != "tp" && news.NewsType != "qy")
             {
                 sql = "insert into NewsInFo(NewsTitle,NewsContent,NewsLink,NewsType,Relation_Firm,CreateUser)values('" +
                           news.NewsTitle + "','" + news.NewsContent + "','" + news.NewsLink + "','" + news.NewsType + "','" + news.Relation_Firm + "','" + news.CreateUser + "')";

@@ -25,14 +25,17 @@
         var newsZcId;
         var newsGgId;
         var newstpId;
+        var newsqyId;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZCdlg').dialog('close');
             $('#GGdlg').dialog('close');
             $('#tpdlg').dialog('close');
+            $('#qyfcdlg').dialog('close');
             loadZCDG();
             loadGGDG();
             loadImageNews_dg();
+            loadqyfcdg();
             KindEditor.ready(function (K) {
                 editor1 = K.create('#contentZC', {
                     cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
@@ -92,6 +95,28 @@
                     }
                 });
             });
+
+            KindEditor.ready(function (K) {
+                editor4 = K.create('#qyfccontenttp', {
+                    cssPath: '../kindeditor-4.1.7/plugins/code/prettify.css',
+                    uploadJson: '../kindeditor-4.1.7/asp.net/upload_json.ashx',
+                    fileManagerJson: '../kindeditor-4.1.7/asp.net/file_manager_json.ashx',
+                    allowFileManager: true,
+                    afterCreate: function () {
+                        var self = this;
+                        K.ctrl(document, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function () {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                    }
+                });
+            });
+
+
         });
 
         function loadZCDG() {
@@ -218,8 +243,84 @@
             });
         }
 
+        function loadqyfcdg() {
+            newsqyId = '';
+            $('#qyfc_dg').datagrid({
+                url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetqyfcDG',
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '企业风采列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: 10, hidden: true, align: 'center' },
+                    { field: 'NewsTitle', title: '图片新闻标题', width: 450, align: 'center' },
+                    { field: 'Createdate', title: '创建时间', width: 250, align: 'center' },
+                    { field: 'CreateUser', title: '创建人员', width: 250, align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '发布企业风采',
+                    handler: function () {
+                        $('#qyfcCreateUser').textbox('setValue', UserInfo["name"]);
+                        $('#qyfcdlg').dialog('open');
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除企业风采',
+                    handler: function () {
+                        Delqy();
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    newsqyId = data.ID;
+                }),
+                onDblClickRow: (function (index, row) {
+                })
+            });
+        }
+
+        function saveqyfc() {
+            if ($('#qyfctitletp').textbox('getValue') == '') {
+                $.messager.alert('提示', '必须填写企业名称！', 'info');
+            }
+            else if ($('#qyfcimagetp').textbox('getValue') == "") {
+                $.messager.alert('提示', '请上传企业图片', 'info');
+            }
+            else if (editor4.html() === '') {
+                $.messager.alert('提示', '企业简介必须填写！', 'info');
+            } else {
+
+                $('#qyfccontenttp').val(encodeURIComponent(editor4.html()));
+                var formData = new FormData($("#qyfcff")[0]);
+                $.ajax({
+                    url: "../../WebServer/PublishZCGGWebService.ashx?Method=Addqyfc",
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data > 0) {
+                            loadqyfcdg();
+                            $.messager.alert('提示', '保存成功', 'info');
+                            $('#qyfcdlg').dialog('close');
+                        } else {
+                            $.messager.alert('提示', '保存失败', 'error');
+                        }
+                    }
+                });
+            }
+        }
+
         function savetp() {
-            if ($('#NewsTitle').val() === '') {
+            if ($('#titletp').textbox('getValue') === '') {
                 $.messager.alert('提示', '必须填写图片新闻标题！', 'info');
             }
             else if ($('#imagetp').textbox('getValue') == "") {
@@ -312,6 +413,33 @@
                 });
             }
         }
+        function Delqy() {
+            if (newsqyId === '') {
+                $.messager.alert('提示', '请选择需要删除的企业风采！', 'info');
+            } else {
+                $.messager.confirm('确认', '您确认想要删除该篇企业风采吗？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "text",
+                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                            data: { 'newsId': newsqyId },
+                            success: function (text) {
+                                if (text > 0) {
+                                    $.messager.alert('提示', '企业风采删除成功！', 'info');
+                                    loadqyfcdg();
+                                    newsqyId = '';
+                                }
+                            },
+                            error: function () {
+                                $.messager.alert('错误提示', '企业风采删除出错，请重试或联系系统管理员！', 'error');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
         function Deltp() {
             if (newstpId === '') {
                 $.messager.alert('提示', '请选择需要删除的图片新闻！', 'info');
@@ -327,7 +455,7 @@
                                 if (text > 0) {
                                     $.messager.alert('提示', '图片新闻删除成功！', 'info');
                                     loadImageNews_dg();
-                                    newsZcId = '';
+                                    newstpId = '';
                                 }
                             },
                             error: function () {
@@ -398,24 +526,37 @@
         <font color="#15428B">加载中....</font>
     </div>
     <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
-        <div>
-            <table id="ZC_dg" data-options="
+        <div class="easyui-accordion" style="width:100%;height:98%;">
+            <div title="政策与公告" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                <div>
+                    <table id="ZC_dg" data-options="
                 iconCls: 'icon-save',
                 buttons: '#ZC_dg-buttons'
             "></table>
-        </div>
-        <div>
-            <table id="GG_dg" data-options="
+                </div>
+                <div>
+                    <table id="GG_dg" data-options="
                 iconCls: 'icon-save',
                 buttons: '#GG_dg-buttons'
             "></table>
-        </div>
-        <div>
-            <table id="ImageNews_dg" data-options="
+                </div>
+            </div>
+            <div title="图片新闻与企业风采" data-options="iconCls:'icon-ok'" style="padding:10px;">
+                <div>
+                    <table id="ImageNews_dg" data-options="
                 iconCls: 'icon-save',
                 buttons: '#ImageNews_dg-buttons'
             "></table>
+                </div>
+                <div>
+                    <table id="qyfc_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#qyfc_dg-buttons'
+            "></table>
+                </div>
+            </div>
         </div>
+
         <div id="ZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
              data-options="
                 iconCls: 'icon-save',
@@ -473,6 +614,38 @@
                     </tr>
                 </table>
             </form>
+        </div>
+        <div id="qyfcdlg" class="easyui-dialog" title="企业风采编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
+             data-options="
+                iconCls: 'icon-save',
+                buttons: '#qyfcdlg-buttons'
+            ">
+            <form id="qyfcff" method="post">
+                <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                    <tr id="UserNameTD" style="display:none;">
+                        <td style=" text-align:right;">*用户名称:</td>
+                        <td style=" text-align:left;"><input id="qyfcCreateUser" name="qyfcCreateUser" class="f1 easyui-textbox" style="width:95%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">企业名称:</td>
+                        <td style=" text-align:left;"><input id="qyfctitletp" name="qyfctitletp" class="f1 easyui-textbox" style="width:80%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">企业图片:</td>
+                        <td style=" text-align:left;"><input id="qyfcimagetp" name="qyfcimagetp" data-options="buttonText:'选择',prompt:'请选择JPEG格式图像文件...',accept:'image/jpeg'" class="f1 easyui-filebox" style="width:80%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">企业简介:</td>
+                        <td style=" text-align:left;"><textarea id="qyfccontenttp" name="qyfccontenttp" style="width:100%; height:320px;"></textarea></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="qyfcdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveqyfc()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#qyfcdlg').dialog('close');">
+                关闭
+            </a>
         </div>
         <div id="tpdlg-buttons">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="savetp()">保存</a>

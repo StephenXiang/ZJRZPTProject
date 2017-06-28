@@ -6,11 +6,10 @@
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
     <script type="text/javascript">
-        var EnterId = 0;
+        var zcNewId = 0;
         $(function () {
-            EnterId = getQueryStringByName("id");
-            loadBankInfo();
-            initLogin();
+            zcNewId = getQueryStringByName("id");
+            loadNewsDetail();
         });
         function getQueryStringByName(name) {
             var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
@@ -23,26 +22,21 @@
             window.history.back();
         }
 
-        function loadBankInfo() {
+        function loadNewsDetail() {
             $.ajax({
                 type: "get",
                 dataType: "json",
                 async: true,
-                data: { id: EnterId },
-                url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoById",
+                data: { Id: zcNewId },
+                url: "../../WebServer/PublishZCGGWebService.ashx?Method=GetZCNewsDetail",
                 success: function (json) {
-                    $('#BankName').html(json[0].Name);
-                    $('#labMainProduction').html(json[0].MainProduction);
-                    $('#labRegFinance').html(json[0].zczj);
-                    $('#labBusiness').html(json[0].yyfw);
-                    $('#labCreateTime').html(jsonDateFormat(json[0].CreateTime));
-                    $('#labConectionPerson').html(json[0].JuridicalPerson);
-                    $('#labConectionTelephone').html(json[0].ConnectionTelephone);
-                    $('#labDesc').html(json[0].Desc);
-                    //$('#imgDiv').html(GetLogoImg(bankid));
+                    $('#zcNewsTitle').html(json[0].NewsTitle);
+                    $('#zcNewsDetail').html("<div style='text-align:center'><img src='../../WebServer/PublishZCGGWebService.ashx?Method=GetNewsImage&newsid=" + zcNewId + "' /></div>" + json[0].NewsContent);
+                    $('#PublishDate').html(jsonDateFormat(json[0].Createdate));
                 }
             });
         }
+
         function jsonDateFormat(jsonDate) {
             try {
                 var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
@@ -56,11 +50,6 @@
             } catch (ex) {
                 return "";
             }
-        }
-
-        function GetLogoImg(BankId) {
-            var imghtml = "<img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
-            return imghtml;
         }
     </script>
 </head>
@@ -113,50 +102,14 @@
                 </div>
             </div>
 
-            <div class="bankdes">
-                <div class="bankdescon">
-                    <div class="bankdesh" id="BankName">太仓担保</div>
-                    <div class="bankdesd" style="text-align:center;"></div>
-                    <div class="bankdesc" id="content">
-                        <table border="0" style="margin:auto; width:50%; border-collapse:separate; border-spacing:0px 6px;">
-                            <tr>
-                                <td style=" text-align:center;font-size:20px; width:50%">主要产品:</td>
-                                <td style=" text-align:center;font-size:15px;"><label id="labMainProduction" />无</td>
-                            </tr>
-                            <tr>
-                                <td style=" text-align:center;font-size:20px;width:50%">注册资金:</td>
-                                <td style=" text-align:center;font-size:15px;"><label id="labRegFinance" />无</td>
-                            </tr>
-                            <tr>
+            <div class="viewhead">
+                <div class="viewtitle" id="zcNewsTitle">科技企业上市培育专题辅导讲座在南京举办</div>
+                <div class="viewdes">来源：系统&nbsp;&nbsp;&nbsp;&nbsp;发布日期：<label id="PublishDate"></label></div>
+            </div>
+            <div class="viewcon" id="zcNewsDetail">
+                <br />
+                <img src="images/timg.jpg" />
 
-                                <td style=" text-align:center;font-size:20px;width:50%">营业范围:</td>
-                                <td style=" text-align:center;font-size:15px;"><label id="labBusiness" />无</td>
-                            </tr>
-                            <tr>
-                                <td style=" text-align:center;font-size:20px;width:50%">成立时间:</td>
-                                <td style=" text-align:center;font-size:15px;"><label id="labCreateTime" />无</td>
-                            </tr>
-                            <tr>
-                                <td style=" text-align:center;font-size:20px;width:50%">联系人姓名:</td>
-                                <td style=" text-align:center;font-size:15px;"><label id="labConectionPerson" />无</td>
-                            </tr>
-                            <tr>
-                                <td style=" text-align:center;font-size:20px;width:50%">联系人电话:</td>
-                                <td style=" text-align:center;font-size:15px;"><label id="labConectionTelephone" />无</td>
-                            </tr>
-                            <tr>
-                                <td style=" text-align:center;font-size:20px;width:50%">企业简介:</td>
-                                <td style=" text-align:center;font-size:15px;" colspan="5"><label id="labDesc" />无</td>
-                            </tr>
-                            <tr></tr>
-
-
-                        </table>
-                    </div>
-                    <div class="bankback">
-                        <a class="back-btn" id="back" onclick="fanhui()">返回</a>
-                    </div>
-                </div>
             </div>
 
 

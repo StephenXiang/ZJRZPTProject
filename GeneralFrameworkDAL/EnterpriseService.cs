@@ -247,7 +247,7 @@ values(@eid,@fy,@fn,@fnl,@fnll)";
 
         public string GetEnterpriseInfoList()
         {
-            var sql = @"select Id,Name from Enterprise";
+            var sql = @"select ID as Id,NewsTitle as Name,NewsContent,Createdate,[image] from NewsInFo where NewsType = 'qy' and IsDeleted != 1";
             var dt1 = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt1);
             return reply;
