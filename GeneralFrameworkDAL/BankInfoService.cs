@@ -145,7 +145,7 @@ left join MainBank c on a.MainBankId = c.id";
 
         public string GetBankInfoList()
         {
-            var sql = @"select Id,Name,MainBankId from Bank where iszzd = 1";
+            var sql = @"select Id,Name,MainBankId from Bank where iszzd = 1 order by sort asc";
             var dt1 = DBHelper.GetDataSet(sql);
             DataTable dt = new DataTable();
             dt = GetDistinctSelf(dt1, "MainBankId");
