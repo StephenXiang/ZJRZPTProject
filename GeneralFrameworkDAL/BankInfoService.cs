@@ -11,8 +11,39 @@ namespace GeneralFrameworkDAL
 {
     public class BankInfoService
     {
+        public string UpdateBankInfo(Bank bank)
+        {
+            var sql = @"update Bank set Name=@name,[Address]=@address,Connector=@connector,ConnectorPhone=@ConnectorPhone,MainBankId=@MainBankId,[Desc]=@Desc,iszzd=@iszzd
+where Id=@bankid";
+            var efc = DBHelper.Execute(sql,
+                new SqlParameter("@bankid", bank.ID),
+                new SqlParameter("@name", bank.Name.Trim()),
+                new SqlParameter("@address", bank.Address.Trim()),
+                new SqlParameter("@connector", bank.Connector.Trim()),
+                new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                new SqlParameter("@Desc", bank.BankDesc),
+                new SqlParameter("@MainBankId", bank.MainBankId),
+                new SqlParameter("@iszzd", bank.iszzd)) as int?;
+            if (bank.logo1 != null)
+            {
+                sql = @"update Bank set Logo=@logo where Id=@bankid";
+                DBHelper.Execute(sql,
+                new SqlParameter("@bankid", bank.ID),
+                new SqlParameter("@logo", bank.logo1));
+            }
+            if (bank.logo2 != null)
+            {
+                sql = @"update Bank set Logo2=@logo2 where Id=@bankid";
+                DBHelper.Execute(sql,
+                new SqlParameter("@bankid", bank.ID),
+                new SqlParameter("@logo2", bank.logo2));
+            }
+            return bank.ID.ToString();
+        }
+
         public string SaveBankInfo(Bank bank)
         {
+            if (bank.ID > 0) return UpdateBankInfo(bank);
             string sql = string.Empty;
             int? id = 0;
             if (bank.iszzd == 1)
@@ -83,7 +114,7 @@ namespace GeneralFrameworkDAL
 
         public string GetBankInfolbForBankId(string BankId)
         {
-            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,MainBankId,c.BankName,a.[Desc],a.EditDate  from Bank a 
+            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,MainBankId,c.BankName,a.[Desc],a.EditDate,iszzd from Bank a 
 left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt);

@@ -17,9 +17,12 @@
         var UserInfo;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         var BankInfoID;
+        var isedit;
+        var BankInfo;
         $(function () {
             $('#Logo1').filebox
             $('#UserNameTD').hide();
+            $('#ExtraBankInfo').hide();
             $('#Bankdlg').dialog('close');
 
             if (UserInfo["role"] == 3) {
@@ -27,6 +30,7 @@
                 if (BankInfoID == "") {
                     $.messager.confirm('提示', '您还没有登记银行信息！是否现在登记？', function (r) {
                         if (r) {
+                            isedit = false;
                             openBankdlg();
                         }
                     });
@@ -39,6 +43,7 @@
         });
 
         function LoadBankDG(bankId) {
+            BankInfo = '';
             $('#Bank_dg').datagrid({
                 url: '../../WebServer/BankInfoWebService.ashx?Method=GetBankInfolbForBankId',
                 queryParams: { BankId: bankId },
@@ -54,13 +59,27 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'Id', title: 'ID', width: '10', hidden: true, align: 'center' },
-                                    { field: 'Name', title: '银行名称', width: '450', align: 'center' },
-                                    { field: 'Address', title: '地址', width: '450', align: 'center' },
-                                    { field: 'Connector', title: '联系人', width: '250', align: 'center' },
-                                    { field: 'ConnectorPhone', title: '电话', width: '250', align: 'center' },
-                                    { field: 'BankName', title: '归属总行', width: '250', align: 'center' }
-                ]]
+                    { field: 'Id', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'Name', title: '银行名称', width: '450', align: 'center' },
+                    { field: 'Address', title: '地址', width: '450', align: 'center' },
+                    { field: 'Connector', title: '联系人', width: '250', align: 'center' },
+                    { field: 'ConnectorPhone', title: '电话', width: '250', align: 'center' },
+                    { field: 'BankName', title: '归属总行', width: '250', align: 'center' },
+                    { field: 'Desc', title: '银行简介', width: '250', hidden: true, align: 'center' },
+                    { field: 'MainBankId', title: 'MainBankId', width: '10', hidden: true, align: 'center' },
+                    { field: 'iszzd', title: 'iszzd', width: '10', hidden: true, align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-edit',
+                    text: '编辑',
+                    handler: function () {
+                        isedit = true;
+                        openBankdlg();
+                    }
+                }],
+                onLoadSuccess: (function (data) {
+                    if (data.rows.length > 0)
+                        BankInfo = data.rows[0];
+                })
             });
         }
 
@@ -110,6 +129,7 @@
             return bankid;
 
         }
+
         function openBankdlg() {
             $('#MainBankCmb').combobox({
                 //width: 145,
@@ -117,12 +137,39 @@
                 valueField: 'ID',
                 textField: 'TypeName'
             });
+            if (isedit) {
+                $('#MainBankCmb').combobox('setValues', [BankInfo.MainBankId]);
+                $('#BankNametext').textbox('setValue', BankInfo.Name);
+                $('#BankAddresstext').textbox('setValue', BankInfo.Address);
+                $('#Connectortext').textbox('setValue', BankInfo.Connector);
+                $('#ConnectorPhonetext').textbox('setValue', BankInfo.ConnectorPhone);
+                $('#BankDesc').textbox('setValue', BankInfo.Desc);
+                if (BankInfo.iszzd == 0) {
+                    $('input:radio[name="rd"]').eq(0).attr("checked", "checked");
+                    $('input:radio[name="rd"]').eq(1).removeAttr("checked");
+                    $('input:radio[name="rd"]').eq(0).click();
+                } else {
+                    $('input:radio[name="rd"]').eq(1).attr("checked", "checked");
+                    $('input:radio[name="rd"]').eq(0).removeAttr("checked");
+                    $('input:radio[name="rd"]').eq(1).click();
+                }
+            }
+            else {
+                $('#MainBankCmb').combobox('setValues', []);
+                $('#BankNametext').textbox('setValue', '');
+                $('#BankAddresstext').textbox('setValue', '');
+                $('#Connectortext').textbox('setValue', '');
+                $('#ConnectorPhonetext').textbox('setValue', '');
+                $('#BankDesc').textbox('setValue', '');
+            }
             $('#UserNametxt').textbox('setValue', UserInfo["name"]);
+            $('#BankId').textbox('setValue', isedit ? BankInfo.Id : 0);
+            $('#IsEdit').textbox('setValue', isedit);
+            redioselect();
             $('#Bankdlg').dialog('open');
         }
 
         function SaveBankInfo() {
-
             if ($('#UserNametxt').textbox('getValue') == "") {
                 $.messager.alert('提示', '获取用户名称异常，请刷新页面', 'info');
             }
@@ -145,10 +192,10 @@
                 $.messager.alert('提示', '联系电话格式不正确', 'info');
             }
             else if ($("input[name='rd']:checked").val() == 1) {
-                if ($('#Logo1').textbox('getValue') == "") {
+                if ($('#Logo1').textbox('getValue') == "" && !isedit) {
                     $.messager.alert('提示', '请上传log1,白底，JPG格式，140*42像素', 'info');
                 }
-                else if ($('#Logo2').textbox('getValue') == "") {
+                else if ($('#Logo2').textbox('getValue') == "" && !isedit) {
                     $.messager.alert('提示', '请上传请上传log2,透明背景，JPG格式，124*46像素', 'info');
                 }
                 else if ($('#BankDesc').val() == "") {
@@ -324,6 +371,11 @@
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankDesc" name="BankDesc" class="easyui-textbox" style="width:90%;height:100px" data-options="multiline:true" /></td>
                     </tr>
 
+                    <tr id="ExtraBankInfo">
+                        <td style=" text-align:right;">*ExtraBankInfo:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankId" name="BankId" class="f1 easyui-textbox" style="width:90%;" /></td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="IsEdit" name="IsEdit" class="f1 easyui-textbox" style="width:90%;" /></td>
+                    </tr>
                 </table>
             </form>
         </div>

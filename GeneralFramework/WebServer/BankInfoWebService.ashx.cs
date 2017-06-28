@@ -66,7 +66,32 @@ namespace GeneralFramework.WebServer
 
         public void SaveBankInfo()
         {
-
+            // Edit
+            if (bool.Parse(_request.Form["IsEdit"]))
+            {
+                var fs = _request.Files;
+                var logo1 = fs["Logo1"];
+                var logo2 = fs["logo2"];
+                var id = int.Parse(_request.Form[8]);
+                if (id <= 0) return;
+                Bank BankInfo = new Bank
+                {
+                    ID = id,
+                    UserName = _request.Form[0],
+                    MainBankId = _request.Form[1],
+                    Name = _request.Form[2],
+                    Address = _request.Form[3],
+                    Connector = _request.Form[4],
+                    ConnectorPhone = _request.Form[5],
+                    iszzd = int.Parse(_request.Form[6]),
+                    BankDesc = _request.Form[7],
+                    logo1 = logo1 == null ? null : StreamToBytes(logo1.InputStream),
+                    logo2 = logo2 == null ? null : StreamToBytes(logo2.InputStream)
+                };
+                _response.Write(_bi.SaveBankInfo(BankInfo));
+                return;
+            }
+            // Add
             if (int.Parse(_request.Form[6]) == 1)
             {
                 var fs = _request.Files;
