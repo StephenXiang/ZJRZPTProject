@@ -67,7 +67,7 @@ where BankId={0} and f.IsDeleted=0 order by f.Id Desc
             List<IndexNewsInfo> list = new List<IndexNewsInfo>();
             var sql = @"select top(6) b.Name,a.Id,Title,CONVERT(varchar(5), PublishDate, 110) as createdate from JRCPFlow a 
 left join Bank b on a.BankId = b.Id
- where Status = 1 and a.IsDeleted=0 order by a.Id desc";
+ where Status = 1 and a.IsDeleted=0 order by b.sort asc";
             var dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
