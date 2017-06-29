@@ -76,6 +76,14 @@ namespace GeneralFramework.WebServer
             var stream = sr.ReadToEnd();
             var javaScriptSerializer = new JavaScriptSerializer();
             var ji = javaScriptSerializer.Deserialize<JRCPInfo>(stream);
+            if (ji.llfwstart == null)
+            {
+                ji.llfwstart = 0.00;
+            }
+            if (ji.llfwend == null)
+            {
+                ji.llfwend = 0.00;
+            }
             Response.Write(_pm.SaveJRCPInfo(ji));
         }
 

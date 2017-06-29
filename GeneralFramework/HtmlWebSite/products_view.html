@@ -29,7 +29,12 @@
                 success: function (json) {
                     $('#jrcptitle').html(json[0].Title);
                     $('#bankname').html(json[0].Name);
-                    $('#lilvfanwei').html(json[0].LilvLow + "%-" + json[0].LilvUp + "%");
+                    if (json[0].LilvLow == 0 || json[0].DaikuanUp == 0) {
+                        $('#lilvfanwei').html('根据具体情况');
+                    } else {
+                        $('#lilvfanwei' + j + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
+                    }
+                    //$('#lilvfanwei').html(json[0].LilvLow + "%-" + json[0].LilvUp + "%");
                     $('#daikuanedu').html(json[0].DaikunLow + "万元-" + json[0].DaikuanUp + "万元");
                     $('#daikuanqixian').html(json[0].QxLow + "个月-" + json[0].QxUp + "个月");
                     $('#danbaofangshi').html(json[0].Desc);

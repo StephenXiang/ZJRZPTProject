@@ -49,7 +49,17 @@
                     { field: 'Qixian', title: '贷款期限', width: '200', align: 'center' },
                     { field: 'Danbao', title: '担保方式', width: '200', align: 'center' },
                     { field: 'Edu', title: '贷款额度(单位：万元)', width: '200', align: 'center' },
-                    { field: 'Lilv', title: '利率范围', width: '200', align: 'center' },
+                    {
+                        field: 'Lilv', title: '利率范围', width: '200', align: 'center', formatter:
+                                          function (value, row, index) {
+                                              UserID = row.ID;
+                                              if (value == "0%~0%") {
+                                                  return '根据具体情况';
+                                              } else {
+                                                  return value;
+                                              }
+                                          }
+                    },
                     { field: 'Dianhua', title: '联系电话', width: '200', align: 'center' },
                     { field: 'Jianjie', title: '产品简介', width: '500', align: 'center' },
                     { field: 'PublishDate', title: '发布时间', width: '200', align: 'center' },
@@ -125,12 +135,12 @@
             else if (parseFloat($('#dkedstart').val().trim()) >= parseFloat($('#dkedend').val().trim())) {
                 $.messager.alert('提示', '贷款额度范围输入有误', 'info');
             }
-            else if (!checkNum("llfwstart") || !checkNum("llfwend")) {
-                $.messager.alert('提示', '利率范围只能输入数字', 'info');
-            }
-            else if (parseFloat($('#llfwstart').val().trim()) >= parseFloat($('#llfwend').val().trim())) {
-                $.messager.alert('提示', '利率范围输入有误', 'info');
-            }
+                //else if (!checkNum("llfwstart") || !checkNum("llfwend")) {
+                //    $.messager.alert('提示', '利率范围只能输入数字', 'info');
+                //}
+                //else if (parseFloat($('#llfwstart').val().trim()) >= parseFloat($('#llfwend').val().trim())) {
+                //    $.messager.alert('提示', '利率范围输入有误', 'info');
+                //}
             else if (!checkMobile($('#jrlxdh').val().trim()) && !checkPhone($('#jrlxdh').val().trim())) {
                 $.messager.alert('提示', '联系电话格式不正确', 'info');
             }

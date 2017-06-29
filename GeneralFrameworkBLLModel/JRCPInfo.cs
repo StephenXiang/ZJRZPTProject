@@ -14,8 +14,8 @@ namespace GeneralFrameworkBLLModel
         public int jrdanbao;
         public double dkedstart;
         public double dkedend;
-        public double llfwstart;
-        public double llfwend;
+        public double? llfwstart;
+        public double? llfwend;
         public string jrlxdh;
         public string jrcpjj;
         public string jrcptd;
