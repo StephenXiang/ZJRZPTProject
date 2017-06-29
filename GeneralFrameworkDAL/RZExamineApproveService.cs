@@ -30,7 +30,7 @@ namespace GeneralFrameworkDAL
 
             if (BankId != 0)
             {
-                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds,a.SLBankId,d.Name as SLBankName,b.CreditAmount,b.CreditDate from RZFlow a 
+                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,CONVERT(varchar(100), PublishDate, 23) as PublishDate,a.Status,a.BankIds,a.SLBankId,d.Name as SLBankName,b.CreditAmount,CONVERT(varchar(100), b.CreditDate, 23) as CreditDate from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
 left join Enterprise c on a.EnterpriseId = c.ID
 left join Bank d on a.SLBankId = d.Id 
@@ -68,7 +68,7 @@ where BankIds like '%" + BankId + "%' and a.IsDeleted=0";
             }
             if (RoleId == 1 || RoleId == 2)    // 系统用户或政府部门
             {
-                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,a.PublishDate,a.Status,a.BankIds,d.Name as SLBankName,b.CreditAmount,b.CreditDate from RZFlow a 
+                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.Status,a.BankIds,d.Name as SLBankName,b.CreditAmount,CONVERT(varchar(100), b.CreditDate, 23) as CreditDate from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
 left join Enterprise c on a.EnterpriseId = c.ID
 left join Bank d on a.SLBankId = d.Id 

@@ -209,6 +209,7 @@
     <Content Include="HtmlWebSite\bank.html" />
     <Content Include="HtmlWebSite\bank_view.html" />
     <Content Include="HtmlWebSite\css\index.css" />
+    <Content Include="HtmlWebSite\css\indexbak.css" />
     <Content Include="HtmlWebSite\Enterprise.html" />
     <Content Include="HtmlWebSite\Enterprise_view.html" />
     <Content Include="HtmlWebSite\gglist.html" />
@@ -222,6 +223,7 @@
     <Content Include="HtmlWebSite\images\close_hov.png" />
     <Content Include="HtmlWebSite\images\date.png" />
     <Content Include="HtmlWebSite\images\font.png" />
+    <Content Include="HtmlWebSite\images\fontbak.png" />
     <Content Include="HtmlWebSite\images\fwlc.png" />
     <Content Include="HtmlWebSite\images\home.png" />
     <Content Include="HtmlWebSite\images\input_password.png" />
@@ -255,10 +257,16 @@
     <Content Include="HtmlWebSite\images\zz1.png" />
     <Content Include="HtmlWebSite\images\zz2.png" />
     <Content Include="HtmlWebSite\images\全市金融支持实体经济推进会.jpg" />
+    <Content Include="HtmlWebSite\js\slider.js" />
     <Content Include="HtmlWebSite\tplist.html" />
     <Content Include="HtmlWebSite\tpview.html" />
     <Content Include="HtmlWebSite\zclist.html" />
+    <Content Include="images\dot.png" />
+    <Content Include="images\news2.jpg" />
+    <Content Include="images\news3.jpg" />
+    <Content Include="images\news4.jpg" />
     <Content Include="index.html" />
+    <Content Include="indexbak.html" />
     <Content Include="HtmlWebSite\js\jquery-1.9.1.min.js" />
     <Content Include="HtmlWebSite\js\login.js" />
     <Content Include="HtmlWebSite\message.html" />
@@ -1395,6 +1403,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="kindeditor-4.1.7\attached\" />
+    <Folder Include="NewsFile\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeneralFrameworkBLLModel\GeneralFrameworkBLLModel.csproj">

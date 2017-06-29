@@ -152,7 +152,7 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
 
         public string GetDefaultNewsImage()
         {
-            var sql = "select top(1) ID from NewsInFo where NewsType = 'tp'  and IsDeleted != 1 order by Createdate desc";
+            var sql = "select top(3) ID from NewsInFo where NewsType = 'tp'  and IsDeleted != 1 order by Createdate desc";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
         }

@@ -254,7 +254,13 @@ function regist() {
                 alert("注册成功");
                 hideDialogReg();
             } else {
-                alert(json["msg"] === "" ? "注册失败" : json["msg"]);
+                var msg = json["msg"] === "" ? "注册失败" : json["msg"];
+                if (msg == "用户名已存在") {
+                    alert("该用户名已经在965808平台注册过，可直接登陆");
+                    toLogin();
+                } else {
+                    alert(msg);
+                }
             }
         }
     });

@@ -131,7 +131,7 @@
             else if (parseFloat($('#llfwstart').val().trim()) >= parseFloat($('#llfwend').val().trim())) {
                 $.messager.alert('提示', '利率范围输入有误', 'info');
             }
-            else if (!checkMobile($('#jrlxdh').val().trim())) {
+            else if (!checkMobile($('#jrlxdh').val().trim()) && !checkPhone($('#jrlxdh').val().trim())) {
                 $.messager.alert('提示', '联系电话格式不正确', 'info');
             }
             else if ("" === $('#jrcpjj').val().trim()) {
@@ -262,6 +262,14 @@
                 return false;
             }
         }
+        function checkPhone(str) {
+            var re = /^0\d{2,3}-?\d{7,8}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     </script>
 </head>
 <body class="easyui-layout">
@@ -276,7 +284,7 @@
             "></table>
         </div>
         <div id="FPdlg" class="easyui-dialog" title="金融产品编辑" style="text-align: center;
-        width: 600px; height: 700px; padding: 10px" data-options="
+        width: 600px; height: 450px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#FPdlg-buttons'
             ">

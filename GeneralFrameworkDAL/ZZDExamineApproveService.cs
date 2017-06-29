@@ -29,7 +29,7 @@ namespace GeneralFrameworkDAL
             }
             if (BankId != 0)
             {
-                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c.Name as BankName,a.ThisQuota,a.PublishDate,a.[Status] from ZZDFlow a 
+                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c.Name as BankName,a.ThisQuota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.[Status] from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID
 left join Bank c on a.BankId = c.Id
 where  a.MastBankId = '" + BankId + "' and a.IsDeleted=0 order by a.Id Desc";
@@ -38,7 +38,7 @@ where  a.MastBankId = '" + BankId + "' and a.IsDeleted=0 order by a.Id Desc";
             }
             if (RoleId == 1 || RoleId == 2)    // 系统用户或政府部门
             {
-                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c1.Name as Bank1,c2.Name as BankName,a.ThisQuota,a.PublishDate,a.[Status] from ZZDFlow a 
+                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c1.Name as Bank1,c2.Name as BankName,a.ThisQuota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.[Status] from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID
 left join Bank c1 on a.MastBankId = c1.Id
 left join Bank c2 on a.BankId = c2.Id where a.IsDeleted=0 order by a.Id Desc";

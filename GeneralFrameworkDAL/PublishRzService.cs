@@ -111,7 +111,7 @@ update RZDemandInfo set Quota=@qua,TermId=@tem,PurposeId=@pup,HadCollateral=@hc,
             if (ent == null) return "";
             sql = string.Format(@"select b.Id as ID,a.Quota as RZED,c.[Desc] as RZQX,b.BankIds as SXYH, d.[Desc] as RZYT,a.CollateralDesc as DYW,
 a.TermId as RZQXid,a.PurposeId as RZYTid,
-b.PublishDate,b.[Status],b.SLBankId,e.Name as SLBankName from RZDemandInfo a 
+CONVERT(varchar(100), b.PublishDate, 23) as PublishDate,b.[Status],b.SLBankId,e.Name as SLBankName from RZDemandInfo a 
 join RZFlow b on a.Id = b.DemandId
 left join (select * from Lookup where Type = 8) c on a.TermId = c.Id
 left join (select * from Lookup where Type = 9) d on a.PurposeId = d.Id

@@ -109,9 +109,9 @@ update ZZDFlow set BankId=@bk,MastBankId=@mbk,Manager=@ma,ManagerPhone=@map,Orig
 Manager as ZZDManager,ManagerPhone as ZZDManagerPhone,
 OriginalQuota as ZZDOriginalQuota,
 ThisQuota as ZZDThisQuota,
-ExpirationDate as ZZDExpirationDate,
+CONVERT(varchar(100), ExpirationDate, 23) as ZZDExpirationDate,
 [Status] as ZZDStatus,
-PublishDate as ZZDPublishDate
+CONVERT(varchar(100), PublishDate, 23) as ZZDPublishDate
 from ZZDFlow f
 left join Bank b on b.Id=f.BankId
 left join Bank b2 on b2.Id=f.MastBankId

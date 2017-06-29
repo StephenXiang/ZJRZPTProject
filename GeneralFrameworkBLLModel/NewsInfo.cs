@@ -18,5 +18,7 @@ namespace GeneralFrameworkBLLModel
         public DateTime Createdate;
 
         public byte[] image;
+
+        public string FilePath;
     }
 }

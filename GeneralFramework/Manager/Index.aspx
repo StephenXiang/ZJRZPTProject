@@ -147,7 +147,7 @@
             <div id="time" style="text-align: right; float: left;">
             </div>
             <div id="Logout" style="text-align: right; float: right; height: 20px; margin-right: 10px;">
-                <a href="#" onclick="OpenUserDialog()">修改密码</a>&nbsp;&nbsp;&nbsp; <a href="#" onclick="exit()">退出系统</a>
+                <a href="../index.html" target="_new" class="more">返回门户</a> &nbsp;&nbsp;&nbsp; <a href="#" onclick="OpenUserDialog()">修改密码</a>&nbsp;&nbsp;&nbsp; <a href="#" onclick="exit()">退出系统</a>
             </div>
         </div>
         <div style="margin: 20px 0;">

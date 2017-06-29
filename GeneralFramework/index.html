@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="HtmlWebSite/css/index.css" />
     <script type="text/javascript" src="HtmlWebSite/js/jquery-1.9.1.min.js" language="javascript"></script>
     <script src="Scripts/jquery.cookie.js"></script>
+    <script src="HtmlWebSite/js/slider.js"></script>
     <script type="text/javascript">
         $(function () {
             loadIndexNewsInfo();
@@ -21,13 +22,26 @@
             $.ajax({
                 type: "get",
                 dataType: "json",
-                async: true,
+                async: false,
                 url: "../../WebServer/PublishZCGGWebService.ashx?Method=GetDefaultNewsImage",
                 success: function (json) {
-                    $('#imgnewsdiv').html(GetImageNewsHtml(json[0].ID));
+                    GetImageNewsHtml(json);
+                    //$('#imgnewsdiv').html(GetImageNewsHtml(json[0].ID));
                     //GetImageNewsHtml
                 }
             });
+        }
+        function GetImageNewsHtml(json) {
+            var imghtml = " <div class='slider'><div class='flexslider'><ul class='slides'>";
+            for (var i = 0; i < json.length; i++) {
+                imghtml = imghtml + "<li><div class='img'><a href='HtmlWebSite/tpview.html?id=" + json[i].ID + "'><img src='../WebServer/PublishZCGGWebService.ashx?Method=GetNewsImage&newsid=" + json[i].ID + "'></a></div></li>";
+            }
+            imghtml = imghtml + "</ul></div></div>";
+            $('#imgnewsdiv').html(imghtml);
+            //var imghtml = "<a href='HtmlWebSite/tpview.html?id=" + newsid + "'><li><div class='img'><img width='360' height='240'  src='../WebServer/PublishZCGGWebService.ashx?Method=GetNewsImage&newsid=" + newsid + "'></li></a>";
+
+
+            //return imghtml;
         }
 
         function loadIndexNewsInfo() {
@@ -152,14 +166,11 @@
         }
 
         function GetLogoImg(BankId) {
-            var imghtml = "<a href='HtmlWebSite/bank_view.html?bankid=" + BankId + "'><img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'></a>";
+            var imghtml = "<a href='HtmlWebSite/bank_view.html?bankid=" + BankId + "'><img width='162' height='51' src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'></a>";
             return imghtml;
         }
 
-        function GetImageNewsHtml(newsid) {
-            var imghtml = "<a href='HtmlWebSite/tpview.html?id=" + newsid + "'><img width='360' height='240'  src='../WebServer/PublishZCGGWebService.ashx?Method=GetNewsImage&newsid=" + newsid + "'></a>";
-            return imghtml;
-        }
+
 
 
         function loadNewJRCP() {
@@ -185,7 +196,7 @@
         <div class="head">
             <div class="head_l">
                 <div class="headpic"><img src="HtmlWebSite/images/12_388.png" /></div>
-                <div id="head_l_info" class="head_l_con" style="display: none">
+                <div id="head_l_info" class="head_l_con" style="display: none;">
                     <a id="logined-username" href="javascript:gotoUserBackgourd();"></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:exitLogin();">退出</a>
                 </div>
                 <div id="head_l_con" class="head_l_con">
@@ -236,15 +247,44 @@
                         </div>
                         <div id="imgnewsdiv" class="b1cp">
                             <!--<img src="HtmlWebSite/images/news.png" />-->
+                            <!--<div class="slider">
+                                <div class="flexslider">
+                                    <ul class="slides">-->
+                            <!--<li>
+                                <div class="img"><img src="images/news2.jpg" alt="" /></div>
+                            </li>
+                            <li>
+                                <div class="img"><img src="images/news2.jpg" alt="" /></div>
+                            </li>
+                            <li>
+                                <div class="img"><img src="images/news3.jpg" alt="" /></div>
+                            </li>
+                            <li>
+                                <div class="img"><img src="images/news4.jpg" alt="" /></div>
+                            </li>-->
+                            <!--</ul>
+                                </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
-
+                <script type="text/javascript" src="js/slider.js" language="javascript"></script>
+                <script type="text/javascript">
+                    $(function () {
+                        $('.flexslider').flexslider({
+                            animation: "slide",
+                            slideshowSpeed: 5000,
+                            start: function (slider) {
+                                $('body').removeClass('loading');
+                            }
+                        });
+                    });
+                </script>
                 <div class="block1">
                     <div class="b1c">
                         <div class="b1ch">
                             <div class="b1cht">通知公告</div>
-                            <div class="b1chm"><a href="HtmlWebSite/list.html">更多</a></div>
+                            <div class="b1chm"><a href="HtmlWebSite/gglist.html">更多</a></div>
                         </div>
                         <div class="b1cc">
                             <div class="b1sin">
@@ -523,7 +563,7 @@
 
     <div class="foot">
         <div class="footcon">
-            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
+            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监分局、人民银行镇江支行</div>
             <div class="footsin">承办方：镇江市中小企业服务中心</div>
             <div class="footsin">服务热线：965808</div>
             <div class="footsin">Copyright©2017 All Rights Reserved</div>
