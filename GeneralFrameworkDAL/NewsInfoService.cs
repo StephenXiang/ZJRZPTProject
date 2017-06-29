@@ -5,6 +5,7 @@ using GeneralFrameworkDAL.JSON;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Web;
+using System.Text;
 
 namespace GeneralFrameworkDAL
 {
@@ -22,7 +23,8 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 DataRow dr = dt.Rows[i];
-                string content = HttpUtility.UrlEncode(dr["NewsContent"].ToString());
+                string content = HttpUtility.UrlEncode(dr["NewsContent"].ToString(), Encoding.UTF8);
+                content = content.Replace("+", "%20");
                 dt.Rows[i]["NewsContent"] = content;
             }
             var json = JsonHelper.TableToJson(countDt.Rows.Count, dt);
