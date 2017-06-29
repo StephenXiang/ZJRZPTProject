@@ -172,7 +172,7 @@ left join Bank b on a.BankId = b.Id
 left join Bank b on a.BankId = b.Id
 left join MainBank c on b.MainBankId = c.Id
 left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a.DanbaoId = d.Id
- where a.Status  = 1 and a.IsDeleted=0 " + where + " order by a.PublishDate desc";
+ where a.Status  = 1 and a.IsDeleted=0 " + where + " order by b.sort asc";
             DataTable dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
         }
