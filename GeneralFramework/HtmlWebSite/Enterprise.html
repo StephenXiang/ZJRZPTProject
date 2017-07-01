@@ -16,7 +16,7 @@
             $.ajax({
                 type: "get",
                 dataType: "json",
-                async: true,
+                async: false,
                 url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoList",
                 success: function (json) {
                     var JRCPJSON = json;
@@ -57,6 +57,63 @@
                     }
                 }
             });
+if (PageAllNum == 0) {
+                $('#sya').removeClass("current")
+                $('#syya').removeClass("current")
+                $('#xya').removeClass("current")
+                $('#wya').removeClass("current")
+                $('#sya').addClass("current")
+                $('#syya').addClass("current")
+                $('#xyya').removeClass("current")
+                $('#wya').removeClass("current")
+            } else {
+                if (PageIndex == 1) {
+                    if (PageIndex == PageAllNum) {
+                        $('#sya').removeClass("current")
+                        $('#syya').removeClass("current")
+                        $('#xya').removeClass("current")
+                        $('#wya').removeClass("current")
+                        $('#sya').addClass("current")
+                        $('#syya').addClass("current")
+                        $('#xyya').addClass("current")
+                        $('#wya').addClass("current")
+                    } else {
+                        $('#sya').removeClass("current")
+                        $('#syya').removeClass("current")
+                        $('#xya').removeClass("current")
+                        $('#wya').removeClass("current")
+                        $('#sya').addClass("current")
+                        $('#syya').addClass("current")
+                        $('#xyya').removeClass("current")
+                        $('#wya').removeClass("current")
+                    }
+                } else {
+                    if (PageIndex == PageAllNum) {
+                        $('#sya').removeClass("current")
+                        $('#syya').removeClass("current")
+                        $('#xya').removeClass("current")
+                        $('#wya').removeClass("current")
+                        $('#sya').removeClass("current")
+                        $('#syya').removeClass("current")
+                        $('#xyya').addClass("current")
+                        $('#wya').addClass("current")
+                    } else if (PageIndex < PageAllNum && PageIndex > 1) {
+                        $('#sya').removeClass("current")
+                        $('#syya').removeClass("current")
+                        $('#xyya').removeClass("current")
+                        $('#wya').removeClass("current")
+                    } else if (PageIndex < PageAllNum && PageIndex == 1) {
+                        $('#sya').removeClass("current")
+                        $('#syya').removeClass("current")
+                        $('#xya').removeClass("current")
+                        $('#wya').removeClass("current")
+                        $('#sya').addClass("current")
+                        $('#syya').addClass("current")
+                        $('#xyya').removeClass("current")
+                        $('#wya').removeClass("current")
+                    }
+                }
+            }
         }
 
 
@@ -130,7 +187,7 @@
 
     <div class="main_slider">
         <div class="sliderc">
-            <div class="slider_font"><img src="images/font.png" /></div>
+            <div class="slider_font" style="width:800px;"><img src="images/font.png" style="width:100%;"/></div>
         </div>
     </div>
 
@@ -174,15 +231,15 @@
 
                     <div class="bankpage">
                         <div class="bpage">
-                            <a href="#" onclick="shouye()">首页</a>
-                            <a href="#" onclick="prePage()">上一页</a>
+                            <a id="sya" href="#" onclick="shouye()">首页</a>
+                            <a id="syya" href="#" onclick="prePage()">上一页</a>
                             <!--<a href="#">1</a>
                             <span class="current">2</span>
                             <a href="#">3</a>
                             <a href="#">4</a>
                             <a href="#">5</a>-->
-                            <a href="#" onclick="NextPage()">下一页</a>
-                            <a href="#" onclick="weiye()">尾页</a>
+                            <a id="xyya" href="#" onclick="NextPage()">下一页</a>
+                            <a id="wya" href="#" onclick="weiye()">尾页</a>
                         </div>
                     </div>
 
@@ -203,7 +260,7 @@
 
     <div class="foot">
         <div class="footcon">
-            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监局、人民银行镇江支行</div>
+            <div class="footsin" style="margin-top:25px;">主办方：镇江市经济和信息化委员会、镇江银监分局、人民银行镇江支行</div>
             <div class="footsin">承办方：镇江市中小企业服务中心</div>
             <div class="footsin">服务热线：965808</div>
             <div class="footsin">Copyright©2017 All Rights Reserved</div>
