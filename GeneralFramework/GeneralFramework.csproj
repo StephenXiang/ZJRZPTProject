@@ -206,6 +206,7 @@
     <Content Include="HtmlPage\SystemMaintain.htm" />
     <Content Include="HtmlPage\SystemUserMaintain.htm" />
     <Content Include="HtmlPage\PublishZCGG.htm" />
+    <Content Include="HtmlPage\TPQYInfo.html" />
     <Content Include="HtmlPage\ZZDExamineApprove.aspx" />
     <Content Include="HtmlPage\ZZDExamineApprove.htm" />
     <Content Include="HtmlWebSite\bank.html" />

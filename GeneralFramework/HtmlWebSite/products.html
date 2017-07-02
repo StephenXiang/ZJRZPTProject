@@ -7,7 +7,7 @@
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
     <script type="text/javascript">
         var PageIndex = 1;
-        var PageSize = 5;
+        var PageSize = 10;
         var PageAllNum = 0;
         var dkqd = "0";
         var dkqx = "0";
@@ -30,7 +30,9 @@
 
             cpmc = decodeURI(getQueryStringByName("cpmc"));
 
+
             loadjrcplist();
+            loadjgmccmb();
             initLogin();
         });
         function getQueryStringByName(name) {
@@ -121,7 +123,7 @@
                             $('#jrcpqx' + j + '').html(JRCPJSON[i].QxLow + "个月-" + JRCPJSON[i].QxUp + "个月");
                             $('#jrcpDetail' + j + '').attr("href", "products_view.html?jrcpid=" + JRCPJSON[i].Id);
                         }
-                        for (var k = 4; k > j; k--) {
+                        for (var k = 9; k > j; k--) {
                             $('#jrcpdiv' + k + '').hide();
                         }
                     }
@@ -269,6 +271,8 @@
             loadjrcplist();
         }
         function searchClick() {
+            PageIndex = 1;
+            PageAllNum = 0;
             if ($('#jg').val() != "" && $('#jg').val() != null) {
                 jgmc = $('#jg').val();
             } else {
@@ -280,6 +284,22 @@
                 cpmc = "0"
             }
             loadjrcplist();
+        }
+
+        function loadjgmccmb() {
+            $("#jg").empty();
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: false,
+                url: "../../WebServer/CooperativeBank.ashx?Method=GetBankInfoList",
+                success: function (json) {
+                    $("#jg").append("<option>全部</option>");
+                    for (var i = 0; i < json.length; i++) {
+                        $("#jg").append("<option>" + json[i].Name + "</option>");
+                    }
+                }
+            });
         }
     </script>
 </head>
@@ -332,7 +352,8 @@
             <div class="pro_split">
                 <div class="pro_jg">
                     <div class="proname">机构名称：</div>
-                    <div class="protext"><input type="text" id="jg" name="jg" class="proinput" placeholder="支持模糊查询" /></div>
+                    <!--<div class="protext"><input type="text" id="jg" name="jg" class="proinput" placeholder="支持模糊查询" /></div>-->
+                    <div class="protext"><select id="jg" name="jg" class="proinput" placeholder="请选择机构"></select></div>
                 </div>
                 <div class="pro_jg">
                     <div class="proname">产品名称：</div>
@@ -496,7 +517,111 @@
                         </div>
                     </div>
                 </div>
-
+                <div id="jrcpdiv5" class="prolist">
+                    <div class="prolistl">
+                        <div class="probank" id="imgDiv5"></div>
+                        <div class="profont">
+                            <div class="profontu" id="jrcpTitle5">常熟农商行-燕谷信保贷</div>
+                            <div class="profontd">参考利率范围： <font id="jrcplilv5" color="#e21739">4.32%-6.0%</font></div>
+                        </div>
+                    </div>
+                    <div class="prolistr">
+                        <div class="prolistrl">
+                            <div class="prolistdk">贷款额度：<font id="jrcped5" color="#e21739">10万元-500万元</font></div>
+                            <div class="prolistdb">担保方式： <font id="jrcpdbfs5" color="#e21739">信保基金</font></div>
+                            <div class="prolistqx">贷款期限：<font id="jrcpqx5" color="#e21739">6个月-12个月</font></div>
+                        </div>
+                        <div class="prolistrr">
+                            <a id="jrcpDetail5" href="products_view.html"><div class="prolistbtn">详情</div></a>
+                            <!--<div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img src="images/star5.png" /></div></div>
+                            <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div id="jrcpdiv6" class="prolist">
+                    <div class="prolistl">
+                        <div class="probank" id="imgDiv6"></div>
+                        <div class="profont">
+                            <div class="profontu" id="jrcpTitle6">常熟农商行-燕谷信保贷</div>
+                            <div class="profontd">参考利率范围： <font id="jrcplilv6" color="#e21739">4.32%-6.0%</font></div>
+                        </div>
+                    </div>
+                    <div class="prolistr">
+                        <div class="prolistrl">
+                            <div class="prolistdk">贷款额度：<font id="jrcped6" color="#e21739">10万元-500万元</font></div>
+                            <div class="prolistdb">担保方式： <font id="jrcpdbfs6" color="#e21739">信保基金</font></div>
+                            <div class="prolistqx">贷款期限：<font id="jrcpqx6" color="#e21739">6个月-12个月</font></div>
+                        </div>
+                        <div class="prolistrr">
+                            <a id="jrcpDetail6" href="products_view.html"><div class="prolistbtn">详情</div></a>
+                            <!--<div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img src="images/star5.png" /></div></div>
+                            <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div id="jrcpdiv7" class="prolist">
+                    <div class="prolistl">
+                        <div class="probank" id="imgDiv7"></div>
+                        <div class="profont">
+                            <div class="profontu" id="jrcpTitle7">常熟农商行-燕谷信保贷</div>
+                            <div class="profontd">参考利率范围： <font id="jrcplilv7" color="#e21739">4.32%-6.0%</font></div>
+                        </div>
+                    </div>
+                    <div class="prolistr">
+                        <div class="prolistrl">
+                            <div class="prolistdk">贷款额度：<font id="jrcped7" color="#e21739">10万元-500万元</font></div>
+                            <div class="prolistdb">担保方式： <font id="jrcpdbfs7" color="#e21739">信保基金</font></div>
+                            <div class="prolistqx">贷款期限：<font id="jrcpqx7" color="#e21739">6个月-12个月</font></div>
+                        </div>
+                        <div class="prolistrr">
+                            <a id="jrcpDetail7" href="products_view.html"><div class="prolistbtn">详情</div></a>
+                            <!--<div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img src="images/star5.png" /></div></div>
+                            <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div id="jrcpdiv8" class="prolist">
+                    <div class="prolistl">
+                        <div class="probank" id="imgDiv8"></div>
+                        <div class="profont">
+                            <div class="profontu" id="jrcpTitle8">常熟农商行-燕谷信保贷</div>
+                            <div class="profontd">参考利率范围： <font id="jrcplilv8" color="#e21739">4.32%-6.0%</font></div>
+                        </div>
+                    </div>
+                    <div class="prolistr">
+                        <div class="prolistrl">
+                            <div class="prolistdk">贷款额度：<font id="jrcped8" color="#e21739">10万元-500万元</font></div>
+                            <div class="prolistdb">担保方式： <font id="jrcpdbfs8" color="#e21739">信保基金</font></div>
+                            <div class="prolistqx">贷款期限：<font id="jrcpqx8" color="#e21739">6个月-12个月</font></div>
+                        </div>
+                        <div class="prolistrr">
+                            <a id="jrcpDetail8" href="products_view.html"><div class="prolistbtn">详情</div></a>
+                            <!--<div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img src="images/star5.png" /></div></div>
+                            <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div id="jrcpdiv9" class="prolist">
+                    <div class="prolistl">
+                        <div class="probank" id="imgDiv9"></div>
+                        <div class="profont">
+                            <div class="profontu" id="jrcpTitle9">常熟农商行-燕谷信保贷</div>
+                            <div class="profontd">参考利率范围： <font id="jrcplilv9" color="#e21739">4.32%-6.0%</font></div>
+                        </div>
+                    </div>
+                    <div class="prolistr">
+                        <div class="prolistrl">
+                            <div class="prolistdk">贷款额度：<font id="jrcped9" color="#e21739">10万元-500万元</font></div>
+                            <div class="prolistdb">担保方式： <font id="jrcpdbfs9" color="#e21739">信保基金</font></div>
+                            <div class="prolistqx">贷款期限：<font id="jrcpqx9" color="#e21739">6个月-12个月</font></div>
+                        </div>
+                        <div class="prolistrr">
+                            <a id="jrcpDetail9" href="products_view.html"><div class="prolistbtn">详情</div></a>
+                            <!--<div class="prolistcg"><div class="procgf">成功率</div><div class="procgstar"><img src="images/star5.png" /></div></div>
+                            <div class="prolistcg"><font color="#e21739">296</font>家企业申请</div>-->
+                        </div>
+                    </div>
+                </div>
 
 
 

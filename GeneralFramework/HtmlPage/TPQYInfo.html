@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>政策与公告</title>
+    <title>图片新闻与企业风采</title>
     <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
     <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
     <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
@@ -26,8 +26,6 @@
         var newsGgId;
         var newstpId;
         var newsqyId;
-        var zcrows = "";
-        var ggrows = "";
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#ZCdlg').dialog('close');
@@ -164,7 +162,6 @@
         });
 
         function loadZCDG() {
-            zcrows = "";
             newsZcId = '';
             $('#ZC_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetZCDG',
@@ -194,17 +191,6 @@
                         $('#ZCdlg').dialog('open');
                     }
                 }, '-', {
-                    iconCls: 'icon-edit',
-                    text: '修改',
-                    handler: function () {
-                        if (zcrows == "") { $.messager.alert('提示', '请选择要修改的政策！', 'info'); } else {
-                            newsZcId = zcrows.ID;
-                            $('#edittitleZC').textbox('setValue', zcrows.NewsTitle);
-                            editor5.html(decodeURIComponent(zcrows.NewsContent));
-                            $('#editZCdlg').dialog('open');
-                        }
-                    }
-                }, '-', {
                     iconCls: 'icon-remove',
                     text: '删除政策',
                     handler: function () {
@@ -213,7 +199,6 @@
                 }],
                 onClickRow: (function (index, data) {
                     newsZcId = data.ID;
-                    zcrows = data;
                 }),
                 onDblClickRow: (function (index, row) {
                     newsZcId = row.ID;
@@ -227,7 +212,6 @@
 
         function loadGGDG() {
             newsGgId = '';
-            ggrows = "";
             $('#GG_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetGGDG',
                 rownumbers: true,
@@ -253,19 +237,6 @@
                         $('#GGdlg').dialog('open');
                     }
                 }, '-', {
-                    iconCls: 'icon-edit',
-                    text: '修改',
-                    handler: function () {
-                        if (ggrows == "") {
-                            $.messager.alert('提示', '请选中要修改的公告', 'info');
-                        } else {
-                            newsGgId = ggrows.ID;
-                            $('#edittitleGG').textbox('setValue', ggrows.NewsTitle);
-                            editor6.html(decodeURIComponent(ggrows.NewsContent));
-                            $('#editGGdlg').dialog('open');
-                        }
-                    }
-                }, '-', {
                     iconCls: 'icon-remove',
                     text: '删除公告',
                     handler: function () {
@@ -274,7 +245,6 @@
                 }],
                 onClickRow: (function (index, data) {
                     newsGgId = data.ID;
-                    ggrows = data;
                 }),
                 onDblClickRow: (function (index, row) {
                     newsGgId = row.ID;
@@ -676,110 +646,25 @@
         }
     </script>
 </head>
+
 <body class="easyui-layout">
     <div id="loading" style="position:absolute;z-index:1000;top:0px;left:0px;width:100%;height:100%;background:#ffffff;">
         <font color="#15428B">加载中....</font>
     </div>
     <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
-        <!--<div class="easyui-accordion" style="width:100%;height:98%;">-->
-        <!--<div title="政策与公告" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">-->
+
         <div>
-            <table id="ZC_dg" data-options="
+            <table id="ImageNews_dg" data-options="
                 iconCls: 'icon-save',
-                buttons: '#ZC_dg-buttons'
+                buttons: '#ImageNews_dg-buttons'
             "></table>
         </div>
         <div>
-            <table id="GG_dg" data-options="
+            <table id="qyfc_dg" data-options="
                 iconCls: 'icon-save',
-                buttons: '#GG_dg-buttons'
+                buttons: '#qyfc_dg-buttons'
             "></table>
         </div>
-        <!--</div>-->
-        <!--<div title="图片新闻与企业风采" data-options="iconCls:'icon-ok'" style="padding:10px;">
-            <div>
-                <table id="ImageNews_dg" data-options="
-            iconCls: 'icon-save',
-            buttons: '#ImageNews_dg-buttons'
-        "></table>
-            </div>
-            <div>
-                <table id="qyfc_dg" data-options="
-            iconCls: 'icon-save',
-            buttons: '#qyfc_dg-buttons'
-        "></table>
-            </div>
-        </div>-->
-        <!--</div>-->
-
-        <div id="ZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
-             data-options="
-                iconCls: 'icon-save',
-                buttons: '#ZCdlg-buttons'
-            ">
-            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                <tr>
-                    <td style=" text-align:right;">标题:</td>
-                    <td style=" text-align:left;"><input id="titleZC" name="name" class="f1 easyui-textbox" style="width: 80%;" /></td>
-                </tr>
-                <tr>
-                    <td style=" text-align:right;">详细内容:</td>
-                    <td style=" text-align:left;"><textarea id="contentZC" name="content" style="width:100%; height:350px;"></textarea></td>
-                </tr>
-            </table>
-        </div>
-
-        <div id="editZCdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
-             data-options="
-                iconCls: 'icon-save',
-                buttons: '#editZCdlg-buttons'
-            ">
-            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                <tr>
-                    <td style=" text-align:right;">标题:</td>
-                    <td style=" text-align:left;"><input id="edittitleZC" name="edittitleZC" class="f1 easyui-textbox" style="width: 80%;" /></td>
-                </tr>
-                <tr>
-                    <td style=" text-align:right;">详细内容:</td>
-                    <td style=" text-align:left;"><textarea id="editcontentZC" name="editcontentZC" style="width:100%; height:350px;"></textarea></td>
-                </tr>
-            </table>
-        </div>
-
-        <div id="GGdlg" class="easyui-dialog" title="公告编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
-             data-options="
-                iconCls: 'icon-save',
-                buttons: '#GGdlg-buttons'
-            ">
-            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                <tr>
-                    <td style=" text-align:right;">标题:</td>
-                    <td style=" text-align:left;"><input id="titleGG" name="name" class="f1 easyui-textbox" style="width:80%;" /></td>
-                </tr>
-                <tr>
-                    <td style=" text-align:right;">详细内容:</td>
-                    <td style=" text-align:left;"><textarea id="contentGG" name="content1" style="width:100%; height:350px;"></textarea></td>
-                </tr>
-            </table>
-        </div>
-
-        <div id="editGGdlg" class="easyui-dialog" title="政策编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
-             data-options="
-                iconCls: 'icon-save',
-                buttons: '#editGGdlg-buttons'
-            ">
-            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
-                <tr>
-                    <td style=" text-align:right;">标题:</td>
-                    <td style=" text-align:left;"><input id="edittitleGG" name="edittitleGG" class="f1 easyui-textbox" style="width: 80%;" /></td>
-                </tr>
-                <tr>
-                    <td style=" text-align:right;">详细内容:</td>
-                    <td style=" text-align:left;"><textarea id="editcontentGG" name="editcontentGG" style="width:100%; height:350px;"></textarea></td>
-                </tr>
-            </table>
-        </div>
-
         <div id="tpdlg" class="easyui-dialog" title="图片新闻编辑" style="text-align: center; display: none;width: 800px; height: 500px; padding: 10px"
              data-options="
                 iconCls: 'icon-save',
@@ -841,31 +726,6 @@
         <div id="tpdlg-buttons">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="savetp()">保存</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#tpdlg').dialog('close');">
-                关闭
-            </a>
-        </div>
-        <div id="ZCdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveZC()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZCdlg').dialog('close');">
-                关闭
-            </a>
-        </div>
-        <div id="editZCdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="editzc()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#editZCdlg').dialog('close');">
-                关闭
-            </a>
-        </div>
-
-        <div id="GGdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveGG()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#GGdlg').dialog('close');">
-                关闭
-            </a>
-        </div>
-        <div id="editGGdlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="editgg()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#editGGdlg').dialog('close');">
                 关闭
             </a>
         </div>

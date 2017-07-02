@@ -38,7 +38,7 @@ namespace GeneralFrameworkDAL
 
             if (ParentBankId != 0)
             {
-                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,CONVERT(varchar(100), PublishDate, 23) as PublishDate,a.Status,a.BankIds,a.SLBankId,d.Name as SLBankName,b.CreditAmount,CONVERT(varchar(100), b.CreditDate, 23) as CreditDate from RZFlow a 
+                sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,CONVERT(varchar(100), PublishDate, 23) as PublishDate,a.Status,a.BankIds,a.SLBankId,d.Name as SLBankName,b.CreditAmount,CONVERT(varchar(100), b.CreditDate, 23) as CreditDate,a.Status as cz from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
 left join Enterprise c on a.EnterpriseId = c.ID
 left join Bank d on a.SLBankId = d.Id 

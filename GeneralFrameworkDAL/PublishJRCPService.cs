@@ -88,10 +88,31 @@ left join Bank b on a.BankId = b.Id
 
         public string GetJRCPList(string dkqd, string dkqx, string dbfs, string dked, string jgmc, string cpmc)
         {
+            string copsql = "";
+            if (jgmc != "全部" && jgmc != "0")
+            {
+                copsql = "select Id from CooperativeBank where BankName = '" + jgmc + "'";
+                DataTable copdt = DBHelper.GetDataSet(copsql);
+                if (copdt.Rows.Count > 0)
+                {
+                    DataRow copdr = copdt.Rows[0];
+                    jgmc = copdr[0].ToString();
+                }
+                else
+                {
+                    jgmc = "0";
+                }
+            }
+            else
+            {
+                jgmc = "0";
+            }
+
+
             string where = "";
             if (jgmc != "0")
             {
-                where = where + " and c.BankName like '%" + jgmc + "%'";
+                where = where + " and b.ParentBankId = '" + jgmc + "'";
             }
             if (cpmc != "0")
             {

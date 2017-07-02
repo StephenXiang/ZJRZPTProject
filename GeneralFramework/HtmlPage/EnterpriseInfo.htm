@@ -37,6 +37,7 @@
             $('#UserNameTD').hide();
             $('#Enterprisedlg').dialog('close');
             $('#EnterpriseFinanceInfodlg').dialog('close');
+            $('#yyzzDialog').dialog('close');
             UserInfo = JSON.parse($.cookie('UserInfo'));
             if (UserInfo["role"] == 4) {
                 loadEnterpriseInfo();
@@ -458,7 +459,11 @@
             if (Code == undefined || Code == "") {
                 $('#BusinessLicenseImgTD').hide();
             } else {
-                $('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                //$('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                $("#BusinessLicenseImg").click(function () {
+                    yyzzShow(Code);
+                    $('#yyzzDialog').dialog('open');
+                });
                 $('#BusinessLicenseImgTD').show();
             }
         }
@@ -490,6 +495,10 @@
             }
             return true;
         }
+
+        function yyzzShow(code) {
+            $('#yyzzHtml').html("<img src='../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=" + code + "'>")
+        }
     </script>
 
 </head>
@@ -512,55 +521,55 @@
 
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
-                                <td style=" text-align:left;  ">企业名称:</td>
+                                <td style=" width:80px; text-align:left;  ">企业名称:</td>
                                 <td style=" text-align:left;"><label id="labEnterpriseName" />无</td>
-                                <td style=" text-align:left; ">信用代码:</td>
+                                <td style=" text-align:right; ">信用代码:</td>
                                 <td style=" text-align:left;"><label id="labCode" />无</td>
                             </tr>
                             <tr>
                                 <td style=" text-align:left;">企业类型:</td>
                                 <td style=" text-align:left;"><label id="labEnterpriseType" />无</td>
-                                <td style=" text-align:left;">行业分类:</td>
+                                <td style=" text-align:right;">行业分类:</td>
                                 <td style=" text-align:left;"><label id="labProfession" />无</td>
                             </tr>
                             <tr>
                                 <td style=" text-align:left;">主要产品:</td>
                                 <td style=" text-align:left;"><label id="labMainProduction" />无</td>
-                                <td style=" text-align:left; ">环评结果:</td>
+                                <td style=" text-align:right; ">环评结果:</td>
                                 <td style=" text-align:left;"><label id="labHuanping" />无</td>
 
                             </tr>
                             <tr>
                                 <td style=" text-align:left;">注册类型:</td>
                                 <td style=" text-align:left;"><label id="labRegistType" />无</td>
-                                <td style=" text-align:left;">注册地区:</td>
+                                <td style=" text-align:right;">注册地区:</td>
                                 <td style=" text-align:left;"><label id="labRegistRegion" />无</td>
                             </tr>
                             <tr>
                                 <td style=" text-align:left;">注册资金:</td>
                                 <td style=" text-align:left;"><label id="labRegFinance" />无</td>
-                                <td style=" text-align:left;">注册币种:</td>
+                                <td style=" text-align:right;">注册币种:</td>
                                 <td style=" text-align:left;"><label id="labRegFinanceMt" />无</td>
                             </tr>
                             <tr>
 
                                 <td style=" text-align:left;">营业范围:</td>
                                 <td style=" text-align:left;"><label id="labBusiness" />无</td>
-                                <td style=" text-align:left;">成立时间:</td>
+                                <td style=" text-align:right;">成立时间:</td>
                                 <td style=" text-align:left;"><label id="labCreateTime" />无</td>
                             </tr>
                             <tr>
                                 <td style=" text-align:left;">法人代表:</td>
                                 <td style=" text-align:left;"><label id="labJuridicalPerson" />无</td>
-                                <td style=" text-align:left;">营业执照:</td>
+                                <td style=" text-align:right;">营业执照:</td>
                                 <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
-                                    <a id="BusinessLicenseImg" name="BusinessLicenseImg" target="_blank" href="">点击查看</a>
+                                    <a id="BusinessLicenseImg" name="BusinessLicenseImg" href="#">点击查看</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style=" text-align:left;">联系人姓名:</td>
                                 <td style=" text-align:left;"><label id="labConectionPerson" />无</td>
-                                <td style=" text-align:left;">联系人电话:</td>
+                                <td style=" text-align:right;">联系人电话:</td>
                                 <td style=" text-align:left;"><label id="labConectionTelephone" />无</td>
                             </tr>
                             <tr>
@@ -725,7 +734,7 @@
                 </tr>
                 <tr></tr>
                 <tr>
-                    <td style=" text-align:right;">注册资金额度:</td>
+                    <td style=" text-align:right;">注册资金:</td>
                     <td></td>
                     <td style=" text-align:left;"><select id="RegFinanceCmb" class="easyui-combobox" name="RegFinanceCmb" label="" style="width:95%"></select></td>
                     <td style=" text-align:right;">币种:</td>
@@ -850,6 +859,19 @@
     <div id="EnterpriseFinanceInfodlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveEnterpriseFinanceInfo()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#EnterpriseFinanceInfodlg').dialog('close')">
+            关闭
+        </a>
+    </div>
+
+    <div id="yyzzDialog" class="easyui-dialog" title="营业执照" style="text-align: center;
+        width: 800px; height:450px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#yyzzDialog-buttons'
+            ">
+        <div id="yyzzHtml" style="height:100%;width:100%;"></div>
+    </div>
+    <div id="yyzzDialog-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#yyzzDialog').dialog('close')">
             关闭
         </a>
     </div>

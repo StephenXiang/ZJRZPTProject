@@ -21,6 +21,8 @@
             loadzzddg();
             $('#DetialInfo').hide();
             $('#DetialInfoZZD').hide();
+            $('#yyzzDialog').dialog('close');
+            $('#yyzzDialog2').dialog('close');
         });
 
         function loadrzdg() {
@@ -52,15 +54,15 @@
                         field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
                         function (value, row, index) {
                             if (value == 0) {
-                                return '待受理';
+                                return '<b style="color:#FF0000;">待受理</b>';
                             } else if (value == 1) {
-                                return '受理中';
+                                return '<b style="color:#CD00CD;">受理中</b>';
                             } else if (value == 2) {
-                                return '已受理';
+                                return '<b style="color:#8DB6CD;">已受理</b>';
                             } else if (value == 3) {
-                                return '受理成功';
+                                return '<b style="color:green;">受理成功</b>';
                             } else if (value == 4) {
-                                return '受理不成功';
+                                return '<b style="color:#CDC5BF;">受理不成功</b>';
                             }
                         }
                     }
@@ -104,15 +106,15 @@
                         field: 'Status', title: '受理状态', width: 300, align: 'center', formatter:
                         function (value, row, index) {
                             if (value == 0) {
-                                return '待受理';
+                                return '<b style="color:#FF0000;">待受理</b>';
                             } else if (value == 1) {
-                                return '受理中';
+                                return '<b style="color:#CD00CD;">受理中</b>';
                             } else if (value == 2) {
-                                return '已受理';
+                                return '<b style="color:#8DB6CD;">已受理</b>';
                             } else if (value == 3) {
-                                return '受理成功';
+                                return '<b style="color:green;">受理成功</b>';
                             } else if (value == 4) {
-                                return '受理不成功';
+                                return '<b style="color:#CDC5BF;">受理不成功</b>';
                             }
                         }
                     }
@@ -162,14 +164,22 @@
                         if (Code == undefined || Code == "") {
                             $('#BusinessLicenseImgTDZZD').hide();
                         } else {
-                            $('#BusinessLicenseImgZZD').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            $("#BusinessLicenseImgZZD").click(function () {
+                                yyzzShow2(Code);
+                                $('#yyzzDialog2').dialog('open');
+                            });
+                            //$('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            //$('#BusinessLicenseImgTD').show();
+                            //$('#BusinessLicenseImgZZD').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
                             $('#BusinessLicenseImgTDZZD').show();
                         }
                     }
                 }
             });
         }
-
+        function yyzzShow(code) {
+            $('#yyzzHtml').html("<img src='../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=" + code + "'>")
+        }
         function loadEnterpriseFiancialInfoZZD(EnterpriseId) {
             $.ajax({
                 type: "get",
@@ -272,14 +282,24 @@
                         if (Code == undefined || Code == "") {
                             $('#BusinessLicenseImgTD').hide();
                         } else {
-                            $('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            $("#BusinessLicenseImg").click(function () {
+                                yyzzShow(Code);
+                                $('#yyzzDialog').dialog('open');
+                            });
+                            //$('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            //$('#BusinessLicenseImgTD').show();
+                            //$('#BusinessLicenseImgZZD').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
                             $('#BusinessLicenseImgTD').show();
+                            //$('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            //$('#BusinessLicenseImgTD').show();
                         }
                     }
                 }
             });
         }
-
+        function yyzzShow2(code) {
+            $('#yyzzHtml2').html("<img src='../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=" + code + "'>")
+        }
         function loadEnterpriseFiancialInfo(EnterpriseId) {
             $.ajax({
                 type: "get",
@@ -361,7 +381,7 @@
                 buttons: '#RZ_dg-buttons'
             "></table>
                 </div>
-                <div id="DetialInfo" class="easyui-panel" title="详细信息" style="width:100%;height:420px;padding:10px;">
+                <!--<div id="DetialInfo" class="easyui-panel" title="详细信息" style="width:100%;height:420px;padding:10px;">
                     <div class="easyui-layout" data-options="fit:true">
                         <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
                             <h2> 企业信息</h2>
@@ -565,6 +585,273 @@
 
                         </div>
                     </div>
+                </div>-->
+                <div id="DetialInfo" class="easyui-panel" title="详细信息" style="width:100%;height:420px;padding:10px;">
+                    <div class="easyui-layout" data-options="fit:true">
+                        <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
+                            <h2> 企业信息</h2>
+                            <div class="easyui-layout" data-options="fit:false" style=" min-width:600px; height:280px; width:98%; padding-bottom:5px;">
+                                <div data-options="region:'center'" style="width:33%;padding:10px">
+                                    <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                        <tr>
+                                            <td style=" width:80px; text-align:left;  ">企业名称:</td>
+                                            <td style=" text-align:left;"><label id="labEnterpriseName" />无</td>
+                                            <td style=" text-align:right; ">信用代码:</td>
+                                            <td style=" text-align:left;"><label id="labCode" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">企业类型:</td>
+                                            <td style=" text-align:left;"><label id="labEnterpriseType" />无</td>
+                                            <td style=" text-align:right;">行业分类:</td>
+                                            <td style=" text-align:left;"><label id="labProfession" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">主要产品:</td>
+                                            <td style=" text-align:left;"><label id="labMainProduction" />无</td>
+                                            <td style=" text-align:right; ">环评结果:</td>
+                                            <td style=" text-align:left;"><label id="labHuanping" />无</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">注册类型:</td>
+                                            <td style=" text-align:left;"><label id="labRegistType" />无</td>
+                                            <td style=" text-align:right;">注册地区:</td>
+                                            <td style=" text-align:left;"><label id="labRegistRegion" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">注册资金:</td>
+                                            <td style=" text-align:left;"><label id="labRegFinance" />无</td>
+                                            <td style=" text-align:right;">注册币种:</td>
+                                            <td style=" text-align:left;"><label id="labRegFinanceMt" />无</td>
+                                        </tr>
+                                        <tr>
+
+                                            <td style=" text-align:left;">营业范围:</td>
+                                            <td style=" text-align:left;"><label id="labBusiness" />无</td>
+                                            <td style=" text-align:right;">成立时间:</td>
+                                            <td style=" text-align:left;"><label id="labCreateTime" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">法人代表:</td>
+                                            <td style=" text-align:left;"><label id="labJuridicalPerson" />无</td>
+                                            <td style=" text-align:right;">营业执照:</td>
+                                            <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
+                                                <a id="BusinessLicenseImg" name="BusinessLicenseImg" href="#">点击查看</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">联系人姓名:</td>
+                                            <td style=" text-align:left;"><label id="labConectionPerson" />无</td>
+                                            <td style=" text-align:right;">联系人电话:</td>
+                                            <td style=" text-align:left;"><label id="labConectionTelephone" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">企业简介:</td>
+                                            <td style=" text-align:left;" colspan="5"><label id="labDesc" />无</td>
+
+                                        </tr>
+                                        <tr></tr>
+
+
+                                    </table>
+                                    <!--<table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                        <tr>
+                                            <td style=" text-align:left;  ">企业名称:</td>
+                                            <td style=" text-align:left;"><label id="labEnterpriseName" />无</td>
+                                            <td style=" text-align:left; ">信用代码:</td>
+                                            <td style=" text-align:left;"><label id="labCode" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">企业类型:</td>
+                                            <td style=" text-align:left;"><label id="labEnterpriseType" />无</td>
+                                            <td style=" text-align:left;">行业分类:</td>
+                                            <td style=" text-align:left;"><label id="labProfession" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">主要产品:</td>
+                                            <td style=" text-align:left;"><label id="labMainProduction" />无</td>
+                                            <td style=" text-align:left; ">环评结果:</td>
+                                            <td style=" text-align:left;"><label id="labHuanping" />无</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">注册类型:</td>
+                                            <td style=" text-align:left;"><label id="labRegistType" />无</td>
+                                            <td style=" text-align:left;">注册地区:</td>
+                                            <td style=" text-align:left;"><label id="labRegistRegion" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">注册资金:</td>
+                                            <td style=" text-align:left;"><label id="labRegFinance" />无</td>
+                                            <td style=" text-align:left;">注册币种:</td>
+                                            <td style=" text-align:left;"><label id="labRegFinanceMt" />无</td>
+                                        </tr>
+                                        <tr>
+
+                                            <td style=" text-align:left;">营业范围:</td>
+                                            <td style=" text-align:left;"><label id="labBusiness" />无</td>
+                                            <td style=" text-align:left;">成立时间:</td>
+                                            <td style=" text-align:left;"><label id="labCreateTime" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">法人代表:</td>
+                                            <td style=" text-align:left;"><label id="labJuridicalPerson" />无</td>
+                                            <td style=" text-align:left;">营业执照:</td>
+                                            <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
+                                                <a id="BusinessLicenseImg" name="BusinessLicenseImg" href="#">点击查看</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">联系人姓名:</td>
+                                            <td style=" text-align:left;"><label id="labConectionPerson" />无</td>
+                                            <td style=" text-align:left;">联系人电话:</td>
+                                            <td style=" text-align:left;"><label id="labConectionTelephone" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">企业简介:</td>
+                                            <td style=" text-align:left;" colspan="5"><label id="labDesc" />无</td>
+
+                                        </tr>
+                                        <tr></tr>
+
+
+                                    </table>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div data-options="region:'center'" style="padding:10px">
+                            <h2>财务信息</h2>
+                            <div class="easyui-layout" data-options="fit:false" style=" min-width:600px; height:280px; width:99%;padding-bottom:5px;">
+                                <div data-options="region:'west'" style="width:33%;padding:10px">
+                                    <h3> <label id="llYear">无</label></h3>
+                                    <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                        <tr>
+                                            <td style=" text-align:right;">资产总额:</td>
+                                            <td style=" text-align:right;"><label id="llzczeLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">负债总额:</td>
+                                            <td style=" text-align:right;"><label id="llfzzeLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">销售收入:</td>
+                                            <td style=" text-align:right;"><label id="llxssrLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">应收账款:</td>
+                                            <td style=" text-align:right;"><label id="llyszkLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">净利润:</td>
+                                            <td style=" text-align:right;"><label id="lljlrLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">所有者权益:</td>
+                                            <td style=" text-align:right;"><label id="llsyzqyLab">无</label></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div data-options="region:'east'" style="width:33%;padding:10px">
+                                    <h3> <label id="thisYearMonth">无</label></h3>
+                                    <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                        <tr>
+                                            <td style=" text-align:right;">资产总额:</td>
+                                            <td style=" text-align:right;"><label id="lzczeLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">负债总额:</td>
+                                            <td style=" text-align:right;"><label id="lfzzeLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">销售收入:</td>
+                                            <td style=" text-align:right;"><label id="lxssrLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">应收账款:</td>
+                                            <td style=" text-align:right;"><label id="lyszkLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">净利润:</td>
+                                            <td style=" text-align:right;"><label id="ljlrLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">所有者权益:</td>
+                                            <td style=" text-align:right;"><label id="lsyzqyLab">无</label></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div data-options="region:'center'" style="width:33%;padding:10px">
+                                    <h3> <label id="lYear">无</label></h3>
+                                    <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                        <tr>
+                                            <td style=" text-align:right;">资产总额:</td>
+                                            <td style=" text-align:right;"><label id="thiszczeLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">负债总额:</td>
+                                            <td style=" text-align:right;"><label id="thisfzzeLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">销售收入:</td>
+                                            <td style=" text-align:right;"><label id="thisxssrLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">应收账款:</td>
+                                            <td style=" text-align:right;"><label id="thisyszkLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">净利润:</td>
+                                            <td style=" text-align:right;"><label id="thisjlrLab">无</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:right;">所有者权益:</td>
+                                            <td style=" text-align:right;"><label id="thissyzqyLab">无</label></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div data-options="region:'east'" style=" width:30%;padding:10px">
+                            <h2> 融资需求</h2>
+                            <div class="easyui-layout" data-options="fit:false" style=" min-height:70%; height:280px; width:98%;">
+                                <div data-options="region:'center'" style="width:33%;padding:10px">
+                                    <h3> <label>详情</label></h3>
+                                    <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                        <tr>
+                                            <td style=" min-width:80px; text-align:left;">融资额度:</td>
+                                            <td style=" text-align:left;"><label id="labRZED" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">融资银行:</td>
+                                            <td style=" text-align:left; overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"><label id="labRZYH" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">融资期限:</td>
+                                            <td style=" text-align:left;"><label id="labRZQX" />无</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style=" text-align:left;">融资用途:</td>
+                                            <td style=" text-align:left;"><label id="labRZQT" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">是否有抵押:</td>
+                                            <td style=" text-align:left;"><label id="labisdyw" />无</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=" text-align:left;">抵押物描述:</td>
+                                            <td style=" text-align:left;"><label id="labdywdesc" />无</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
             <div title="周转贷信息" data-options="iconCls:'icon-ok'" style="padding:10px;">
@@ -576,7 +863,7 @@
                 </div>
                 <div id="DetialInfoZZD" class="easyui-panel" title="详细信息" style="width:100%;height:420px;padding:10px;">
                     <div class="easyui-layout" data-options="fit:true">
-                        <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
+                        <div data-options="region:'west',split:false" style="min-width:600px;width:35%;padding:10px;">
                             <h2> 企业信息</h2>
                             <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%;">
                                 <div data-options="region:'center'" style="width:33%;padding:10px">
@@ -625,7 +912,7 @@
                                             <td style=" text-align:left;"><label id="labJuridicalPersonZZD" />无</td>
                                             <td style=" text-align:left;">营业执照:</td>
                                             <td id="BusinessLicenseImgTDZZD" style=" text-align:left;" colspan="5">
-                                                <a id="BusinessLicenseImgZZD" name="BusinessLicenseImgZZD" target="_blank" href="">点击查看</a>
+                                                <a id="BusinessLicenseImgZZD" name="BusinessLicenseImgZZD" href="#">点击查看</a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -646,7 +933,7 @@
                         </div>
                         <div data-options="region:'center'" style="padding:10px">
                             <h2>财务信息</h2>
-                            <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:99%;padding-bottom:5px;">
+                            <div class="easyui-layout" data-options="fit:false" style="min-width:600px; height:280px; width:99%;padding-bottom:5px;">
                                 <div data-options="region:'west'" style="width:33%;padding:10px">
                                     <h3> <label id="llYearZZD">无</label></h3>
                                     <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
@@ -783,6 +1070,31 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="yyzzDialog" class="easyui-dialog" title="营业执照" style="text-align: center;
+        width: 800px; height:450px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#yyzzDialog-buttons'
+            ">
+        <div id="yyzzHtml" style="height:100%;width:100%;"></div>
+    </div>
+    <div id="yyzzDialog-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#yyzzDialog').dialog('close')">
+            关闭
+        </a>
+    </div>
+
+    <div id="yyzzDialog2" class="easyui-dialog" title="营业执照" style="text-align: center;
+        width: 800px; height:450px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#yyzzDialog2-buttons'
+            ">
+        <div id="yyzzHtml2" style="height:100%;width:100%;"></div>
+    </div>
+    <div id="yyzzDialog2-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#yyzzDialog2').dialog('close')">
+            关闭
+        </a>
     </div>
 </body>
 </html>

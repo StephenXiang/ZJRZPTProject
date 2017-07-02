@@ -256,7 +256,11 @@
             var isdyw = $('input:radio[name="isDyw"]:checked').val();
             if (isdyw == 0) {
                 $('#DywTR').hide();
+            } else if (isdyw == 2) {
+                $('#dywms').html("描述:");
+                $('#DywTR').show();
             } else {
+                $('#dywms').html("抵押物:");
                 $('#DywTR').show();
             }
         }
@@ -283,7 +287,7 @@
             else if ($('#RZYTcmb').combobox('getValue') == "") {
                 $.messager.alert('提示', '融资用途必须选择', 'info');
             } else {
-                if (isdyw == 1) {
+                if (isdyw == 1 || isdyw == 2) {
                     if ($('#dywtext').val().trim() == "") {
                         $.messager.alert('提示', '请填写抵押物描述', 'info');
                     }
@@ -443,7 +447,7 @@
                 </tr>
                 <tr>
                     <td style=" text-align:right;">融资银行:</td>
-                    <td style=" text-align:left;"><select id="RZYHcmb" name="RZYHcmb" class="easyui-combobox" label="" style="width:80%"></select></td>
+                    <td style=" text-align:left;"><select id="RZYHcmb" name="RZYHcmb" class="easyui-combobox" label="" style="width:81%"></select>&nbsp<label style="color:red">可选3家</label></td>
                 </tr>
                 <tr>
                     <td style=" text-align:right;">融资期限:</td>
@@ -459,11 +463,12 @@
                         <span class="radioSpan">
                             <input type="radio" name="isDyw" value="0" checked="checked" onchange="dywchange()">否</input>
                             <input type="radio" name="isDyw" value="1" onchange="dywchange()">是</input>
+                            <input type="radio" name="isDyw" value="2" onchange="dywchange()">其他</input>
                         </span>
                     </td>
                 </tr>
                 <tr id="DywTR">
-                    <td style=" text-align:right;">抵押物:</td>
+                    <td id="dywms" style=" text-align:right;">抵押物:</td>
                     <td style=" text-align:left;"><input class="easyui-textbox" id="dywtext" name="dywtext" style="width:80%;height:40px" data-options="label:'',multiline:true" /></td>
                 </tr>
             </table>

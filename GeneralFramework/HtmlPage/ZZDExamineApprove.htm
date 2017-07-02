@@ -21,6 +21,7 @@
             $('#statusdiv').hide();
             $('#zzdiddiv').hide();
             $('#ZZDFeedBackdlg').dialog('close');
+            $('#yyzzDialog').dialog('close');
             loadzzddg();
         });
 
@@ -51,15 +52,30 @@
                                         field: 'Status', title: '受理状态', width: 300, align: 'center', formatter:
                                             function (value, row, index) {
                                                 if (value == 0) {
-                                                    return '待受理';
+                                                    return '<b style="color:#FF0000;">待受理</b>';
                                                 } else if (value == 1) {
-                                                    return '受理中';
+                                                    return '<b style="color:#CD00CD;">受理中</b>';
                                                 } else if (value == 2) {
-                                                    return '已受理';
+                                                    return '<b style="color:#8DB6CD;">已受理</b>';
                                                 } else if (value == 3) {
-                                                    return '受理成功';
+                                                    return '<b style="color:green;">受理成功</b>';
                                                 } else if (value == 4) {
-                                                    return '受理不成功';
+                                                    return '<b style="color:#CDC5BF;">受理不成功</b>';
+                                                }
+                                            }
+                                    }, {
+                                        field: 'cz', title: '操作', width: 300, align: 'center', formatter:
+                                            function (value, row, index) {
+                                                if (value == 0) {
+                                                    return '选中查看';
+                                                } else if (value == 1) {
+                                                    return '<a href="#" onclick="slclick(' + value + ',' + row.Id + ',' + row.SLBankId + ')">是否确认受理</a>';
+                                                } else if (value == 2) {
+                                                    return '<a href="#" onclick="slclick(' + value + ',' + row.Id + ',' + row.SLBankId + ')">是否受理成功</a>';
+                                                } else if (value == 3) {
+                                                    return '无操作';
+                                                } else if (value == 4) {
+                                                    return '无操作';
                                                 }
                                             }
                                     }
@@ -78,31 +94,33 @@
                     }
                 }),
                 onDblClickRow: (function (index, row) {
-                    if (row.Status == 1) {
-                        $.messager.confirm('提示', '请确认该企业是否符合贵银行的周转贷条件！是否确认受理？', function (r) {
-                            if (r) {
-                                EditZZDStatus('2', row.Id);
-                            } else {
 
-                            }
-                        });
-                    } else if (row.Status == 2) {
-                        $.messager.defaults = { ok: "是", cancel: "否" };
-                        $.messager.confirm('提示', '该企业的周转贷请求是否受理成功？', function (r) {
-                            if (r) {
-                                EditZZDStatus('3', row.Id);
-                            } else {
-                                $.messager.defaults = { ok: "确定", cancel: "取消" };
-                                $('#statustext').textbox('setValue', '4');
-                                $('#zzdidtext').textbox("setValue", row.Id);
-                                $('#ZZDFeedBackdlg').dialog('open');
-                            }
-                        });
-                    }
                 })
             });
         }
+        function slclick(status, id) {
+            if (status == 1) {
+                $.messager.confirm('提示', '请确认该企业是否符合贵银行的周转贷条件！是否确认受理？', function (r) {
+                    if (r) {
+                        EditZZDStatus('2', id);
+                    } else {
 
+                    }
+                });
+            } else if (status == 2) {
+                $.messager.defaults = { ok: "是", cancel: "否" };
+                $.messager.confirm('提示', '该企业的周转贷请求是否受理成功？', function (r) {
+                    if (r) {
+                        EditZZDStatus('3', id);
+                    } else {
+                        $.messager.defaults = { ok: "确定", cancel: "取消" };
+                        $('#statustext').textbox('setValue', '4');
+                        $('#zzdidtext').textbox("setValue", id);
+                        $('#ZZDFeedBackdlg').dialog('open');
+                    }
+                });
+            }
+        }
         function EditZZDStatus(status, zzdid) {
             $.ajax({
                 type: "get",
@@ -187,7 +205,13 @@
                         if (Code == undefined || Code == "") {
                             $('#BusinessLicenseImgTD').hide();
                         } else {
-                            $('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            $("#BusinessLicenseImg").click(function () {
+                                yyzzShow(Code);
+                                $('#yyzzDialog').dialog('open');
+                            });
+
+
+                            //$('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
                             $('#BusinessLicenseImgTD').show();
                         }
                     }
@@ -260,6 +284,9 @@
                 }
             });
         }
+        function yyzzShow(code) {
+            $('#yyzzHtml').html("<img src='../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=" + code + "'>")
+        }
     </script>
 </head>
 <body class="easyui-layout">
@@ -277,10 +304,71 @@
             <div class="easyui-layout" data-options="fit:true">
                 <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
                     <h2> 企业信息</h2>
-                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%; padding-bottom:5px;">
+                    <div class="easyui-layout" data-options="fit:false" style=" min-width:500px; height:280px; width:98%; padding-bottom:5px;">
                         <div data-options="region:'center'" style="width:33%;padding:10px">
-
                             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" width:80px; text-align:left;  ">企业名称:</td>
+                                    <td style=" text-align:left;"><label id="labEnterpriseName" />无</td>
+                                    <td style=" text-align:right; ">信用代码:</td>
+                                    <td style=" text-align:left;"><label id="labCode" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">企业类型:</td>
+                                    <td style=" text-align:left;"><label id="labEnterpriseType" />无</td>
+                                    <td style=" text-align:right;">行业分类:</td>
+                                    <td style=" text-align:left;"><label id="labProfession" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">主要产品:</td>
+                                    <td style=" text-align:left;"><label id="labMainProduction" />无</td>
+                                    <td style=" text-align:right; ">环评结果:</td>
+                                    <td style=" text-align:left;"><label id="labHuanping" />无</td>
+
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">注册类型:</td>
+                                    <td style=" text-align:left;"><label id="labRegistType" />无</td>
+                                    <td style=" text-align:right;">注册地区:</td>
+                                    <td style=" text-align:left;"><label id="labRegistRegion" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">注册资金:</td>
+                                    <td style=" text-align:left;"><label id="labRegFinance" />无</td>
+                                    <td style=" text-align:right;">注册币种:</td>
+                                    <td style=" text-align:left;"><label id="labRegFinanceMt" />无</td>
+                                </tr>
+                                <tr>
+
+                                    <td style=" text-align:left;">营业范围:</td>
+                                    <td style=" text-align:left;"><label id="labBusiness" />无</td>
+                                    <td style=" text-align:right;">成立时间:</td>
+                                    <td style=" text-align:left;"><label id="labCreateTime" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">法人代表:</td>
+                                    <td style=" text-align:left;"><label id="labJuridicalPerson" />无</td>
+                                    <td style=" text-align:right;">营业执照:</td>
+                                    <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
+                                        <a id="BusinessLicenseImg" name="BusinessLicenseImg" href="#">点击查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">联系人姓名:</td>
+                                    <td style=" text-align:left;"><label id="labConectionPerson" />无</td>
+                                    <td style=" text-align:right;">联系人电话:</td>
+                                    <td style=" text-align:left;"><label id="labConectionTelephone" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">企业简介:</td>
+                                    <td style=" text-align:left;" colspan="5"><label id="labDesc" />无</td>
+
+                                </tr>
+                                <tr></tr>
+
+
+                            </table>
+                            <!--<table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                                 <tr>
                                     <td style=" text-align:left;  ">企业名称:</td>
                                     <td style=" text-align:left;"><label id="labEnterpriseName" />无</td>
@@ -324,7 +412,7 @@
                                     <td style=" text-align:left;"><label id="labJuridicalPerson" />无</td>
                                     <td style=" text-align:left;">营业执照:</td>
                                     <td id="BusinessLicenseImgTD" style=" text-align:left;" colspan="5">
-                                        <a id="BusinessLicenseImg" name="BusinessLicenseImg" target="_blank" href="">点击查看</a>
+                                        <a id="BusinessLicenseImg" name="BusinessLicenseImg" href="#">点击查看</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -341,14 +429,14 @@
                                 <tr></tr>
 
 
-                            </table>
+                            </table>-->
                         </div>
                     </div>
                 </div>
                 <div data-options="region:'center'" style="padding:10px">
                     <h2>财务信息</h2>
-                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:99%;padding-bottom:5px;">
-                        <div data-options="region:'west'" style="width:33%;padding:10px">
+                    <div class="easyui-layout" data-options="fit:false" style=" min-width:600px; height:280px; width:99%;padding-bottom:5px;">
+                        <div data-options="region:'west'" style=" min-width:200px; width:33%;padding:10px">
                             <h3> <label id="llYear">无</label></h3>
                             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                                 <tr>
@@ -378,7 +466,7 @@
 
                             </table>
                         </div>
-                        <div data-options="region:'east'" style="width:33%;padding:10px">
+                        <div data-options="region:'east'" style=" min-width:200px; width:33%;padding:10px">
                             <h3> <label id="thisYearMonth">无</label></h3>
                             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                                 <tr>
@@ -408,7 +496,7 @@
 
                             </table>
                         </div>
-                        <div data-options="region:'center'" style="width:33%;padding:10px">
+                        <div data-options="region:'center'" style=" min-width:200px; width:33%;padding:10px">
                             <h3> <label id="lYear">无</label></h3>
                             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                                 <tr>
@@ -447,7 +535,7 @@
                         <div data-options="region:'center'" style="width:33%;padding:10px">
                             <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                                 <tr>
-                                    <td style=" text-align:left;">原贷款银行:</td>
+                                    <td style=" min-width:80px; text-align:left;">原贷款银行:</td>
                                     <td style=" text-align:left;"><label id="labydkyh" />无</td>
                                 </tr>
                                 <tr>
@@ -501,6 +589,18 @@
     <div id="ZZDFeedBackdlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="EditZZDStatusAndFeedback()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#ZZDFeedBackdlg').dialog('close')">
+            关闭
+        </a>
+    </div>
+    <div id="yyzzDialog" class="easyui-dialog" title="营业执照" style="text-align: center;
+        width: 800px; height:450px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#yyzzDialog-buttons'
+            ">
+        <div id="yyzzHtml" style="height:100%;width:100%;"></div>
+    </div>
+    <div id="yyzzDialog-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#yyzzDialog').dialog('close')">
             关闭
         </a>
     </div>
