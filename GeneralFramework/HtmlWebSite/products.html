@@ -82,7 +82,7 @@
                         for (var i = 0; i < onePagesize; i++) {
                             $('#jrcpdiv' + i + '').show();
                             $('#imgDiv' + i + '').html(GetLogo2Img(JRCPJSON[i].BankId));
-                            $('#jrcpTitle' + i + '').html(JRCPJSON[i].BankName + "-" + JRCPJSON[i].Title);
+                            $('#jrcpTitle' + i + '').html(JRCPJSON[i].Title);
                             if (JRCPJSON[i].LilvLow == 0 || JRCPJSON[i].DaikuanUp == 0) {
                                 $('#jrcplilv' + i + '').html('根据具体情况');
                             } else {
@@ -110,7 +110,7 @@
                             j = i - ((PageIndex - 1) * PageSize)
                             $('#jrcpdiv' + j + '').show();
                             $('#imgDiv' + j + '').html(GetLogo2Img(JRCPJSON[i].BankId));
-                            $('#jrcpTitle' + j + '').html(JRCPJSON[i].BankName + "-" + JRCPJSON[i].Title);
+                            $('#jrcpTitle' + j + '').html(JRCPJSON[i].Title);
                             if (JRCPJSON[i].LilvLow == 0 || JRCPJSON[i].DaikuanUp == 0) {
                                 $('#jrcplilv' + j + '').html('根据具体情况');
                             } else {

@@ -166,13 +166,13 @@ left join CooperativeBank c on a.ParentBankId = c.id";
 
         public byte[] GetLogo2ImgForId(string Id)
         {
-            var sql = "select Logo2 from Bank where Id = '" + Id + "'";
+            var sql = "select b.logo2 from Bank a left join CooperativeBank b on a.ParentBankId = b.Id where a.Id = '" + Id + "'";
             return (byte[])DBHelper.GetScalar(sql);
         }
 
         public byte[] GetLogoImgForId(string Id)
         {
-            var sql = "select Logo from Bank where Id = '" + Id + "'";
+            var sql = "select b.logo1 from Bank a left join CooperativeBank b on a.ParentBankId = b.Id where a.Id = '" + Id + "'";
             return (byte[])DBHelper.GetScalar(sql);
         }
 

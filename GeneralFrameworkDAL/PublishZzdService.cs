@@ -25,7 +25,10 @@ namespace GeneralFrameworkDAL
 
         public string GetMastBanks(string mainbankid)
         {
-            mainbankid = mainbankid.Replace("中国", "");
+            if (mainbankid != "中国银行")
+            {
+                mainbankid = mainbankid.Replace("中国", "");
+            }
             var sql = "select Id as ID,[Name] as TypeName from [Bank] where 1=1 and iszzd = 0 and Name Like '%" + mainbankid + "%'";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.ConvertJosnData(dt);

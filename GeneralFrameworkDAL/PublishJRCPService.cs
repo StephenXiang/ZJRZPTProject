@@ -168,11 +168,11 @@ left join Bank b on a.BankId = b.Id
                 }
 
             }
-            var sql = @"select a.Id,b.Id as BankId,c.BankName,a.Title,a.LilvLow,a.LilvUp,a.DaikunLow,a.DaikuanUp,a.DanbaoId,d.[Desc],a.QxLow,a.QxUp,b.Logo2 from JRCPFlow a 
+            var sql = @"select a.Id,b.Id as BankId,c.BankName,a.Title,a.LilvLow,a.LilvUp,a.DaikunLow,a.DaikuanUp,a.DanbaoId,d.[Desc],a.QxLow,a.QxUp,b.Logo2,e.Sort from JRCPFlow a 
 left join Bank b on a.BankId = b.Id
 left join MainBank c on b.MainBankId = c.Id
-left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a.DanbaoId = d.Id
- where a.Status  = 1 and a.IsDeleted=0 " + where + " order by b.sort asc";
+left join (select Id,[Type],[Desc] from Lookup where Name='担保方式') d on a.DanbaoId = d.Id left join CooperativeBank e on b.ParentBankId = e.Id
+ where a.Status  = 1 and a.IsDeleted=0 " + where + " order by e.sort asc";
             DataTable dt = DBHelper.GetDataSet(sql);
             return JsonHelper.SerializeObject(dt);
         }
