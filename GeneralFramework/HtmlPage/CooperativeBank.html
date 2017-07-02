@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>合作银行</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/bootstrap/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.5.1/demo/demo.css" />
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript">
+        $.parser.onComplete = function () {
+            $('#loading').remove();
+        }
+        var BankId;
+        var row;
+        var isedit = 0;
+        $(function () {
+            $('#Bankdlg').dialog('close');
+            loadCBDG();
+        });
+
+        function loadCBDG() {
+            BankId = "";
+            isedit = "";
+            $('#Bank_dg').datagrid({
+                url: '../../WebServer/CooperativeBank.ashx?Method=GetCooperativeBankDG',
+                //queryParams: { BankId: bankId },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '银行信息列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'Id', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'BankName', title: '银行名称', width: 300, align: 'center' },
+                    { field: 'BankDesc', title: '银行描述', width: 300, align: 'center' },
+                    { field: 'Leader', title: '领导姓名', width: 300, align: 'center' },
+                    { field: 'Phone', title: '联系电话', width: 300, align: 'center' },
+                    { field: 'Sort', title: '排序', width: 300, align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '新增',
+                    handler: function (index, row) {
+                        isedit = 0;
+                        openBankDlg(0);
+                    }
+                }, {
+                    iconCls: 'icon-edit',
+                    text: '编辑',
+                    handler: function () {
+                        isedit = 1;
+                        if (BankId == "") {
+                            $.messager.alert('提示', '请选择要编辑的银行', 'info');
+                        } else {
+                            $('#BankIdtext').textbox('setValue', (BankId));
+                            $('#BankNametext').textbox('setValue', row.BankName);
+                            $('#BankLeadertext').textbox('setValue', row.Leader);
+                            $('#Phonetext').textbox('setValue', row.Phone);
+                            $('#Banksort').combobox('setValue', row.Sort);
+                            $('#BankDesc').textbox('setValue', row.BankDesc);
+                            openBankDlg(1);
+                        }
+
+                    }
+                }, {
+                    iconCls: 'icon-remove',
+                    text: '删除',
+                    handler: function (index, row) {
+                        DelCooperativeBank();
+                    }
+                }],
+                onClickRow: (function (index, data) {
+                    BankId = data.Id;
+                    row = data;
+                }),
+                onDblClickRow: (function (index, row) {
+
+                })
+            });
+        }
+        function clear() {
+            $('#BankIdtext').textbox('setValue', "");
+            $('#BankNametext').textbox('setValue', "");
+            $('#BankLeadertext').textbox('setValue', "");
+            $('#Phonetext').textbox('setValue', "");
+            $('#Banksort').combobox('setValue', "");
+            $('#BankDesc').textbox('setValue', "");
+            $('#Logo1').textbox('setValue', "");
+            $('#Logo2').textbox('setValue', "");
+        }
+        function openBankDlg(stype) {
+            var bankcount = $("#Bank_dg").datagrid('getData').total;
+            var options = new Array();
+            if (stype == 0) {
+                BankId = "";
+                clear();
+                bankcount = bankcount + 1;
+                for (var i = 1; i <= bankcount; i++) {
+                    var json = { "text": "" + i + "", "value": i };
+                    options[i - 1] = json;
+                }
+            } else if (stype == 1) {
+                for (var i = 1; i <= bankcount; i++) {
+                    var json = { "text": "" + i + "", "value": i };
+                    options[i - 1] = json;
+                }
+            }
+            $("#Banksort").combobox('loadData', options);
+            $('#Bankdlg').dialog('open');
+        }
+
+        function DelCooperativeBank() {
+            if (BankId == "") {
+                $.messager.alert('提示', '请选择要删除的银行', 'info');
+            } else {
+                $.messager.confirm('提示', '确认删除当前选择项？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            type: "POST",
+                            url: "../../WebServer/CooperativeBank.ashx?Method=DelCooperativeBank",
+                            data: { 'Id': BankId },
+                            dataType: "text",
+                            success: function (text) {
+                                if (text == "True") {
+                                    $.messager.alert('提示', '合作银行信息删除成功', 'info');
+                                    loadCBDG();
+                                } else {
+                                    $.messager.alert('提示', '合作银行信息删除失败，请重试', 'error');
+                                }
+                            },
+                            error: function (message) {
+                                $.messager.alert('提示', '合作银行信息删除失败，请重试', 'error');
+                            }
+                        });
+                    };
+                });
+            }
+        }
+        function checkMobile(str) {
+            var re = /^1\d{10}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function checkPhone(str) {
+            var re = /^0\d{2,3}-?\d{7,8}$/;
+            if (re.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function EditBankInfo() {
+
+            if ($('#BankIdtext').val() == "") {
+                $.messager.alert('提示', '获取银行编号失败，请重新选择要编辑的合作银行', 'info');
+            }
+            else if ($('#BankNametext').val() == "") {
+                $.messager.alert('提示', '银行名称不得为空', 'info');
+            }
+            else if ($('#BankLeadertext').val() == "") {
+                $.messager.alert('提示', '领导姓名不得为空', 'info');
+            }
+            else if ($('#Phonetext').val() == "") {
+                $.messager.alert('提示', '联系电话不得为空', 'info');
+            }
+            else if (!checkMobile($('#Phonetext').val()) && !checkPhone($('#Phonetext').val())) {
+                $.messager.alert('提示', '联系电话格式不正确', 'info');
+            }
+            else if ($('#Banksort').combobox('getValue') == "") {
+                $.messager.alert('提示', '排序必须选择', 'info');
+            }
+            else if ($('#BankDesc').val() == "") {
+                $.messager.alert('提示', '请填写银行简介', 'info');
+            }
+            else {
+                $.messager.confirm('提示', '请确认您所填写的银行信息真实有效！是否现在保存？', function (r) {
+                    if (r) {
+                        var formData = new FormData($("#Bankff")[0]);
+                        $.ajax({
+                            url: "../../WebServer/CooperativeBank.ashx?Method=EditCB",
+                            type: 'POST',
+                            data: formData,
+                            async: false,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            dataType: "text",
+                            success: function (text) {
+                                if (text == "True") {
+                                    $('#Bankdlg').dialog('close');
+                                    $.messager.alert('提示', '合作银行信息保存成功', 'info');
+                                    loadCBDG();
+                                } else {
+                                    $.messager.alert('提示', '合作银行信息保存失败，请重试', 'error');
+                                }
+                            },
+                            error: function (data) {
+                                $.messager.alert('提示', '合作银行信息保存失败', 'info');
+                            }
+                        });
+                    }
+                });
+            }
+
+        }
+
+        function SaveBankInfo() {
+            if (isedit == 0) {
+                if ($('#BankNametext').val() == "") {
+                    $.messager.alert('提示', '银行名称不得为空', 'info');
+                }
+                else if ($('#BankLeadertext').val() == "") {
+                    $.messager.alert('提示', '领导姓名不得为空', 'info');
+                }
+                else if ($('#Phonetext').val() == "") {
+                    $.messager.alert('提示', '联系电话不得为空', 'info');
+                }
+                else if (!checkMobile($('#Phonetext').val()) && !checkPhone($('#Phonetext').val())) {
+                    $.messager.alert('提示', '联系电话格式不正确', 'info');
+                }
+                else if ($('#Banksort').combobox('getValue') == "") {
+                    $.messager.alert('提示', '排序必须选择', 'info');
+                }
+                else if ($('#Logo1').textbox('getValue') == "") {
+                    $.messager.alert('提示', '请上传log1,白底，JPG格式，140*42像素', 'info');
+                }
+                else if ($('#Logo2').textbox('getValue') == "") {
+                    $.messager.alert('提示', '请上传请上传log2,透明背景，JPG格式，124*46像素', 'info');
+                }
+                else if ($('#BankDesc').val() == "") {
+                    $.messager.alert('提示', '请填写银行简介', 'info');
+                }
+                else {
+                    $.messager.confirm('提示', '请确认您所填写的银行信息真实有效！是否现在保存？', function (r) {
+                        if (r) {
+                            var formData = new FormData($("#Bankff")[0]);
+                            $.ajax({
+                                url: "../../WebServer/CooperativeBank.ashx?Method=AddCB",
+                                type: 'POST',
+                                data: formData,
+                                async: false,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                dataType: "text",
+                                success: function (text) {
+                                    if (text == "True") {
+                                        $('#Bankdlg').dialog('close');
+                                        $.messager.alert('提示', '合作银行信息保存成功', 'info');
+                                        loadCBDG();
+                                    } else {
+                                        $.messager.alert('提示', '合作银行信息保存失败，请重试', 'error');
+                                    }
+                                },
+                                error: function (data) {
+                                    $.messager.alert('提示', '合作银行信息保存失败', 'info');
+                                }
+                            });
+                        }
+                    });
+                }
+            } else if (isedit == 1) {
+                EditBankInfo();
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div id="loading" style="position:absolute;z-index:1000;top:0px;left:0px;width:100%;height:100%;background:#ffffff;">
+        <font color="#15428B">加载中....</font>
+    </div>
+    <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div>
+            <table id="Bank_dg" data-options="
+                iconCls: 'icon-save'
+            "></table>
+        </div>
+        <div id="Bankdlg" class="easyui-dialog" title="编辑银行信息" style="text-align: center;
+        width: 450px; height: 400px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#Bankdlg-buttons'
+            ">
+            <form id="Bankff" method="post">
+                <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                    <tr>
+                        <td style=" text-align:right;">银行名称:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankNametext" name=" BankNametext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">领导姓名:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankLeadertext" name=" BankLeadertext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">联系电话:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Phonetext" name=" Phonetext" class="f1 easyui-textbox" style="width:90%;" /></input></td>
+                    </tr>
+                    <tr id="log1tr">
+                        <td style=" text-align:right;">log1(140*42):</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo1" name="Logo1" data-options="buttonText:'选择',prompt:'请选择文件...(白底,JPG格式)',accept:'image/jpeg'" class="f1 easyui-filebox" style="width:90%;" /></td>
+                    </tr>
+                    <tr id="log2tr">
+                        <td style=" text-align:right;">log2(124*46):</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Logo2" name="Logo2" data-options="buttonText:'选择',prompt:'请选择文件...(透明,PNG格式)',accept:'image/png'" class="f1 easyui-filebox" style="width:90%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">银行排序:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<select id="Banksort" name="Banksort" class="easyui-combobox" style="width:90%"></select></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">银行简介:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankDesc" name="BankDesc" class="easyui-textbox" style="width:90%;height:100px" data-options="multiline:true" /></td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td style=" text-align:right;">ID:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankIdtext" name="BankIdtext" class="easyui-textbox" style="width:90%;" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="Bankdlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveBankInfo()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#Bankdlg').dialog('close'); loadCBDG();">
+                关闭
+            </a>
+        </div>
+    </div>
+</body>
+</html>

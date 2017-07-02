@@ -15,7 +15,6 @@
             loadNewJRCP();
             loadNewsImage();
             initLogin();
-
         });
 
         function loadNewsImage() {
@@ -130,17 +129,23 @@
                     $('#labdjzzddxqje').html(TJJson["djzzdje"]);
                     $('#labdjzzdcgsl').html(TJJson["djzzdcgsl"]);
                     $('#labdjzzdcgje').html(TJJson["djzzdcgje"]);
-
                 }
             });
         }
 
         function searchjrcp() {
-            var cpmc = "0"
+            var cpmc = ""
             if ($('#searchcpmc').val() != "" && $('#searchcpmc').val() != null) {
                 cpmc = $('#searchcpmc').val();
             }
-            location.href = "HtmlWebSite/products.html?dkqx=" + encodeURI($('#dkqxcmb').val()) + "&dkje=" + encodeURI($('#dkjecmb').val()) + "&dbfs=" + encodeURI($('#dbfscmb').val()) + "&cpmc=" + encodeURI(cpmc) + "";
+            //location.href = "HtmlWebSite/products.html?dkqx=" + encodeURI($('#dkqxcmb').val()) + "&dkje=" + encodeURI($('#dkjecmb').val()) + "&dbfs=" + encodeURI($('#dbfscmb').val()) + "&cpmc=" + encodeURI(cpmc) + "";
+            if (cpmc == "") {
+                alert("请输入关键词");
+            } else {
+                //$.cookie('rzptSearchStr', cpmc,｛expires：7，path：'/'｝);
+                $.cookie("rzptSearchStr", cpmc, { path: "../" });
+                location.href = "HtmlWebSite/Search.html";
+            }
         }
 
         function loadBankImgList() {
@@ -148,7 +153,7 @@
                 type: "get",
                 dataType: "json",
                 async: true,
-                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfoList",
+                url: "../../WebServer/CooperativeBank.ashx?Method=GetBankInfoList",
                 success: function (json) {
                     var JRCPJSON = json;
                     var count = 18;
@@ -166,7 +171,7 @@
         }
 
         function GetLogoImg(BankId) {
-            var imghtml = "<a href='HtmlWebSite/bank_view.html?bankid=" + BankId + "'><img width='162' height='51' src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'></a>";
+            var imghtml = "<a href='HtmlWebSite/bank_view.html?bankid=" + BankId + "'><img width='162' height='51' src='../WebServer/CooperativeBank.ashx?Method=LoadLogoImg&Id=" + BankId + "'></a>";
             return imghtml;
         }
 

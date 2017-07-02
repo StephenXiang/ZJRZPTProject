@@ -217,7 +217,7 @@ function login() {
         url: "../../WebServer/UserLoginWebService.ashx?Method=Login",
         success: function (json) {
             if (json["status"] == true) {
-                $.cookie('UserInfo', JSON.stringify(json));
+                $.cookie('UserInfo', JSON.stringify(json), { path: "../" });
                 hideDialog();
                 showLoginedInfo(uname);
             } else {
@@ -226,6 +226,37 @@ function login() {
         }
     });
 }
+
+
+function login2() {
+    var uname = $.trim($("#login-username").val());
+    var pwd = $.trim($("#login-passwords").val());
+    if (uname === "" || uname == null) {
+        alert("请输入用户名");
+        return false;
+    }
+    if (pwd === "" || pwd == null) {
+        alert("请输入密码");
+        return false;
+    }
+    $.ajax({
+        type: "Post",
+        dataType: "json",
+        async: false,
+        data: { UserName: uname, Pwd: pwd },
+        url: "../../WebServer/UserLoginWebService.ashx?Method=Login",
+        success: function (json) {
+            if (json["status"] == true) {
+                $.cookie('UserInfo', JSON.stringify(json), { path: "/" });
+                hideDialog();
+                showLoginedInfo(uname);
+            } else {
+                alert("登录失败！" + (json["msg"] === "" ? "" : json["msg"]));
+            }
+        }
+    });
+}
+
 
 function regist() {
     var uname = $.trim($("#regist-username").val());

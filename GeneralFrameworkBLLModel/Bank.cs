@@ -28,5 +28,9 @@ namespace GeneralFrameworkBLLModel
         public string MainBankId { get; set; }
 
         public int iszzd { get; set; }
+
+        public int BankType { get; set; }
+
+        public string ParentBankId { get; set; }
     }
 }

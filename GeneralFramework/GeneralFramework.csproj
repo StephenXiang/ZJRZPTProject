@@ -190,9 +190,11 @@
     <Content Include="HighCharts\jquery-1.9.1.min.js" />
     <Content Include="HtmlPage\BankInfo.htm" />
     <Content Include="HtmlPage\BaseInfo.html" />
+    <Content Include="HtmlPage\CooperativeBank.html" />
     <Content Include="HtmlPage\EnterpriseInfo.htm" />
     <Content Include="HtmlPage\FinancialProductsApprove.htm" />
     <Content Include="HtmlPage\HistoricalApprove.htm" />
+    <Content Include="HtmlPage\JRCPApply.html" />
     <Content Include="HtmlPage\LeavingMessage.htm" />
     <Content Include="HtmlPage\PublishFinancialProducts.htm" />
     <Content Include="HtmlPage\HomeMaintain.htm" />
@@ -258,6 +260,7 @@
     <Content Include="HtmlWebSite\images\zz2.png" />
     <Content Include="HtmlWebSite\images\全市金融支持实体经济推进会.jpg" />
     <Content Include="HtmlWebSite\js\slider.js" />
+    <Content Include="HtmlWebSite\Search.html" />
     <Content Include="HtmlWebSite\tplist.html" />
     <Content Include="HtmlWebSite\tpview.html" />
     <Content Include="HtmlWebSite\zclist.html" />
@@ -1346,6 +1349,12 @@
     <Compile Include="Manager\test.aspx.designer.cs">
       <DependentUpon>test.aspx</DependentUpon>
     </Compile>
+    <Compile Include="WebServer\CooperativeBank.ashx.cs">
+      <DependentUpon>CooperativeBank.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="WebServer\JRCPApplyWebService.ashx.cs">
+      <DependentUpon>JRCPApplyWebService.ashx</DependentUpon>
+    </Compile>
     <Compile Include="WebServer\MessageService.ashx.cs">
       <DependentUpon>MessageService.ashx</DependentUpon>
     </Compile>
@@ -1389,6 +1398,9 @@
     </Compile>
     <Compile Include="WebServer\RZExamineApproveWebService.ashx.cs">
       <DependentUpon>RZExamineApproveWebService.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="WebServer\SearchWebService.ashx.cs">
+      <DependentUpon>SearchWebService.ashx</DependentUpon>
     </Compile>
     <Compile Include="WebServer\SysDepartmentWebService.ashx.cs">
       <DependentUpon>SysDepartmentWebService.ashx</DependentUpon>
@@ -1468,6 +1480,9 @@
     <Content Include="WebServer\FinancialProductsApproveWebService.ashx" />
     <Content Include="WebServer\MessageService.ashx" />
     <None Include="Properties\PublishProfiles\配置文件1.pubxml" />
+    <Content Include="WebServer\CooperativeBank.ashx" />
+    <Content Include="WebServer\SearchWebService.ashx" />
+    <Content Include="WebServer\JRCPApplyWebService.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

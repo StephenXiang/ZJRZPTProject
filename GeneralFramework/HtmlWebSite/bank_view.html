@@ -10,7 +10,6 @@
         $(function () {
             bankid = getQueryStringByName("bankid");
             loadBankInfo();
-            initLogin();
         });
         function getQueryStringByName(name) {
             var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
@@ -29,11 +28,11 @@
                 dataType: "json",
                 async: true,
                 data: { BankId: bankid },
-                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfolbForBankId",
+                url: "../../WebServer/CooperativeBank.ashx?Method=GetBankInfolbForBankId",
                 success: function (json) {
-                    $('#bankDesc').html("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + json[0].Desc);
-                    $('#BankName').html(json[0].Name);
-                    $('#EditDate').html(jsonDateFormat(json[0].EditDate));
+                    $('#bankDesc').html("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + json[0].BankDesc);
+                    $('#BankName').html(json[0].BankName);
+                    $('#EditDate').html(jsonDateFormat(json[0].CreateDate));
                     $('#imgDiv').html(GetLogoImg(bankid));
                 }
             });
@@ -54,7 +53,7 @@
         }
 
         function GetLogoImg(BankId) {
-            var imghtml = "<img src='../WebServer/BankInfoWebService.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
+            var imghtml = "<img src='../WebServer/CooperativeBank.ashx?Method=LoadLogoImg&Id=" + BankId + "'>";
             return imghtml;
         }
     </script>
@@ -82,7 +81,7 @@
 
     <div class="main_slider">
         <div class="sliderc">
-            <div class="slider_font" style="width:800px;"><img src="images/font.png" style="width:100%;"/></div>
+            <div class="slider_font" style="width:800px;"><img src="images/font.png" style="width:100%;" /></div>
         </div>
     </div>
 

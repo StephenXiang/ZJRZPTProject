@@ -70,8 +70,7 @@ namespace GeneralFramework.WebServer
         }
         public void GetZzdBanks()
         {
-            var mainbankid = Request.QueryString["mainbankid"].ToString();
-            Response.Write(_zm.GetBanks(mainbankid));
+            Response.Write(_zm.GetBanks());
         }
 
         public void GetZzdMastBanks()

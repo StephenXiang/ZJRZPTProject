@@ -125,7 +125,7 @@ where b.EnterpriseId = {0} and b.IsDeleted=0 order by b.Id Desc", ent);
         public string GetRZBankstr(string BankIds)
         {
             string Bankstr = string.Empty;
-            var sql = string.Format(@"select Name from Bank where Id in({0})", BankIds);
+            var sql = string.Format(@"select BankName as Name from CooperativeBank where Id in({0})", BankIds);
             DataTable dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {

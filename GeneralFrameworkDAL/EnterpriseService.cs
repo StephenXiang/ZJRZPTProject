@@ -140,6 +140,24 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
             return reply;
         }
 
+        public Enterprise GetEnterpriseInfoForUserNameTwo(string UserName)
+        {
+            string reply = null;
+            string sql = @"select b.ID,b.Name,b.ConectionPerson,b.ConnectionTelephone from SysUser a right join Enterprise b on a.EnterpriseId = b.ID where a.UserName = '" + UserName + "'";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            Enterprise ent = new Enterprise();
+            if (dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                ent.ID = int.Parse(dr["ID"].ToString());
+                ent.Name = dr["Name"].ToString();
+                ent.ConectionPerson = dr["ConectionPerson"].ToString();
+                ent.ConnectionTelephone = dr["ConnectionTelephone"].ToString();
+            }
+            return ent;
+
+        }
+
         public byte[] GetImgForCode(string Code)
         {
             var sql = "select BusinessLicense from Enterprise where code='" + Code + "' ";
@@ -247,7 +265,7 @@ values(@eid,@fy,@fn,@fnl,@fnll)";
 
         public string GetEnterpriseInfoList()
         {
-            var sql = @"select ID as Id,NewsTitle as Name,NewsContent,Createdate,[image] from NewsInFo where NewsType = 'qy' and IsDeleted != 1";
+            var sql = @"select ID as Id,NewsTitle as Name from NewsInFo where NewsType = 'qy' and IsDeleted != 1";
             var dt1 = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt1);
             return reply;

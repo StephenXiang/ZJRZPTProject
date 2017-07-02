@@ -16,16 +16,17 @@ namespace GeneralFrameworkDAL
             return JsonHelper.ConvertJosnData(dt);
         }
 
-        public string GetBanks(string mainbankid)
+        public string GetBanks()
         {
-            var sql = "select Id as ID,[Name] as TypeName from [Bank] where iszzd = 0 and MainBankId = '" + mainbankid + "' ";
+            var sql = "select Id as ID,[Name] as TypeName from [Bank] where BankType = 1";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.ConvertJosnData(dt);
         }
 
         public string GetMastBanks(string mainbankid)
         {
-            var sql = "select Id as ID,[Name] as TypeName from [Bank] where 1=1 and MainBankId = '" + mainbankid + "'";
+            mainbankid = mainbankid.Replace("中国", "");
+            var sql = "select Id as ID,[Name] as TypeName from [Bank] where 1=1 and iszzd = 0 and Name Like '%" + mainbankid + "%'";
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.ConvertJosnData(dt);
         }

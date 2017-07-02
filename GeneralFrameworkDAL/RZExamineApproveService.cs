@@ -16,25 +16,33 @@ namespace GeneralFrameworkDAL
             var sql = @"select BankId,RolesID from SysUser where UserName = '" + UserName + "'";
             int BankId = 0;
             int RoleId = 0;
+            int ParentBankId = 0;
             DataTable dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {
                 DataRow dr = dt.Rows[0];
                 BankId = dr["BankId"] == DBNull.Value ? 0 : int.Parse(dr["BankId"].ToString());
                 RoleId = dr["RolesID"] == DBNull.Value ? 0 : int.Parse(dr["RolesID"].ToString());
+                if (BankId != 0)
+                {
+                    sql = "select ParentBankId from Bank where Id = '" + BankId + "'";
+                    dt = DBHelper.GetDataSet(sql);
+                    dr = dt.Rows[0];
+                    ParentBankId = dr["ParentBankId"] == DBNull.Value ? 0 : int.Parse(dr["ParentBankId"].ToString());
+                }
             }
             else
             {
                 return "";
             }
 
-            if (BankId != 0)
+            if (ParentBankId != 0)
             {
                 sql = @"select a.Id,a.EnterpriseId,c.Name,b.Quota,CONVERT(varchar(100), PublishDate, 23) as PublishDate,a.Status,a.BankIds,a.SLBankId,d.Name as SLBankName,b.CreditAmount,CONVERT(varchar(100), b.CreditDate, 23) as CreditDate from RZFlow a 
 left join RZDemandInfo b on a.DemandId = b.Id
 left join Enterprise c on a.EnterpriseId = c.ID
 left join Bank d on a.SLBankId = d.Id 
-where BankIds like '%" + BankId + "%' and a.IsDeleted=0";
+where BankIds like '%" + ParentBankId + "%' and a.IsDeleted=0";
                 var dt1 = DBHelper.GetDataSet(sql);
                 if (dt1.Rows.Count == 0)
                 {
@@ -51,7 +59,7 @@ where BankIds like '%" + BankId + "%' and a.IsDeleted=0";
                     {
                         for (int i = 0; i < bankids.Length; i++)
                         {
-                            if (int.Parse(bankids[i]) == BankId)
+                            if (int.Parse(bankids[i]) == ParentBankId)
                             {
                                 iscz = true;
                                 break;
@@ -138,9 +146,10 @@ where a.Id = {0}", RZID);
                 var efi = new RzInfoReply
                 {
                     RZED = dr[0].ToString(),
-                    RZYH = string.Join(",",
-                        dr["BankIds"].ToString().Split(',').Select(int.Parse)
-                            .Select(p => banks.ContainsKey(p) ? banks[p] : "")),
+                    //RZYH = string.Join(",",
+                    //    dr["BankIds"].ToString().Split(',').Select(int.Parse)
+                    //        .Select(p => banks.ContainsKey(p) ? banks[p] : "")),
+                    RZYH = GetBankNamesByBankIds(dr["BankIds"].ToString()),
                     RZQX = dr[2].ToString(),
                     RZQT = dr[3].ToString(),
                     isdyw = dr[4].ToString(),
@@ -205,7 +214,7 @@ where a.Id = {0}", RZID);
         public string GetBankNamesByBankIds(string BankIDs)
         {
             string BankNames = string.Empty;
-            var sql = string.Format(@"select Name from Bank where Id in({0})", BankIDs);
+            var sql = string.Format(@"select BankName as Name from CooperativeBank where Id in({0})", BankIDs);
             var dt = DBHelper.GetDataSet(sql);
             if (dt.Rows.Count > 0)
             {

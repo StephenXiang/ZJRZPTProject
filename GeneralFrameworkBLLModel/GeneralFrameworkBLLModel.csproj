@@ -41,10 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bank.cs" />
+    <Compile Include="CooperativeBank.cs" />
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseFinanceInfo.cs" />
     <Compile Include="IndexNewsInfo.cs" />
     <Compile Include="IndexTJInfo.cs" />
+    <Compile Include="JRCPApply.cs" />
     <Compile Include="JRCPInfo.cs" />
     <Compile Include="MainBank.cs" />
     <Compile Include="MessageInfo.cs" />

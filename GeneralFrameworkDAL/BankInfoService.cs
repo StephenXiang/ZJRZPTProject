@@ -13,7 +13,7 @@ namespace GeneralFrameworkDAL
     {
         public string UpdateBankInfo(Bank bank)
         {
-            var sql = @"update Bank set Name=@name,[Address]=@address,Connector=@connector,ConnectorPhone=@ConnectorPhone,MainBankId=@MainBankId,[Desc]=@Desc,iszzd=@iszzd
+            var sql = @"update Bank set Name=@name,[Address]=@address,Connector=@connector,ConnectorPhone=@ConnectorPhone,ParentBankId=@ParentBankId,iszzd=@iszzd
 where Id=@bankid";
             var efc = DBHelper.Execute(sql,
                 new SqlParameter("@bankid", bank.ID),
@@ -21,23 +21,22 @@ where Id=@bankid";
                 new SqlParameter("@address", bank.Address.Trim()),
                 new SqlParameter("@connector", bank.Connector.Trim()),
                 new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
-                new SqlParameter("@Desc", bank.BankDesc),
-                new SqlParameter("@MainBankId", bank.MainBankId),
+                new SqlParameter("@ParentBankId", bank.ParentBankId),
                 new SqlParameter("@iszzd", bank.iszzd)) as int?;
-            if (bank.logo1 != null)
-            {
-                sql = @"update Bank set Logo=@logo where Id=@bankid";
-                DBHelper.Execute(sql,
-                new SqlParameter("@bankid", bank.ID),
-                new SqlParameter("@logo", bank.logo1));
-            }
-            if (bank.logo2 != null)
-            {
-                sql = @"update Bank set Logo2=@logo2 where Id=@bankid";
-                DBHelper.Execute(sql,
-                new SqlParameter("@bankid", bank.ID),
-                new SqlParameter("@logo2", bank.logo2));
-            }
+            //if (bank.logo1 != null)
+            //{
+            //    sql = @"update Bank set Logo=@logo where Id=@bankid";
+            //    DBHelper.Execute(sql,
+            //    new SqlParameter("@bankid", bank.ID),
+            //    new SqlParameter("@logo", bank.logo1));
+            //}
+            //if (bank.logo2 != null)
+            //{
+            //    sql = @"update Bank set Logo2=@logo2 where Id=@bankid";
+            //    DBHelper.Execute(sql,
+            //    new SqlParameter("@bankid", bank.ID),
+            //    new SqlParameter("@logo2", bank.logo2));
+            //}
             return bank.ID.ToString();
         }
 
@@ -46,30 +45,29 @@ where Id=@bankid";
             if (bank.ID > 0) return UpdateBankInfo(bank);
             string sql = string.Empty;
             int? id = 0;
-            if (bank.iszzd == 1)
-            {
-                sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId,Logo,Logo2,[Desc],iszzd)values(@name,@address,@connector,@ConnectorPhone,@MainBankId,@logo,@logo2,@Desc,@iszzd)";
-                id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
-                    new SqlParameter("@address", bank.Address.Trim()),
-                    new SqlParameter("@connector", bank.Connector.Trim()),
-                    new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
-                    new SqlParameter("@logo", bank.logo1),
-                    new SqlParameter("@logo2", bank.logo2),
-                    new SqlParameter("@Desc", bank.BankDesc),
-                    new SqlParameter("@MainBankId", bank.MainBankId),
-                    new SqlParameter("@iszzd", bank.iszzd)) as int?;
-            }
-            else
-            {
-                sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId,[Desc],iszzd)values(@name,@address,@connector,@ConnectorPhone,@MainBankId,@Desc,@iszzd)";
-                id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
-                    new SqlParameter("@address", bank.Address.Trim()),
-                    new SqlParameter("@connector", bank.Connector.Trim()),
-                    new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
-                    new SqlParameter("@Desc", bank.BankDesc),
-                    new SqlParameter("@MainBankId", bank.MainBankId),
-                    new SqlParameter("@iszzd", bank.iszzd)) as int?;
-            }
+            //if (bank.iszzd == 1)
+            //{
+            //    sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,MainBankId,Logo,Logo2,[Desc],iszzd)values(@name,@address,@connector,@ConnectorPhone,@MainBankId,@logo,@logo2,@Desc,@iszzd)";
+            //    id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
+            //        new SqlParameter("@address", bank.Address.Trim()),
+            //        new SqlParameter("@connector", bank.Connector.Trim()),
+            //        new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+            //        new SqlParameter("@logo", bank.logo1),
+            //        new SqlParameter("@logo2", bank.logo2),
+            //        new SqlParameter("@Desc", bank.BankDesc),
+            //        new SqlParameter("@MainBankId", bank.MainBankId),
+            //        new SqlParameter("@iszzd", bank.iszzd)) as int?;
+            //}
+            //else
+            //{
+            sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,ParentBankId,iszzd)values(@name,@address,@connector,@ConnectorPhone,@ParentBankId,@iszzd)";
+            id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
+                new SqlParameter("@address", bank.Address.Trim()),
+                new SqlParameter("@connector", bank.Connector.Trim()),
+                new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                new SqlParameter("@ParentBankId", bank.ParentBankId),
+                new SqlParameter("@iszzd", bank.iszzd)) as int?;
+            //}
 
             if (id > 0)
             {
@@ -114,8 +112,8 @@ where Id=@bankid";
 
         public string GetBankInfolbForBankId(string BankId)
         {
-            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,MainBankId,c.BankName,a.[Desc],a.EditDate,iszzd from Bank a 
-left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
+            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,a.[Desc],a.EditDate,iszzd from Bank a 
+left join CooperativeBank c on a.ParentBankId = c.id where a.Id = " + BankId + "";
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt);
             return reply;
@@ -123,8 +121,8 @@ left join MainBank c on a.MainBankId = c.id where a.Id = " + BankId + "";
 
         public string GetBankDg(int page, int rows)
         {
-            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,MainBankId,c.BankName,a.EditDate from Bank a 
-left join MainBank c on a.MainBankId = c.id";
+            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,a.EditDate from Bank a 
+left join CooperativeBank c on a.ParentBankId = c.id";
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
             return reply;

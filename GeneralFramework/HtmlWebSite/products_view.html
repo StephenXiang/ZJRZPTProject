@@ -5,6 +5,7 @@
     <title>镇江市融资服务平台</title>
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
         var jrcpId = 0;
         $(function () {
@@ -32,7 +33,7 @@
                     if (json[0].LilvLow == 0 || json[0].DaikuanUp == 0) {
                         $('#lilvfanwei').html('根据具体情况');
                     } else {
-                        $('#lilvfanwei' + j + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
+                        $('#lilvfanwei').html(json[0].LilvLow + "%-" + json[0].LilvUp + "%");
                     }
                     //$('#lilvfanwei').html(json[0].LilvLow + "%-" + json[0].LilvUp + "%");
                     $('#daikuanedu').html(json[0].DaikunLow + "万元-" + json[0].DaikuanUp + "万元");
@@ -48,7 +49,52 @@
                 }
             });
         }
+        function Apply() {
+            if ($.cookie('UserInfo') != undefined && $.cookie('UserInfo') != "") {
+                var UserInfo = JSON.parse($.cookie('UserInfo'));
+                if (UserInfo.role != 4) {
+                    alert("您不是企业用户，不能申请该金融产品！");
+                } else {
+                    $.ajax({
+                        type: "get",
+                        dataType: "text",
+                        async: false,
+                        data: { jrcpid: jrcpId, UserName: UserInfo.name },
+                        url: "../WebServer/JRCPApplyWebService.ashx?Method=CheckApply",
+                        success: function (text) {
+                            if (parseInt(text) > 0) {
+                                alert("您已经申请过该产品！");
+                            } else if (text == "flase") {
+                                alert("申请失败，企业基本资料未完善，请先登陆融资平台完善企业基本资料！");
+                                window.location.href = "../Manager/Index.aspx";
+                            } else if (text == "0") {
+                                $.ajax({
+                                    type: "get",
+                                    dataType: "text",
+                                    async: false,
+                                    data: { jrcpid: jrcpId, UserName: UserInfo.name },
+                                    url: "../WebServer/JRCPApplyWebService.ashx?Method=AddApply",
+                                    success: function (text) {
+                                        if (text == "True") {
+                                            alert("申请成功！我们会尽快与您联系！");
+                                        } else {
+                                            alert("申请失败，企业基本资料未完善，请先登陆融资平台完善企业基本资料！");
+                                            window.location.href = "../Manager/Index.aspx";
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
 
+                }
+            } else {
+                alert("您还没有登陆，请先登陆！");
+                $('body').scrollTop(0);
+                showDialog();
+            }
+
+        }
         function fanhui() {
             window.history.back();
         }
@@ -81,7 +127,7 @@
 
     <div class="main_slider">
         <div class="sliderc">
-            <div class="slider_font" style="width:800px;"><img src="images/font.png" style="width:100%;"/></div>
+            <div class="slider_font" style="width:800px;"><img src="images/font.png" style="width:100%;" /></div>
         </div>
     </div>
 
@@ -187,7 +233,7 @@
                     </div>
                     <div class="btn-area">
                         <a class="blue-link" id="back" onclick="fanhui()">返回</a>
-                        <!--<a class="blue-link" id="apply">立即申请</a>-->
+                        <a class="blue-link" id="apply" onclick="Apply()">立即申请</a>
                     </div>
 
                 </div>
@@ -228,16 +274,16 @@
         </div>
         <div class="ui-dialog-content">
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+                <input id="login-username" class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
             </div>
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+                <input id="login-passwords" class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
             </div>
             <div class="ui-dialog-l40">
 
             </div>
             <div>
-                <a class="ui-dialog-submit" href="#" onclick="login()">登录</a>
+                <a class="ui-dialog-submit" href="#" onclick="login2()">登录</a>
             </div>
             <div class="ui-dialog-l40">
                 <a href="#" onclick="toRegist()">立即注册</a>
@@ -256,13 +302,13 @@
         </div>
         <div class="ui-dialog-content">
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
+                <input id="regist-username" class="ui-dialog-input ui-dialog-input-username" type="text" placeholder="手机/邮箱/用户名" value="" />
             </div>
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
+                <input id="regist-pwd" class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="密码" value="" />
             </div>
             <div class="ui-dialog-l40 ui-dialog-pt15">
-                <input class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
+                <input id="regist-pwd-confirm" class="ui-dialog-input ui-dialog-input-password" type="password" placeholder="确认密码" value="" />
             </div>
             <div class="ui-dialog-l40">
 
@@ -276,8 +322,8 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="js/login.js" language="javascript"></script>
 
+    <script type="text/javascript" src="../HtmlWebSite/js/login.js" language="javascript"></script>
 
 </body>
 </html>

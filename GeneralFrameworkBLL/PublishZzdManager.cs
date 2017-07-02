@@ -15,9 +15,9 @@ namespace GeneralFrameworkBLL
             return _zs.Save(zi);
         }
 
-        public string GetBanks(string mainbankid)
+        public string GetBanks()
         {
-            return _zs.GetBanks(mainbankid);
+            return _zs.GetBanks();
         }
 
         public string GetMastBanks(string mainbankid)

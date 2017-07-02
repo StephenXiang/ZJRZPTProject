@@ -11,8 +11,6 @@
         var PageAllNum = 0;
 
         $(function () {
-
-
             loadjrcplist();
             initLogin();
         });
@@ -21,7 +19,7 @@
                 type: "get",
                 dataType: "json",
                 async: false,
-                url: "../../WebServer/BankInfoWebService.ashx?Method=GetBankInfoList",
+                url: "../../WebServer/CooperativeBank.ashx?Method=GetBankInfoList",
                 success: function (json) {
                     var JRCPJSON = json;
                     checkxiaoshu(JRCPJSON.length);
@@ -61,7 +59,7 @@
                     }
                 }
             });
-if (PageAllNum == 0) {
+            if (PageAllNum == 0) {
                 $('#sya').removeClass("current")
                 $('#syya').removeClass("current")
                 $('#xya').removeClass("current")
