@@ -68,6 +68,38 @@ select ROW_NUMBER() over (order by Createdate desc) as rowId,* from NewsInFo whe
             return i;
         }
 
+        public int EditTpNews(NewsInfo news)
+        {
+            string sql = "";
+            int? id = 0;
+            if (news.image.Length > 0)
+            {
+                sql = "update NewsInFo set NewsTitle=@title,NewsContent=@content,image=@image where ID=@id";
+                id = DBHelper.Execute(sql,
+                   new SqlParameter("@title", news.NewsTitle.Trim()),
+                   new SqlParameter("@content", news.NewsContent.Trim()),
+                   new SqlParameter("@image", news.image),
+                   new SqlParameter("@id", news.NewsID)) as int?;
+            }
+            else
+            {
+                sql = "update NewsInFo set NewsTitle=@title,NewsContent=@content where ID=@id";
+                id = DBHelper.Execute(sql,
+                  new SqlParameter("@title", news.NewsTitle.Trim()),
+                  new SqlParameter("@content", news.NewsContent.Trim()),
+                  new SqlParameter("@image", news.image),
+                  new SqlParameter("@id", news.NewsID)) as int?;
+            }
+
+            if (id > 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         public int EditNews(NewsInfo news)
         {

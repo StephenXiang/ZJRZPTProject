@@ -144,6 +144,35 @@ namespace GeneralFramework.WebServer
             Response.Write(_nm.AddNews(news));
         }
 
+        public void EdittpNews()
+        {
+            var fs = Request.Files;
+            var file = fs[0];
+            var data = Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+            NewsInfo news = new NewsInfo();
+            news.NewsID = int.Parse(data["edittpid"].ToString());
+            news.NewsTitle = data["titletp"];
+            news.NewsContent = HttpUtility.UrlDecode(data["contenttp"]);
+            news.image = StreamToBytes(file.InputStream);
+            Response.Write(_nm.EditTpNews(news));
+        }
+        public void EditqyfcNews()
+        {
+            var fs = Request.Files;
+            var file = fs[0];
+            var data = Request;
+            var sr = new StreamReader(data.InputStream);
+            var stream = sr.ReadToEnd();
+            NewsInfo news = new NewsInfo();
+            news.NewsID = int.Parse(data["editqyfcId"].ToString());
+            news.NewsTitle = data["editqyfctitletp"];
+            news.NewsContent = HttpUtility.UrlDecode(data["editqyfccontenttp"]);
+            news.image = StreamToBytes(file.InputStream);
+            Response.Write(_nm.EditTpNews(news));
+        }
+
         public void Addqyfc()
         {
             var fs = Request.Files;

@@ -91,8 +91,8 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
         public string GetEnterpriseInfoForUserName(string UserName, int? enterpriseId = null)
         {
             string reply = null;
-            string sql = @"select a.Name,a.BusinessLicense,a.Code,c.[Desc] as RegistType,d.[Desc] as Profession,e.[Desc] as EnterpriseType,
-                            f.[Desc] as RegistRegion,g.[Desc] as Huanping,h.[Desc] as RegFinance,i.[Desc] as RegFinanceMt,j.[Desc] as Business,
+            string sql = @"select a.Name,a.BusinessLicense,a.Code,a.RegistTypeId,c.[Desc] as RegistType, a.ProfessionId,d.[Desc] as Profession,a.EnterpriseTypeId,e.[Desc] as EnterpriseType,
+                            a.RegistRegionId,f.[Desc] as RegistRegion,a.HuanpingId,g.[Desc] as Huanping,a.RegFinance as RegFinanceId,h.[Desc] as RegFinance,a.RegFinanceMt as RegFinanceMtId,i.[Desc] as RegFinanceMt,j.[Desc] as Business,
                             a.MainProduction,a.CreateTime,a.JuridicalPerson,a.ConectionPerson,a.ConnectionTelephone,a.[Desc] from Enterprise a 
                             left join SysUser b on a.ID = b.EnterpriseId 
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 1) c on a.RegistTypeId = c.Id
@@ -114,12 +114,19 @@ values(@name,@license,@code,@rt,@pi,@et,@rri,@hpi,@regfin,@regfinmt,@business,@m
                     Name = dr["Name"].ToString(),
                     BusinessLicense = dr["BusinessLicense"].ToString(),
                     Code = dr["Code"].ToString(),
+                    RegistTypeId = dr["RegistTypeId"].ToString(),
                     RegistType = dr["RegistType"].ToString(),
+                    ProfessionId = dr["ProfessionId"].ToString(),
                     Profession = dr["Profession"].ToString(),
+                    EnterpriseTypeId = dr["EnterpriseTypeId"].ToString(),
                     EnterpriseType = dr["EnterpriseType"].ToString(),
+                    RegistRegionId = dr["RegistRegionId"].ToString(),
                     RegistRegion = dr["RegistRegion"].ToString(),
+                    HuanpingId = dr["HuanpingId"].ToString(),
                     Huanping = dr["Huanping"].ToString(),
+                    RegFinanceId = dr["RegFinanceId"].ToString(),
                     RegFinance = dr["RegFinance"].ToString(),
+                    RegFinanceMtId = dr["RegFinanceMtId"].ToString(),
                     RegFinanceMt = dr["RegFinanceMt"].ToString(),
                     Business = dr["Business"].ToString(),
                     MainProduction = dr["MainProduction"].ToString(),

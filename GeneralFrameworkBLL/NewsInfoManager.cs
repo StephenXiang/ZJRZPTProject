@@ -16,6 +16,10 @@ namespace GeneralFrameworkBLL
         {
             return _ns.AddNews(news);
         }
+        public int EditTpNews(NewsInfo news)
+        {
+            return _ns.EditTpNews(news);
+        }
 
         public int EditNews(NewsInfo news)
         {
