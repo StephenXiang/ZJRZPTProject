@@ -265,7 +265,9 @@
             $('#ImageNews_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GettpDG',
                 rownumbers: true,
-                singleSelect: true,
+                singleSelect: false,
+                checkOnSelect: true,
+                selectOnCheck: true,
                 striped: true,
                 title: '图片新闻列表',
                 fitColumns: true,
@@ -276,13 +278,13 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                    { field: 'ID', title: 'ID', width: 10, hidden: true, align: 'center' },
-                    { field: 'NewsTitle', title: '图片新闻标题', width: 450, align: 'center' },
-                    {
-                        field: 'NewsContent', title: '图片新闻内容', hidden: true, width: 450, align: 'center'
-                    },
-                    { field: 'Createdate', title: '创建时间', width: 250, align: 'center' },
-                    { field: 'CreateUser', title: '创建人员', width: 250, align: 'center' }
+                    { field: 'ID', title: 'ID', width: 10, checkbox: true, align: 'center' },
+        { field: 'NewsTitle', title: '图片新闻标题', width: 450, align: 'center' },
+        {
+            field: 'NewsContent', title: '图片新闻内容', hidden: true, width: 450, align: 'center'
+        },
+        { field: 'Createdate', title: '创建时间', width: 250, align: 'center' },
+        { field: 'CreateUser', title: '创建人员', width: 250, align: 'center' }
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '发布图片新闻',
@@ -294,14 +296,25 @@
                     iconCls: 'icon-edit',
                     text: '修改',
                     handler: function () {
-                        if (tpnewsrow == "") {
-                            $.messager.alert('提示', '请选中要修改的图片新闻！', 'info');
-                        } else {
-                            $('#edittpid').textbox('setValue', tpnewsrow.ID);
-                            $('#edittitletp').textbox('setValue', tpnewsrow.NewsTitle);
-                            editor1.html(decodeURIComponent(tpnewsrow.NewsContent));
+                        if ($('#ImageNews_dg').datagrid('getChecked').length > 1) {
+                            $.messager.alert('提示', '不允许批量修改，只能选择其中一条图片新闻进行修改！', 'info')
+                        } else if ($('#ImageNews_dg').datagrid('getChecked').length == 0) {
+                            $.messager.alert('提示', '请选择要修改的图片新闻！', 'info');
+                        }
+                        else {
+                            $('#edittpid').textbox('setValue', $('#ImageNews_dg').datagrid('getChecked')[0].ID);
+                            $('#edittitletp').textbox('setValue', $('#ImageNews_dg').datagrid('getChecked')[0].NewsTitle);
+                            editor1.html(decodeURIComponent($('#ImageNews_dg').datagrid('getChecked')[0].NewsContent));
                             $('#edittpdlg').dialog('open');
                         }
+                        //if (tpnewsrow == "") {
+                        //    $.messager.alert('提示', '请选中要修改的图片新闻！', 'info');
+                        //} else {
+                        //    $('#edittpid').textbox('setValue', tpnewsrow.ID);
+                        //    $('#edittitletp').textbox('setValue', tpnewsrow.NewsTitle);
+                        //    editor1.html(decodeURIComponent(tpnewsrow.NewsContent));
+                        //    $('#edittpdlg').dialog('open');
+                        //}
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -325,7 +338,9 @@
             $('#qyfc_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetqyfcDG',
                 rownumbers: true,
-                singleSelect: true,
+                singleSelect: false,
+                checkOnSelect: true,
+                selectOnCheck: true,
                 striped: true,
                 title: '企业风采列表',
                 fitColumns: true,
@@ -336,7 +351,7 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                    { field: 'ID', title: 'ID', width: 10, hidden: true, align: 'center' },
+                    { field: 'ID', title: 'ID', width: 10, checkbox: true, align: 'center' },
                     { field: 'NewsTitle', title: '企业名称', width: 450, align: 'center' },
                      {
                          field: 'NewsContent', title: '图片新闻内容', hidden: true, width: 450, align: 'center'
@@ -354,10 +369,21 @@
                     iconCls: 'icon-edit',
                     text: '修改',
                     handler: function () {
-                        $('#editqyfcId').textbox('setValue', qyfcrow.ID);
-                        $('#editqyfctitletp').textbox('setValue', qyfcrow.NewsTitle);
-                        editor2.html(decodeURIComponent(qyfcrow.NewsContent));
-                        $('#editqyfcdlg').dialog('open');
+                        if ($('#qyfc_dg').datagrid('getChecked').length > 1) {
+                            $.messager.alert('提示', '不允许批量修改，只能选择其中一条企业风采进行修改！', 'info')
+                        } else if ($('#qyfc_dg').datagrid('getChecked').length == 0) {
+                            $.messager.alert('提示', '请选择要修改的企业风采！', 'info');
+                        }
+                        else {
+                            $('#editqyfcId').textbox('setValue', $('#qyfc_dg').datagrid('getChecked')[0].ID);
+                            $('#editqyfctitletp').textbox('setValue', $('#qyfc_dg').datagrid('getChecked')[0].NewsTitle);
+                            editor2.html(decodeURIComponent($('#qyfc_dg').datagrid('getChecked')[0].NewsContent));
+                            $('#editqyfcdlg').dialog('open');
+                        }
+                        //$('#editqyfcId').textbox('setValue', qyfcrow.ID);
+                        //$('#editqyfctitletp').textbox('setValue', qyfcrow.NewsTitle);
+                        //editor2.html(decodeURIComponent(qyfcrow.NewsContent));
+                        //$('#editqyfcdlg').dialog('open');
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -505,57 +531,118 @@
 
 
         function Delqy() {
-            if (newsqyId === '') {
-                $.messager.alert('提示', '请选择需要删除的企业风采！', 'info');
-            } else {
-                $.messager.confirm('确认', '您确认想要删除该篇企业风采吗？', function (r) {
+            //qyfc_dg
+            var selRows = $('#qyfc_dg').datagrid('getChecked');
+            if (selRows.length > 0) {
+                $.messager.confirm('确认', '您确认想要删除所选中的企业风采吗？', function (r) {
                     if (r) {
-                        $.ajax({
-                            type: "POST",
-                            dataType: "text",
-                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
-                            data: { 'newsId': newsqyId },
-                            success: function (text) {
-                                if (text > 0) {
-                                    $.messager.alert('提示', '企业风采删除成功！', 'info');
-                                    loadqyfcdg();
-                                    newsqyId = '';
+                        for (var i = 0; i < selRows.length; i++) {
+                            $.ajax({
+                                type: "POST",
+                                async: false,
+                                dataType: "text",
+                                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                                data: { 'newsId': selRows[i].ID },
+                                success: function (text) {
+                                    if (text > 0) {
+                                        if ((i + 1) == selRows.length) {
+                                            $.messager.alert('提示', '企业风采删除成功！', 'info');
+                                            loadqyfcdg();
+                                            newsqyId = '';
+                                        }
+                                    }
+                                },
+                                error: function () {
+                                    $.messager.alert('错误提示', '企业风采删除出错，请重试或联系系统管理员！', 'error');
                                 }
-                            },
-                            error: function () {
-                                $.messager.alert('错误提示', '企业风采删除出错，请重试或联系系统管理员！', 'error');
-                            }
-                        });
+                            });
+                        }
                     }
                 });
+            } else {
+                $.messager.alert('提示', '请选择需要删除的企业风采！', 'info');
+                //if (newsqyId === '') {
+                //    $.messager.alert('提示', '请选择需要删除的企业风采！', 'info');
+                //} else {
+                //    $.messager.confirm('确认', '您确认想要删除该篇企业风采吗？', function (r) {
+                //        if (r) {
+                //            $.ajax({
+                //                type: "POST",
+                //                dataType: "text",
+                //                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                //                data: { 'newsId': newsqyId },
+                //                success: function (text) {
+                //                    if (text > 0) {
+                //                        $.messager.alert('提示', '企业风采删除成功！', 'info');
+                //                        loadqyfcdg();
+                //                        newsqyId = '';
+                //                    }
+                //                },
+                //                error: function () {
+                //                    $.messager.alert('错误提示', '企业风采删除出错，请重试或联系系统管理员！', 'error');
+                //                }
+                //            });
+                //        }
+                //    });
+                //}
             }
         }
 
         function Deltp() {
-            if (newstpId === '') {
-                $.messager.alert('提示', '请选择需要删除的图片新闻！', 'info');
-            } else {
-                $.messager.confirm('确认', '您确认想要删除该篇图片新闻吗？', function (r) {
+            var selRows = $('#ImageNews_dg').datagrid('getChecked');
+            if (selRows.length > 0) {
+                $.messager.confirm('确认', '您确认想要删除所选中的图片新闻吗？', function (r) {
                     if (r) {
-                        $.ajax({
-                            type: "POST",
-                            dataType: "text",
-                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
-                            data: { 'newsId': newstpId },
-                            success: function (text) {
-                                if (text > 0) {
-                                    $.messager.alert('提示', '图片新闻删除成功！', 'info');
-                                    loadImageNews_dg();
-                                    newstpId = '';
+                        for (var i = 0; i < selRows.length; i++) {
+                            $.ajax({
+                                type: "POST",
+                                async: false,
+                                dataType: "text",
+                                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                                data: { 'newsId': selRows[i].ID },
+                                success: function (text) {
+                                    if (text > 0) {
+                                        if ((i + 1) == selRows.length) {
+                                            $.messager.alert('提示', '图片新闻删除成功！', 'info');
+                                            loadImageNews_dg();
+                                            newstpId = '';
+                                        }
+                                    }
+                                },
+                                error: function () {
+                                    $.messager.alert('错误提示', '图片新闻删除出错，请重试或联系系统管理员！', 'error');
                                 }
-                            },
-                            error: function () {
-                                $.messager.alert('错误提示', '图片新闻删除出错，请重试或联系系统管理员！', 'error');
-                            }
-                        });
+                            });
+                        }
                     }
                 });
+            } else {
+                $.messager.alert('提示', '请选择需要删除的图片新闻！', 'info');
             }
+            //if (newstpId === '') {
+            //    $.messager.alert('提示', '请选择需要删除的图片新闻！', 'info');
+            //} else {
+            //    $.messager.confirm('确认', '您确认想要删除该篇图片新闻吗？', function (r) {
+            //        if (r) {
+            //            $.ajax({
+            //                type: "POST",
+            //                dataType: "text",
+            //                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+            //                data: { 'newsId': newstpId },
+            //                success: function (text) {
+            //                    if (text > 0) {
+            //                        $.messager.alert('提示', '图片新闻删除成功！', 'info');
+            //                        loadImageNews_dg();
+            //                        newstpId = '';
+            //                    }
+            //                },
+            //                error: function () {
+            //                    $.messager.alert('错误提示', '图片新闻删除出错，请重试或联系系统管理员！', 'error');
+            //                }
+            //            });
+            //        }
+            //    });
+            //}
         }
 
         function DelZC() {

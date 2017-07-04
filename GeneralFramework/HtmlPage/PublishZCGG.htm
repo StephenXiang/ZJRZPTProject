@@ -169,7 +169,9 @@
             $('#ZC_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetZCDG',
                 rownumbers: true,
-                singleSelect: true,
+                singleSelect: false,
+                checkOnSelect: true,
+                selectOnCheck: true,
                 striped: true,
                 title: '政策列表',
                 fitColumns: true,
@@ -180,7 +182,7 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                    { field: 'ID', title: 'ID', width: 10, hidden: true, align: 'center' },
+                    { field: 'ID', title: 'ID', width: 10, hidden: false, checkbox: true, align: 'center' },
                     { field: 'NewsTitle', title: '政策标题', width: 450, align: 'center' },
                     {
                         field: 'NewsContent', title: '政策内容', hidden: true, width: 450, align: 'center'
@@ -197,12 +199,23 @@
                     iconCls: 'icon-edit',
                     text: '修改',
                     handler: function () {
-                        if (zcrows == "") { $.messager.alert('提示', '请选择要修改的政策！', 'info'); } else {
-                            newsZcId = zcrows.ID;
-                            $('#edittitleZC').textbox('setValue', zcrows.NewsTitle);
-                            editor5.html(decodeURIComponent(zcrows.NewsContent));
+                        if ($('#ZC_dg').datagrid('getChecked').length > 1) {
+                            $.messager.alert('提示', '不允许批量修改，只能选择其中一条政策进行修改！', 'info')
+                        } else if ($('#ZC_dg').datagrid('getChecked').length == 0) {
+                            $.messager.alert('提示', '请选择要修改的政策！', 'info');
+                        }
+                        else {
+                            newsZcId = $('#ZC_dg').datagrid('getChecked')[0].ID;
+                            $('#edittitleZC').textbox('setValue', $('#ZC_dg').datagrid('getChecked')[0].NewsTitle);
+                            editor5.html(decodeURIComponent($('#ZC_dg').datagrid('getChecked')[0].NewsContent));
                             $('#editZCdlg').dialog('open');
                         }
+                        //if (zcrows == "") { $.messager.alert('提示', '请选择要修改的政策！', 'info'); } else {
+                        //    newsZcId = zcrows.ID;
+                        //    $('#edittitleZC').textbox('setValue', zcrows.NewsTitle);
+                        //    editor5.html(decodeURIComponent(zcrows.NewsContent));
+                        //    $('#editZCdlg').dialog('open');
+                        //}
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -216,10 +229,10 @@
                     zcrows = data;
                 }),
                 onDblClickRow: (function (index, row) {
-                    newsZcId = row.ID;
-                    $('#edittitleZC').textbox('setValue', row.NewsTitle);
-                    editor5.html(decodeURIComponent(row.NewsContent));
-                    $('#editZCdlg').dialog('open');
+                    //newsZcId = row.ID;
+                    //$('#edittitleZC').textbox('setValue', row.NewsTitle);
+                    //editor5.html(decodeURIComponent(row.NewsContent));
+                    //$('#editZCdlg').dialog('open');
                 })
             });
         }
@@ -231,7 +244,9 @@
             $('#GG_dg').datagrid({
                 url: '../../WebServer/PublishZCGGWebService.ashx?Method=GetGGDG',
                 rownumbers: true,
-                singleSelect: true,
+                singleSelect: false,
+                checkOnSelect: true,
+                selectOnCheck: true,
                 striped: true,
                 title: '公告列表',
                 fitColumns: true,
@@ -242,7 +257,7 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                    { field: 'ID', title: 'ID', width: 10, hidden: true, align: 'center' },
+                    { field: 'ID', title: 'ID', width: 10, checkbox: true, align: 'center' },
                     { field: 'NewsTitle', title: '公告标题', width: 450, align: 'center' },
                     { field: 'Createdate', title: '创建时间', width: 250, align: 'center' },
                     { field: 'CreateUser', title: '创建人员', width: 250, align: 'center' }
@@ -256,14 +271,25 @@
                     iconCls: 'icon-edit',
                     text: '修改',
                     handler: function () {
-                        if (ggrows == "") {
-                            $.messager.alert('提示', '请选中要修改的公告', 'info');
-                        } else {
-                            newsGgId = ggrows.ID;
-                            $('#edittitleGG').textbox('setValue', ggrows.NewsTitle);
-                            editor6.html(decodeURIComponent(ggrows.NewsContent));
+                        if ($('#GG_dg').datagrid('getChecked').length > 1) {
+                            $.messager.alert('提示', '不允许批量修改，只能选择其中一条公告进行修改！', 'info')
+                        } else if ($('#GG_dg').datagrid('getChecked').length == 0) {
+                            $.messager.alert('提示', '请选择要修改的公告！', 'info');
+                        }
+                        else {
+                            newsZcId = $('#GG_dg').datagrid('getChecked')[0].ID;
+                            $('#edittitleGG').textbox('setValue', $('#GG_dg').datagrid('getChecked')[0].NewsTitle);
+                            editor6.html(decodeURIComponent($('#GG_dg').datagrid('getChecked')[0].NewsContent));
                             $('#editGGdlg').dialog('open');
                         }
+                        //if (ggrows == "") {
+                        //    $.messager.alert('提示', '请选中要修改的公告', 'info');
+                        //} else {
+                        //    newsGgId = ggrows.ID;
+                        //    $('#edittitleGG').textbox('setValue', ggrows.NewsTitle);
+                        //    editor6.html(decodeURIComponent(ggrows.NewsContent));
+                        //    $('#editGGdlg').dialog('open');
+                        //}
                     }
                 }, '-', {
                     iconCls: 'icon-remove',
@@ -277,10 +303,10 @@
                     ggrows = data;
                 }),
                 onDblClickRow: (function (index, row) {
-                    newsGgId = row.ID;
-                    $('#edittitleGG').textbox('setValue', row.NewsTitle);
-                    editor6.html(decodeURIComponent(row.NewsContent));
-                    $('#editGGdlg').dialog('open');
+                    //newsGgId = row.ID;
+                    //$('#edittitleGG').textbox('setValue', row.NewsTitle);
+                    //editor6.html(decodeURIComponent(row.NewsContent));
+                    //$('#editGGdlg').dialog('open');
                 })
             });
         }
@@ -623,56 +649,117 @@
         }
 
         function DelZC() {
-            if (newsZcId === '') {
-                $.messager.alert('提示', '请选择需要删除的政策记录！', 'info');
-            } else {
-                $.messager.confirm('确认', '您确认想要删除该篇政策吗？', function (r) {
+            var selRows = $('#ZC_dg').datagrid('getChecked');
+            if (selRows.length > 0) {
+                $.messager.confirm('确认', '您确认想要删除所选中的政策吗？', function (r) {
                     if (r) {
-                        $.ajax({
-                            type: "POST",
-                            dataType: "text",
-                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
-                            data: { 'newsId': newsZcId },
-                            success: function (text) {
-                                if (text > 0) {
-                                    $.messager.alert('提示', '政策删除成功！', 'info');
-                                    loadZCDG();
-                                    newsZcId = '';
+                        for (var i = 0; i < selRows.length; i++) {
+                            $.ajax({
+                                type: "POST",
+                                async: false,
+                                dataType: "text",
+                                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                                data: { 'newsId': selRows[i].ID },
+                                success: function (text) {
+                                    if (text > 0) {
+                                        if ((i + 1) == selRows.length) {
+                                            $.messager.alert('提示', '政策删除成功！', 'info');
+                                            loadZCDG();
+                                            newsZcId = '';
+                                        }
+                                    }
+                                },
+                                error: function () {
+                                    $.messager.alert('错误提示', '政策删除出错，请重试或联系系统管理员！', 'error');
                                 }
-                            },
-                            error: function () {
-                                $.messager.alert('错误提示', '政策删除出错，请重试或联系系统管理员！', 'error');
-                            }
-                        });
+                            });
+                        }
                     }
                 });
+            } else {
+                $.messager.alert('提示', '请选中要删除的政策！', 'info');
+                //if (newsZcId === '') {
+                //    $.messager.alert('提示', '请选择需要删除的政策记录！', 'info');
+                //} else {
+                //    $.messager.confirm('确认', '您确认想要删除该篇政策吗？', function (r) {
+                //        if (r) {
+                //            $.ajax({
+                //                type: "POST",
+                //                dataType: "text",
+                //                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                //                data: { 'newsId': newsZcId },
+                //                success: function (text) {
+                //                    if (text > 0) {
+                //                        $.messager.alert('提示', '政策删除成功！', 'info');
+                //                        loadZCDG();
+                //                        newsZcId = '';
+                //                    }
+                //                },
+                //                error: function () {
+                //                    $.messager.alert('错误提示', '政策删除出错，请重试或联系系统管理员！', 'error');
+                //                }
+                //            });
+                //        }
+                //    });
+                //}
             }
         }
         function DelGG() {
-            if (newsGgId === '') {
-                $.messager.alert('提示', '请选择需要删除的公告记录！', 'info');
-            } else {
-                $.messager.confirm('确认', '您确认想要删除该篇公告吗？', function (r) {
+            var selRows = $('#GG_dg').datagrid('getChecked');
+            if (selRows.length > 0) {
+                $.messager.confirm('确认', '您确认想要删除所选中的公告吗？', function (r) {
                     if (r) {
-                        $.ajax({
-                            type: "POST",
-                            dataType: "text",
-                            url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
-                            data: { 'newsId': newsGgId },
-                            success: function (text) {
-                                if (text > 0) {
-                                    $.messager.alert('提示', '公告删除成功！', 'info');
-                                    loadGGDG();
-                                    newsGgId = '';
+                        for (var i = 0; i < selRows.length; i++) {
+                            $.ajax({
+                                type: "POST",
+                                async: false,
+                                dataType: "text",
+                                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                                data: { 'newsId': selRows[i].ID },
+                                success: function (text) {
+                                    if (text > 0) {
+                                        if ((i + 1) == selRows.length) {
+                                            $.messager.alert('提示', '公告删除成功！', 'info');
+                                            loadGGDG();
+                                            newsGgId = '';
+                                        }
+                                    }
+                                },
+                                error: function () {
+                                    $.messager.alert('错误提示', '公告删除出错，请重试或联系系统管理员！', 'error');
                                 }
-                            },
-                            error: function () {
-                                $.messager.alert('错误提示', '公告删除出错，请重试或联系系统管理员！', 'error');
-                            }
-                        });
+                            });
+                        }
                     }
                 });
+            } else {
+                $.messager.alert('提示', '请选择需要删除的公告！', 'info');
+                //if (newsGgId === '') {
+                //    $.messager.alert('提示', '请选择需要删除的公告记录！', 'info');
+                //} else {
+                //    $.messager.confirm('确认', '您确认想要删除该篇公告吗？', function (r) {
+                //        if (r) {
+                //            $.ajax({
+                //                type: "POST",
+                //                dataType: "text",
+                //                url: "../../WebServer/PublishZCGGWebService.ashx?Method=DelNews",
+                //                data: { 'newsId': newsGgId },
+                //                success: function (text) {
+                //                    if (text > 0) {
+                //                        $.messager.alert('提示', '公告删除成功！', 'info');
+                //                        loadGGDG();
+                //                        newsGgId = '';
+                //                    }
+                //                },
+                //                error: function () {
+                //                    $.messager.alert('错误提示', '公告删除出错，请重试或联系系统管理员！', 'error');
+                //                }
+                //            });
+                //        }
+                //    });
+                //}
             }
+
         }
     </script>
 </head>

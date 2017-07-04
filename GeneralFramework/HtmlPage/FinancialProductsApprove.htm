@@ -23,7 +23,9 @@
             $('#jrcp_dg').datagrid({
                 url: '../../WebServer/FinancialProductsApproveWebService.ashx?Method=GetJRCPTableJson',
                 rownumbers: true,
-                singleSelect: true,
+                singleSelect: false,
+                checkOnSelect: true,
+                selectOnCheck: true,
                 striped: true,
                 title: '金融产品列表',
                 fitColumns: true,
@@ -34,7 +36,7 @@
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 columns: [[
-                                    { field: 'Id', title: 'ID', width: 150, hidden: true, align: 'center' },
+                                    { field: 'Id', title: 'ID', width: 150, checkbox: true, align: 'center' },
                                     { field: 'Title', title: '产品名称', width: 150, align: 'center' },
                                     { field: 'Name', title: '发布银行', width: 150, align: 'center' },
                                     { field: 'PublishDate', title: '发布日期', width: 150, align: 'center' },
@@ -45,18 +47,115 @@
                                               if (value == 0) {
                                                   return '<a href="#" onclick="EditJRCPStatus(' + row.Id + ')">审核</a>'
                                               } else if (value == 1) {
-                                                  return '审核已通过'
+                                                  return '<b style="color:green;">审核已通过</b>'
+                                                  //return '审核已通过'
                                               } else if (value == 2) {
-                                                  return '审核未通过'
+                                                  return '<b style="color:#FF0000;">审核未通过</b>'
+                                                  //return '审核未通过'
                                               }
                                           }
                                     }
-                ]],
+                ]], toolbar: [{
+                    iconCls: 'icon-ok',
+                    text: '批量审核通过',
+                    handler: function () {
+                        piliangshenhe();
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '批量审核不通过',
+                    handler: function () {
+                        piliangshenhe2();
+                    }
+                }],
                 onClickRow: (function (index, row) {
                     loadJRCPDetialById(row.Id);
                     $('#jrcpdetialdiv').show();
                 })
             });
+        }
+
+        function piliangshenhe() {
+            var selRows = $('#jrcp_dg').datagrid('getChecked');
+            var shtg = 0;
+            for (var k = 0; k < selRows.length; k++) {
+                if (selRows[k].Status == 1) {
+                    shtg++;
+                }
+            }
+            if (shtg == 0) {
+                if (selRows.length > 0) {
+                    $.messager.confirm('确认', '您确认需要批量【审核通过】所选中的金融产品么？', function (r) {
+                        if (r) {
+                            for (var i = 0; i < selRows.length; i++) {
+                                $.ajax({
+                                    type: "get",
+                                    async: false,
+                                    url: "../../WebServer/FinancialProductsApproveWebService.ashx?Method=EditJRCPStatus",
+                                    data: { Id: selRows[i].Id, status: 1 },
+                                    dataType: "text",
+                                    success: function (text) {
+                                        if (text == "True") {
+                                            if ((i + 1) == selRows.length) {
+                                                $.messager.alert('提示', '金融产品批量审核操作成功!', "info");
+                                                loadjrcpdg();
+                                            }
+                                        } else {
+                                            $.messager.alert('提示', '金融产品批量审核操作失败，请重试!', "info");
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    $.messager.alert('提示', '请选择需要审核的金融产品!', "info");
+                }
+            } else {
+                $.messager.alert('提示', '您所选中的产品当中存在【审核通过】的，请将【已通过审核】的产品取消选中!', "info");
+            }
+        }
+        function piliangshenhe2() {
+            var selRows = $('#jrcp_dg').datagrid('getChecked');
+            var shtg = 0;
+            for (var k = 0; k < selRows.length; k++) {
+                if (selRows[k].Status == 2) {
+                    shtg++;
+                }
+            }
+            if (shtg == 0) {
+                if (selRows.length > 0) {
+                    $.messager.confirm('确认', '您确认需要批量【审核不通过】所选中的金融产品么？', function (r) {
+                        if (r) {
+                            for (var i = 0; i < selRows.length; i++) {
+                                $.ajax({
+                                    type: "get",
+                                    async: false,
+                                    url: "../../WebServer/FinancialProductsApproveWebService.ashx?Method=EditJRCPStatus",
+                                    data: { Id: selRows[i].Id, status: 2 },
+                                    dataType: "text",
+                                    success: function (text) {
+                                        if (text == "True") {
+                                            if ((i + 1) == selRows.length) {
+                                                $.messager.alert('提示', '金融产品批量审核操作成功!', "info");
+                                                loadjrcpdg();
+                                            }
+                                        } else {
+                                            $.messager.alert('提示', '金融产品批量审核操作失败，请重试!', "info");
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    $.messager.alert('提示', '请选择需要审核的金融产品!', "info");
+                }
+            } else {
+                $.messager.alert('提示', '您所选中的产品当中存在【审核未通过】的，请将【未通过审核】的产品取消选中!', "info");
+            }
         }
 
         function loadJRCPDetialById(id) {
@@ -131,9 +230,9 @@
             "></table>
         </div>
 
-        <div id="jrcpdetialdiv" class="easyui-panel" title="详细信息" style="width:100%;padding:10px;">
+        <div id="jrcpdetialdiv" class="easyui-panel" title="详细信息" style="  width:100%;padding:10px;">
             <div class="easyui-layout" data-options="fit:true">
-                <table style=" width:80%;border:1px dashed black;" align="center">
+                <table style="height:100%; width:80%;border:1px dashed black;" align="center">
                     <tr>
                         <td colspan="4" align="center"><h1><label id="labtitle"></label></h1></td>
                     </tr>

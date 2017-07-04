@@ -106,15 +106,15 @@
                         field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
                         function (value, row, index) {
                             if (value == 0) {
-                                return '待受理';
+                                return '<b style="color:#FF0000;">待受理</b>';
                             } else if (value == 1) {
-                                return '受理中';
+                                return '<b style="color:#CD00CD;">受理中</b>';
                             } else if (value == 2) {
-                                return '已受理';
+                                return '<b style="color:#8DB6CD;">已受理</b>';
                             } else if (value == 3) {
-                                return '受理成功';
+                                return '<b style="color:green;">受理成功</b>';
                             } else if (value == 4) {
-                                return '受理不成功';
+                                return '<b style="color:#CDC5BF;">受理不成功</b>';
                             }
                         }
                     }, {
