@@ -112,6 +112,66 @@ namespace GeneralFramework.WebServer
             _response.Write(_em.LookUp("注册资金额度"));
         }
 
+        public void EditEnterpriseInfo()
+        {
+            GeneralFrameworkDAL.EnterpriseService es = new GeneralFrameworkDAL.EnterpriseService();
+            var fs = _request.Files;
+            var file = fs[0];
+            int registTypeId = 0, regFinance = 0, regFinanceMt = 0, business = 0;
+            string mainProduction = "", juridicalPerson = "", desc = "";
+            if (_request.Form["EditRegistTypeCmb"].Trim() != "" && _request.Form["EditRegistTypeCmb"] != null)
+            {
+                registTypeId = Convert.ToInt32(_request.Form["EditRegistTypeCmb"]);
+            }
+            if (_request.Form["EditRegFinanceCmb"].Trim() != "" && _request.Form["EditRegFinanceCmb"] != null)
+            {
+                regFinance = Convert.ToInt32(_request.Form["EditRegFinanceCmb"]);
+            }
+            if (_request.Form["EditRegFinanceMtCmb"].Trim() != "" && _request.Form["EditRegFinanceMtCmb"] != null)
+            {
+                regFinanceMt = Convert.ToInt32(_request.Form["EditRegFinanceMtCmb"]);
+            }
+            if (_request.Form["EditBusinessCmb"].Trim() != "" && _request.Form["EditBusinessCmb"] != null)
+            {
+                business = Convert.ToInt32(_request.Form["EditBusinessCmb"]);
+            }
+            if (_request.Form["EditMainProduction"].Trim() != "" && _request.Form["EditMainProduction"] != null)
+            {
+                mainProduction = _request.Form["EditMainProduction"];
+            }
+            if (_request.Form["EditJuridicalPerson"].Trim() != "" && _request.Form["EditJuridicalPerson"] != null)
+            {
+                juridicalPerson = _request.Form["EditJuridicalPerson"];
+            }
+            if (_request.Form["EditEnterpriseDesc"].Trim() != "" && _request.Form["EditEnterpriseDesc"] != null)
+            {
+                desc = _request.Form["EditEnterpriseDesc"];
+            }
+            var enterprise = new Enterprise
+            {
+                ID = int.Parse(_request.Form["EditEnterpriseId"].Trim()),
+                Name = _request.Form["EditEnterpriseName"].Trim(),
+                Code = _request.Form["EditCode"].Trim(),
+                BusinessLicense = StreamToBytes(file.InputStream),
+                RegistTypeId = registTypeId,
+                ProfessionId = Convert.ToInt32(_request.Form["EditProfessionCmb"]),
+                EnterpriseTypeId = Convert.ToInt32(_request.Form["EditEnterpriseTypeCmb"]),
+                RegistRegionId = Convert.ToInt32(_request.Form["EditRegistRegionCmb"]),
+                HuanpingId = Convert.ToInt32(_request.Form["EditHuanpingCmb"]),
+                RegFinance = regFinance,
+                RegFinanceMt = regFinanceMt,
+                Business = business,
+                MainProduction = mainProduction,
+                CreateTime = DateTime.Parse(_request.Form["EditCreateTime"]),
+                JuridicalPerson = juridicalPerson,
+                ConectionPerson = _request.Form["EditConectionPerson"].Trim(),
+                ConnectionTelephone = _request.Form["EditConnectionTelephone"],
+                Desc = desc
+            };
+            _response.Write(es.EditEnterprise(enterprise));
+        }
+
+
         public void SaveEnterpriseInfo()
         {
             var fs = _request.Files;

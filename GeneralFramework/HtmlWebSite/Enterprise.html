@@ -5,12 +5,15 @@
     <title>镇江市融资服务平台</title>
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <link href="css/page.css" type="text/css" rel="stylesheet" />
+    <!--<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>-->
+    <script type="text/javascript" src="pagejs/page.js"></script>
     <script type="text/javascript">
         var PageIndex = 1;
         var PageSize = 10;
         var PageAllNum = 0;
         $(function () {
-            loadjrcplist();
+            // loadjrcplist();
         });
         function loadjrcplist() {
             $.ajax({
@@ -57,7 +60,7 @@
                     }
                 }
             });
-if (PageAllNum == 0) {
+            if (PageAllNum == 0) {
                 $('#sya').removeClass("current")
                 $('#syya').removeClass("current")
                 $('#xya').removeClass("current")
@@ -187,7 +190,7 @@ if (PageAllNum == 0) {
 
     <div class="main_slider">
         <div class="sliderc">
-            <div class="slider_font" style="width:800px;"><img src="images/font.png" style="width:100%;"/></div>
+            <div class="slider_font" style="width:800px;"><img src="images/font.png" style="width:100%;" /></div>
         </div>
     </div>
 
@@ -229,21 +232,23 @@ if (PageAllNum == 0) {
                         <li id="BankLi9"><a id="BankLink9" class="gotoDetail" href="bank_view.html"><b id="BankTitle9" class="fl"></b><!--<span class="fr">2016-06-24</span>--></a></li>
                     </ul>
 
-                    <div class="bankpage">
-                        <div class="bpage">
-                            <a id="sya" href="#" onclick="shouye()">首页</a>
-                            <a id="syya" href="#" onclick="prePage()">上一页</a>
-                            <!--<a href="#">1</a>
-                            <span class="current">2</span>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>-->
-                            <a id="xyya" href="#" onclick="NextPage()">下一页</a>
-                            <a id="wya" href="#" onclick="weiye()">尾页</a>
-                        </div>
-                    </div>
 
 
+
+                </div>
+                <div class="bankpage">
+                    <!--<div class="bpage">
+                        <a id="sya" href="#" onclick="shouye()">首页</a>
+                        <a id="syya" href="#" onclick="prePage()">上一页</a>
+                        <a href="#">1</a>
+                        <span class="current">2</span>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">5</a>
+                        <a id="xyya" href="#" onclick="NextPage()">下一页</a>
+                        <a id="wya" href="#" onclick="weiye()">尾页</a>
+                    </div>-->
+                    <ul class="page" id="page"></ul>
                 </div>
             </div>
 
@@ -340,6 +345,40 @@ if (PageAllNum == 0) {
 
     <script type="text/javascript" src="js/login.js" language="javascript"></script>
 
+    <script type="text/javascript">
+
+        var datas;
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            async: false,
+            url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoList",
+            success: function (json) {
+                datas = json;
+            }
+        });
+        var options = {
+            "id": "page",//显示页码的元素
+            "data": datas,//显示数据
+            "maxshowpageitem": 3,//最多显示的页码个数
+            "pagelistcount": 10,//每页显示数据个数
+            "callBack": function (result) {
+                var cHtml = "";
+                var onePagesize = 0;
+                for (var i = 0; i < result.length; i++) {
+                    $('#BankLi' + i + '').show();
+                    $('#BankTitle' + i + '').html(result[i].Name);
+                    $('#BankLink' + i + '').attr("href", "Enterprise_view.html?id=" + result[i].Id);
+                    onePagesize++;
+                }
+                for (var l = 10; l > onePagesize; l--) {
+                    $('#BankLi' + (l - 1) + '').hide();
+                }
+            }
+        };
+        page.init(datas.length, 1, options);
+
+    </script>
 
 </body>
 </html>

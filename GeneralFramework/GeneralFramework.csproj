@@ -211,8 +211,15 @@
     <Content Include="HtmlPage\ZZDExamineApprove.htm" />
     <Content Include="HtmlWebSite\bank.html" />
     <Content Include="HtmlWebSite\bank_view.html" />
+    <Content Include="HtmlWebSite\css\alertjscss\css\xcConfirm.css" />
+    <Content Include="HtmlWebSite\css\alertjscss\img\icons.png" />
+    <Content Include="HtmlWebSite\css\alertjscss\img\loading.gif" />
+    <Content Include="HtmlWebSite\css\alertjscss\img\loading2.gif" />
+    <Content Include="HtmlWebSite\css\alertjscss\js\jquery-1.9.1.js" />
+    <Content Include="HtmlWebSite\css\alertjscss\js\xcConfirm.js" />
     <Content Include="HtmlWebSite\css\index.css" />
     <Content Include="HtmlWebSite\css\indexbak.css" />
+    <Content Include="HtmlWebSite\css\page.css" />
     <Content Include="HtmlWebSite\Enterprise.html" />
     <Content Include="HtmlWebSite\Enterprise_view.html" />
     <Content Include="HtmlWebSite\gglist.html" />
@@ -261,6 +268,8 @@
     <Content Include="HtmlWebSite\images\zz2.png" />
     <Content Include="HtmlWebSite\images\全市金融支持实体经济推进会.jpg" />
     <Content Include="HtmlWebSite\js\slider.js" />
+    <Content Include="HtmlWebSite\pagejs\jquery.min.js" />
+    <Content Include="HtmlWebSite\pagejs\page.js" />
     <Content Include="HtmlWebSite\Search.html" />
     <Content Include="HtmlWebSite\tplist.html" />
     <Content Include="HtmlWebSite\tpview.html" />
@@ -1435,6 +1444,8 @@
   <ItemGroup>
     <Content Include="HtmlPage\json1.json" />
     <Content Include="WebServer\EnterpriseService.ashx" />
+    <Content Include="HtmlWebSite\css\alertjscss\css\.DS_Store" />
+    <Content Include="HtmlWebSite\css\alertjscss\js\.DS_Store" />
     <None Include="jquery-easyui-1.5.1\demo\accordion\datagrid_data1.json" />
     <None Include="jquery-easyui-1.5.1\demo\combobox\combobox_data1.json" />
     <None Include="jquery-easyui-1.5.1\demo\combobox\combobox_data2.json" />

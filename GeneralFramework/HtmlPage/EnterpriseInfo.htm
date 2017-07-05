@@ -27,6 +27,7 @@
         var llyear = thisYear - 2;
         var lyear = thisYear - 1;
         var thisyearMonth = "";
+        var EditEnterpriseJson;
         if (thisMonth == 0) {
             thisyearMonth = (thisYear - 1) + "-12";
         } else {
@@ -38,15 +39,19 @@
             $('#Enterprisedlg').dialog('close');
             $('#EnterpriseFinanceInfodlg').dialog('close');
             $('#yyzzDialog').dialog('close');
+            $('#EditEnterprisedlg').dialog('close');
             UserInfo = JSON.parse($.cookie('UserInfo'));
             if (UserInfo["role"] == 4) {
                 loadEnterpriseInfo();
                 loadEnterpriseFiancialInfo();
                 $('#Enterprise_div').hide();
                 $('#EnterpriseFinanceInfoBtn').show();
+                $('#editEnterprisrInfoBtn').show();
+
             } else {
                 $('#Enterprise_div').show();
                 $('#EnterpriseFinanceInfoBtn').hide();
+                $('#editEnterprisrInfoBtn').hide();
                 loadEnterprise_dg();
             }
 
@@ -110,6 +115,153 @@
             }
         }
 
+        function OpenEditEnterprisedlg() {
+            $('#EditRegistTypeCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegistType',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditProfessionCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetProfessionType',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditEnterpriseTypeCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseType',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditRegistRegionCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegionType',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditHuanpingCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetHuanPingType',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditRegFinanceCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetRegFinance',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditRegFinanceMtCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetMoneyType',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditBusinessCmb').combobox({
+                //width: 145,
+                url: '../../WebServer/EnterpriseService.ashx?Method=GetBusinessType',
+                valueField: 'ID',
+                textField: 'TypeName',
+                editable: false
+            });
+            $('#EditEnterpriseId').textbox("setValue", EditEnterpriseJson["Id"]);
+            $('#EditEnterpriseName').textbox("setValue", EditEnterpriseJson["Name"]);
+            $('#EditCode').textbox("setValue", EditEnterpriseJson["Code"]);
+            $('#EditJuridicalPerson').textbox("setValue", EditEnterpriseJson["JuridicalPerson"]);
+            $('#EditConectionPerson').textbox("setValue", EditEnterpriseJson["ConectionPerson"]);
+            $('#EditConnectionTelephone').textbox("setValue", EditEnterpriseJson["ConnectionTelephone"]);
+            $('#EditEnterpriseDesc').textbox("setValue", EditEnterpriseJson["Desc"]);
+            $('#EditRegistTypeCmb').combobox('setValue', EditEnterpriseJson["RegistTypeId"]);
+            $('#EditProfessionCmb').combobox('setValue', EditEnterpriseJson["ProfessionId"]);
+            $('#EditEnterpriseTypeCmb').combobox('setValue', EditEnterpriseJson["EnterpriseTypeId"]);
+            $('#EditRegistRegionCmb').combobox('setValue', EditEnterpriseJson["RegistRegionId"]);
+            $('#EditHuanpingCmb').combobox('setValue', EditEnterpriseJson["HuanpingId"]);
+            if (EditEnterpriseJson["RegFinanceId"] != 0) {
+                $('#EditRegFinanceCmb').combobox('setValue', EditEnterpriseJson["RegFinanceId"]);
+            }
+            if (EditEnterpriseJson["RegFinanceMtId"] != 0) {
+                $('#EditRegFinanceMtCmb').combobox('setValue', EditEnterpriseJson["RegFinanceMtId"]);
+            }
+            $('#EditCreateTime').datebox('setValue', EditEnterpriseJson["CreateTime"]);
+            $('#EditEnterprisedlg').dialog('open');
+        }
+
+        function EditSaveEnterprisrInfo() {
+
+            if ($('#EditEnterpriseName').val().trim() == "") {
+                $.messager.alert('提示', '企业名称不得为空', 'info');
+            }
+            else if (!/^[\u0391-\uFFE5]+$/i.test($('#EditEnterpriseName').val().trim())) {
+                $.messager.alert('提示', '企业名称必须是中文', 'info');
+            }
+            else if ($('#EditCode').val() == "") {
+                $.messager.alert('提示', '信用代码不得为空', 'info');
+            }
+            else if ($('#EditCode').val().trim().length != 18) {
+                $.messager.alert('提示', '信用代码不得大于或小于18位', 'info');
+            }
+            else if (!/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/.test($('#EditCode').val().trim())) {
+                $.messager.alert('提示', '信用代码格式有误', 'info');
+            }
+            else if ($('#EditProfessionCmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '行业分类必须选择', 'info');
+            }
+            else if ($('#EditEnterpriseTypeCmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '企业类型必须选择', 'info');
+            }
+            else if ($('#EditRegistRegionCmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '注册地必须选择', 'info');
+            }
+            else if ($('#EditHuanpingCmb').combobox('getValue') == "") {
+                $.messager.alert('提示', '环评结果必须选择', 'info');
+            }
+            else if ($('#EditCreateTime').val() == "") {
+                $.messager.alert('提示', '企业成立时间必须选择', 'info');
+            }
+            else if ($('#EditConectionPerson').val() == "") {
+                $.messager.alert('提示', '联系人不得为空', 'info');
+            }
+            else if ($('#EditConnectionTelephone').val() == "") {
+                $.messager.alert('提示', '联系人电话不得为空', 'info');
+            } else if (checkMobile($('#EditConnectionTelephone').val()) == false && checkPhone($('#EditConnectionTelephone').val()) == false) {
+                $.messager.alert('提示', '联系人电话格式不正确', 'info');
+            }
+            else {
+                $.messager.confirm('提示', '请确认您所填写的信息真实及有效性！是否现在保存？', function (r) {
+                    if (r) {
+                        var formData = new FormData($("#Editff")[0]);
+                        $.ajax({
+                            url: "../../WebServer/EnterpriseService.ashx?Method=EditEnterpriseInfo",
+                            type: 'POST',
+                            data: formData,
+                            async: false,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data == "True") {
+                                    loadEnterpriseInfo();
+                                    $.messager.alert('提示', '保存成功', 'info');
+                                    $('#EditEnterprisedlg').dialog('close');
+                                } else {
+                                    $.messager.alert('提示', '保存失败', 'error');
+                                }
+                            }
+                        });
+                    }
+                });
+
+            }
+        }
+
         function OpenEnterprisrdlg() {
             $('#RegistTypeCmb').combobox({
                 //width: 145,
@@ -168,43 +320,41 @@
                 editable: false
             });
             $('#UserNametxt').textbox("setValue", UserInfo["name"]);
-
             $('#Enterprisedlg').dialog('open');
-
         }
 
         function SaveEnterpriseFinanceInfo() {
-            if ($('#llzczetext').val().trim() == "" || $('#lzczetext').val().trim() == "" || $('#thiszczetext').val().trim() == "") {
+            if ($('#thiszczetext').val().trim() == "") {
                 $.messager.alert('提示', '资产总额不得为空', 'info');
             }
             else if (checkNum('llzczetext') == false || checkNum('lzczetext') == false || checkNum('thiszczetext') == false) {
                 $.messager.alert('提示', '资产总额必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#llfzzetext').val().trim() == "" || $('#lfzzetext').val().trim() == "" || $('#thisfzzetext').val().trim() == "") {
+            else if ($('#thisfzzetext').val().trim() == "") {
                 $.messager.alert('提示', '负债总额不得为空', 'info');
             }
             else if (checkNum('llfzzetext') == false || checkNum('lfzzetext') == false || checkNum('thisfzzetext') == false) {
                 $.messager.alert('提示', '负债总额必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#llxssrtext').val().trim() == "" || $('#lxssrtext').val().trim() == "" || $('#thisxssrtext').val().trim() == "") {
+            else if ($('#thisxssrtext').val().trim() == "") {
                 $.messager.alert('提示', '销售收入不得为空', 'info');
             }
             else if (checkNum('llxssrtext') == false || checkNum('lxssrtext') == false || checkNum('thisxssrtext') == false) {
                 $.messager.alert('提示', '销售收入必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#llyszktext').val().trim() == "" || $('#lyszktext').val().trim() == "" || $('#thisyszktext').val().trim() == "") {
+            else if ($('#thisyszktext').val().trim() == "") {
                 $.messager.alert('提示', '应收账款不得为空', 'info');
             }
             else if (checkNum('llyszktext') == false || checkNum('lyszktext') == false || checkNum('thisyszktext') == false) {
                 $.messager.alert('提示', '应收账款必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#lljlrtext').val().trim() == "" || $('#ljlrtext').val().trim() == "" || $('#thisjlrtext').val().trim() == "") {
+            else if ($('#thisjlrtext').val().trim() == "") {
                 $.messager.alert('提示', '净利润不得为空', 'info');
             }
             else if (checkNum('lljlrtext') == false || checkNum('ljlrtext') == false || checkNum('thisjlrtext') == false) {
                 $.messager.alert('提示', '净利润必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#llsyzqytext').val().trim() == "" || $('#lsyzqytext').val().trim() == "" || $('#thissyzqytext').val().trim() == "") {
+            else if ($('#thissyzqytext').val().trim() == "") {
                 $.messager.alert('提示', '所有者权益不得为空', 'info');
             }
             else if (checkNum('llsyzqytext') == false || checkNum('lsyzqytext') == false || checkNum('thissyzqytext') == false) {
@@ -238,29 +388,41 @@
         }
 
         function GetJsonData() {
+            var llzczetext = $('#llzczetext').val().trim() == "" ? llzczetext = 0 : $('#llzczetext').val().trim();
+            var lzczetext = $('#lzczetext').val().trim() == "" ? lzczetext = 0 : $('#lzczetext').val().trim();
+            var llfzzetext = $('#llfzzetext').val().trim() == "" ? llfzzetext = 0 : $('#llfzzetext').val().trim();
+            var lfzzetext = $('#lfzzetext').val().trim() == "" ? lfzzetext = 0 : $('#lfzzetext').val().trim();
+            var llxssrtext = $('#llxssrtext').val().trim() == "" ? llxssrtext = 0 : $('#llxssrtext').val().trim();
+            var lxssrtext = $('#lxssrtext').val().trim() == "" ? lxssrtext = 0 : $('#lxssrtext').val().trim();
+            var llyszktext = $('#llyszktext').val().trim() == "" ? llyszktext = 0 : $('#llyszktext').val().trim();
+            var lyszktext = $('#lyszktext').val().trim() == "" ? lyszktext = 0 : $('#lyszktext').val().trim();
+            var lljlrtext = $('#lljlrtext').val().trim() == "" ? lljlrtext = 0 : $('#lljlrtext').val().trim();
+            var ljlrtext = $('#ljlrtext').val().trim() == "" ? ljlrtext = 0 : $('#ljlrtext').val().trim();
+            var llsyzqytext = $('#llsyzqytext').val().trim() == "" ? llsyzqytext = 0 : $('#llsyzqytext').val().trim();
+            var lsyzqytext = $('#lsyzqytext').val().trim() == "" ? lsyzqytext = 0 : $('#lsyzqytext').val().trim();
             var EnterpriseFinanceInfoJson =
                 {
                     "UserName": UserInfo["name"],
                     "llyear": llyear,
                     "lyear": lyear,
                     "thisyear": thisyearMonth,
-                    "llzcze": $('#llzczetext').val().trim(),
-                    "lzcze": $('#lzczetext').val().trim(),
+                    "llzcze": llzczetext,
+                    "lzcze": lzczetext,
                     "thiszcze": $('#thiszczetext').val().trim(),
-                    "llfzze": $('#llfzzetext').val().trim(),
-                    "lfzze": $('#lfzzetext').val().trim(),
+                    "llfzze": llfzzetext,
+                    "lfzze": lfzzetext,
                     "thisfzze": $('#thisfzzetext').val().trim(),
-                    "llxssr": $('#llxssrtext').val().trim(),
-                    "lxssr": $('#lxssrtext').val().trim(),
+                    "llxssr": llxssrtext,
+                    "lxssr": lxssrtext,
                     "thisxssr": $('#thisxssrtext').val().trim(),
-                    "llyszk": $('#llyszktext').val().trim(),
-                    "lyszk": $('#lyszktext').val().trim(),
+                    "llyszk": llyszktext,
+                    "lyszk": lyszktext,
                     "thisyszk": $('#thisyszktext').val().trim(),
-                    "lljlr": $('#lljlrtext').val().trim(),
-                    "ljlr": $('#ljlrtext').val().trim(),
+                    "lljlr": lljlrtext,
+                    "ljlr": ljlrtext,
                     "thisjlr": $('#thisjlrtext').val().trim(),
-                    "llsyzqy": $('#llsyzqytext').val().trim(),
-                    "lsyzqy": $('#lsyzqytext').val().trim(),
+                    "llsyzqy": llsyzqytext,
+                    "lsyzqy": lsyzqytext,
                     "thissyzqy": $('#thissyzqytext').val().trim()
                 };
             return EnterpriseFinanceInfoJson;
@@ -309,7 +471,7 @@
                 $.messager.alert('提示', '联系人电话格式不正确', 'info');
             }
             else {
-                $.messager.confirm('提示', '您所填写的企业信息保存后将不再允许编辑，请确认您所填写的信息真实及有效性！是否现在保存？', function (r) {
+                $.messager.confirm('提示', '请确认您所填写的信息真实及有效性！是否现在保存？', function (r) {
                     if (r) {
                         var formData = new FormData($("#ff")[0]);
                         $.ajax({
@@ -423,6 +585,7 @@
                 url: "../../WebServer/EnterpriseService.ashx?Method=GetEnterpriseInfoForUserName",
                 success: function (json) {
                     Enterprise = json;
+                    EditEnterpriseJson = json;
                     if (Enterprise["DataCount"] == 0 && UserInfo["role"] == 4) {
                         $.messager.confirm('提示', '您还没有登记企业基本信息，是否现在登记？', function (r) {
                             if (r) {
@@ -462,7 +625,7 @@
                 //$('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
                 $("#BusinessLicenseImg").click(function () {
                     yyzzShow(Code);
-                    $('#yyzzDialog').dialog('open');
+                    $('#yyzzDialog').dialog('open').dialog('refresh');
                 });
                 $('#BusinessLicenseImgTD').show();
             }
@@ -487,17 +650,23 @@
         }
 
         function checkNum(id) {
-            return /^[0-9]{1,6}([.]{1}[0-9]{1})?$/.test($('#' + id).val());
-            var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
-            var obj = document.getElementById(id);
-            if (!reg.test(obj.value)) {
-                return false
+            if ($('#' + id).val() == "") {
+                return true;
+            } else {
+                return /^[0-9]{1,6}([.]{1}[0-9]{1})?$/.test($('#' + id).val());
+                var reg = new RegExp("^([0-9])[0-9]*(\\.\\w*)?$");
+                var obj = document.getElementById(id);
+                if (!reg.test(obj.value)) {
+                    return false
+                } else {
+                    return true;
+                }
             }
-            return true;
+
         }
 
         function yyzzShow(code) {
-            $('#yyzzHtml').html("<img src='../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=" + code + "'>")
+            $('#yyzzHtml').html("<img src='../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=" + code + "&" + Math.random() + "'>")
         }
     </script>
 
@@ -584,7 +753,7 @@
                     </div>
                 </div>
 
-                <!--<a href="#" id="editEnterprisrInfoBtn" class="easyui-linkbutton" onclick="OpenEnterprisrdlg()">编辑基本信息</a>-->
+                <a href="#" id="editEnterprisrInfoBtn" class="easyui-linkbutton" onclick="OpenEditEnterprisedlg()">编辑基本信息</a>
 
             </div>
             <div data-options="region:'center'" style="padding:10px">
@@ -620,8 +789,8 @@
 
                         </table>
                     </div>
-                    <div data-options="region:'east'" style="width:33%;padding:10px">
-                        <h3> <label id="thisYearMonth">无</label></h3>
+                    <div data-options="region:'center'" style="width:33%;padding:10px">
+                        <h3> <label id="lYear">无</label></h3>
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
                                 <td style=" text-align:right;">资产总额:</td>
@@ -650,8 +819,8 @@
 
                         </table>
                     </div>
-                    <div data-options="region:'center'" style="width:33%;padding:10px">
-                        <h3> <label id="lYear">无</label></h3>
+                    <div data-options="region:'east'" style="width:33%;padding:10px">
+                        <h3> <label id="thisYearMonth">无</label></h3>
                         <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
                             <tr>
                                 <td style=" text-align:right;">资产总额:</td>
@@ -872,6 +1041,102 @@
     </div>
     <div id="yyzzDialog-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#yyzzDialog').dialog('close')">
+            关闭
+        </a>
+    </div>
+
+
+    <div id="EditEnterprisedlg" class="easyui-dialog" title="企业信息编辑" style="text-align: center;
+        width: 600px; height:480px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#EditEnterprisedlg-buttons'
+            ">
+        <form id="Editff" method="post">
+            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                <tr id="EditEnterpriseTD" style="display:none;">
+                    <td style=" text-align:right;">*企业ID:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="EditEnterpriseId" name="EditEnterpriseId" class="f1 easyui-textbox" style="width:95%;" /></td>
+
+                    <td style=" text-align:right;"></td>
+                    <td style=" text-align:left;"></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">*企业名称:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="EditEnterpriseName" name="EditEnterpriseName" class="f1 easyui-textbox" style="width:95%;" /></td>
+
+                    <td style=" text-align:right;">*信用代码:</td>
+                    <td style=" text-align:left;"><input id="EditCode" name="EditCode" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">*营业执照:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="EditBusinessLicenseFile" name="EditBusinessLicenseFile" data-options="buttonText:'选择',prompt:'请选择JPEG格式图像文件...',accept:'image/jpeg'" class="f1 easyui-filebox" style="width:95%;" /></td>
+                    <td style=" text-align:right;">登记注册类型:</td>
+                    <td style=" text-align:left;"><select id="EditRegistTypeCmb" class=" easyui-combobox" name="EditRegistTypeCmb" label="" style="width:95%"></select></td>
+                </tr>
+                <tr>
+
+                    <td style=" text-align:right;">*行业分类:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="EditProfessionCmb" class="easyui-combobox" name="EditProfessionCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">*企业类型:</td>
+                    <td style=" text-align:left;"><select id="EditEnterpriseTypeCmb" class="easyui-combobox" name="EditEnterpriseTypeCmb" label="" style="width:95%"></select></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">*注册地:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="EditRegistRegionCmb" class="easyui-combobox" name="EditRegistRegionCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">*环评结果:</td>
+                    <td style=" text-align:left;"><select id="EditHuanpingCmb" class="easyui-combobox" name="EditHuanpingCmb" label="" style="width:95%"></select></td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td style=" text-align:right;">注册资金:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="EditRegFinanceCmb" class="easyui-combobox" name="EditRegFinanceCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">币种:</td>
+                    <td style=" text-align:left;"><select id="EditRegFinanceMtCmb" class="easyui-combobox" name="EditRegFinanceMtCmb" label="" style="width:95%"></select></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">企业营业范围:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><select id="EditBusinessCmb" class="easyui-combobox" name="EditBusinessCmb" label="" style="width:95%"></select></td>
+                    <td style=" text-align:right;">主要产品:</td>
+                    <td style=" text-align:left;"><input id="EditMainProduction" name="EditMainProduction" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">*企业成立时间:</td>
+                    <td></td>
+                    <td style=" text-align:left;">
+                        <input class="easyui-datebox" id="EditCreateTime" name="EditCreateTime" labelposition="top" style="width:95%;">
+                    </td>
+                    <td style=" text-align:right;">企业法人代表:</td>
+                    <td style=" text-align:left;"><input id="EditJuridicalPerson" name="EditJuridicalPerson" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+
+                <tr>
+                    <td style=" text-align:right;">*联系人姓名:</td>
+                    <td></td>
+                    <td style=" text-align:left;"><input id="EditConectionPerson" name="EditConectionPerson" class="f1 easyui-textbox" style="width:95%;" /></td>
+                    <td style=" text-align:right;">*联系人电话:</td>
+                    <td style=" text-align:left;"><input id="EditConnectionTelephone" name="EditConnectionTelephone" class="f1 easyui-textbox" style="width:95%;" /></td>
+                </tr>
+                <tr>
+                    <td style=" text-align:right;">企业简介:</td>
+                    <td></td>
+                    <td style=" text-align:left;" colspan="3"><input id="EditEnterpriseDesc" name="EditEnterpriseDesc" class="easyui-textbox" style="width:98%;height:100px" data-options="multiline:true" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="EditEnterprisedlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="EditSaveEnterprisrInfo()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#EditEnterprisedlg').dialog('close')">
             关闭
         </a>
     </div>

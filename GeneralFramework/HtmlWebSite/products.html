@@ -5,7 +5,11 @@
     <title>镇江市融资服务平台</title>
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery-1.9.1.min.js" language="javascript"></script>
+    <link href="css/page.css" type="text/css" rel="stylesheet" />
+    <!--<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>-->
+    <script type="text/javascript" src="pagejs/page.js"></script>
     <script type="text/javascript">
+
         var PageIndex = 1;
         var PageSize = 10;
         var PageAllNum = 0;
@@ -63,129 +67,129 @@
         }
 
         function loadjrcplist() {
-            $.ajax({
-                type: "get",
-                dataType: "json",
-                async: false,
-                data: { dkqd: dkqd, dkqx: dkqx, dbfs: dbfs, dked: dked, jgmc: jgmc, cpmc: cpmc },
-                url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetJRCPList",
-                success: function (json) {
-                    var JRCPJSON = json;
-                    //alert(JSON.stringify(JRCPJSON));
-                    $('#jrcpcount').html(JRCPJSON.length);
-                    checkxiaoshu(JRCPJSON.length);
-                    if (PageIndex == 1) {
-                        var onePagesize = 0;
-                        if (JRCPJSON.length < PageSize) {
-                            onePagesize = JRCPJSON.length;
-                        } else {
-                            onePagesize = PageSize;
-                        }
-                        for (var i = 0; i < onePagesize; i++) {
-                            $('#jrcpdiv' + i + '').show();
-                            $('#imgDiv' + i + '').html(GetLogo2Img(JRCPJSON[i].BankId));
-                            $('#jrcpTitle' + i + '').html(JRCPJSON[i].Title);
-                            if (JRCPJSON[i].LilvLow == 0 || JRCPJSON[i].DaikuanUp == 0) {
-                                $('#jrcplilv' + i + '').html('根据具体情况');
-                            } else {
-                                $('#jrcplilv' + i + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
-                            }
-                            //$('#jrcplilv' + i + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
-                            $('#jrcped' + i + '').html(JRCPJSON[i].DaikunLow + "万元-" + JRCPJSON[i].DaikuanUp + "万元");
-                            $('#jrcpdbfs' + i + '').html(JRCPJSON[i].Desc);
-                            $('#jrcpqx' + i + '').html(JRCPJSON[i].QxLow + "个月-" + JRCPJSON[i].QxUp + "个月");
-                            $('#jrcpDetail' + i + '').attr("href", "products_view.html?jrcpid=" + JRCPJSON[i].Id);
-                        }
-                        for (var l = PageSize; l > onePagesize; l--) {
-                            $('#jrcpdiv' + (l - 1) + '').hide();
-                        }
-                    } else {
-                        var twopagesize = 0;
-                        if ((PageIndex * PageSize) > JRCPJSON.length) {
-                            twopagesize = JRCPJSON.length;
-                        }
-                        else {
-                            twopagesize = PageIndex * PageSize;
-                        }
-                        var j = 0;
-                        for (var i = ((PageIndex - 1) * PageSize) ; i < twopagesize; i++) {
-                            j = i - ((PageIndex - 1) * PageSize)
-                            $('#jrcpdiv' + j + '').show();
-                            $('#imgDiv' + j + '').html(GetLogo2Img(JRCPJSON[i].BankId));
-                            $('#jrcpTitle' + j + '').html(JRCPJSON[i].Title);
-                            if (JRCPJSON[i].LilvLow == 0 || JRCPJSON[i].DaikuanUp == 0) {
-                                $('#jrcplilv' + j + '').html('根据具体情况');
-                            } else {
-                                $('#jrcplilv' + j + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
-                            }
-                            $('#jrcped' + j + '').html(JRCPJSON[i].DaikunLow + "万元-" + JRCPJSON[i].DaikuanUp + "万元");
-                            $('#jrcpdbfs' + j + '').html(JRCPJSON[i].Desc);
-                            $('#jrcpqx' + j + '').html(JRCPJSON[i].QxLow + "个月-" + JRCPJSON[i].QxUp + "个月");
-                            $('#jrcpDetail' + j + '').attr("href", "products_view.html?jrcpid=" + JRCPJSON[i].Id);
-                        }
-                        for (var k = 9; k > j; k--) {
-                            $('#jrcpdiv' + k + '').hide();
-                        }
-                    }
-                }
-            });
-            if (PageAllNum == 0) {
-                $('#sya').removeClass("current")
-                $('#syya').removeClass("current")
-                $('#xya').removeClass("current")
-                $('#wya').removeClass("current")
-                $('#sya').addClass("current")
-                $('#syya').addClass("current")
-                $('#xyya').removeClass("current")
-                $('#wya').removeClass("current")
-            } else {
-                if (PageIndex == 1) {
-                    if (PageIndex == PageAllNum) {
-                        $('#sya').removeClass("current")
-                        $('#syya').removeClass("current")
-                        $('#xya').removeClass("current")
-                        $('#wya').removeClass("current")
-                        $('#sya').addClass("current")
-                        $('#syya').addClass("current")
-                        $('#xyya').addClass("current")
-                        $('#wya').addClass("current")
-                    } else {
-                        $('#sya').removeClass("current")
-                        $('#syya').removeClass("current")
-                        $('#xya').removeClass("current")
-                        $('#wya').removeClass("current")
-                        $('#sya').addClass("current")
-                        $('#syya').addClass("current")
-                        $('#xyya').removeClass("current")
-                        $('#wya').removeClass("current")
-                    }
-                } else {
-                    if (PageIndex == PageAllNum) {
-                        $('#sya').removeClass("current")
-                        $('#syya').removeClass("current")
-                        $('#xya').removeClass("current")
-                        $('#wya').removeClass("current")
-                        $('#sya').removeClass("current")
-                        $('#syya').removeClass("current")
-                        $('#xyya').addClass("current")
-                        $('#wya').addClass("current")
-                    } else if (PageIndex < PageAllNum && PageIndex > 1) {
-                        $('#sya').removeClass("current")
-                        $('#syya').removeClass("current")
-                        $('#xyya').removeClass("current")
-                        $('#wya').removeClass("current")
-                    } else if (PageIndex < PageAllNum && PageIndex == 1) {
-                        $('#sya').removeClass("current")
-                        $('#syya').removeClass("current")
-                        $('#xya').removeClass("current")
-                        $('#wya').removeClass("current")
-                        $('#sya').addClass("current")
-                        $('#syya').addClass("current")
-                        $('#xyya').removeClass("current")
-                        $('#wya').removeClass("current")
-                    }
-                }
-            }
+            //$.ajax({
+            //    type: "get",
+            //    dataType: "json",
+            //    async: false,
+            //    data: { dkqd: dkqd, dkqx: dkqx, dbfs: dbfs, dked: dked, jgmc: jgmc, cpmc: cpmc },
+            //    url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetJRCPList",
+            //    success: function (json) {
+            //        var JRCPJSON = json;
+            //        //alert(JSON.stringify(JRCPJSON));
+            //        $('#jrcpcount').html(JRCPJSON.length);
+            //        checkxiaoshu(JRCPJSON.length);
+            //        if (PageIndex == 1) {
+            //            var onePagesize = 0;
+            //            if (JRCPJSON.length < PageSize) {
+            //                onePagesize = JRCPJSON.length;
+            //            } else {
+            //                onePagesize = PageSize;
+            //            }
+            //            for (var i = 0; i < onePagesize; i++) {
+            //$('#jrcpdiv' + i + '').show();
+            //$('#imgDiv' + i + '').html(GetLogo2Img(JRCPJSON[i].BankId));
+            //$('#jrcpTitle' + i + '').html(JRCPJSON[i].Title);
+            //if (JRCPJSON[i].LilvLow == 0 || JRCPJSON[i].DaikuanUp == 0) {
+            //    $('#jrcplilv' + i + '').html('根据具体情况');
+            //} else {
+            //    $('#jrcplilv' + i + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
+            //}
+            ////$('#jrcplilv' + i + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
+            //$('#jrcped' + i + '').html(JRCPJSON[i].DaikunLow + "万元-" + JRCPJSON[i].DaikuanUp + "万元");
+            //$('#jrcpdbfs' + i + '').html(JRCPJSON[i].Desc);
+            //$('#jrcpqx' + i + '').html(JRCPJSON[i].QxLow + "个月-" + JRCPJSON[i].QxUp + "个月");
+            //$('#jrcpDetail' + i + '').attr("href", "products_view.html?jrcpid=" + JRCPJSON[i].Id);
+            //            }
+            //            for (var l = PageSize; l > onePagesize; l--) {
+            //                $('#jrcpdiv' + (l - 1) + '').hide();
+            //            }
+            //        } else {
+            //            var twopagesize = 0;
+            //            if ((PageIndex * PageSize) > JRCPJSON.length) {
+            //                twopagesize = JRCPJSON.length;
+            //            }
+            //            else {
+            //                twopagesize = PageIndex * PageSize;
+            //            }
+            //            var j = 0;
+            //            for (var i = ((PageIndex - 1) * PageSize) ; i < twopagesize; i++) {
+            //                j = i - ((PageIndex - 1) * PageSize)
+            //                $('#jrcpdiv' + j + '').show();
+            //                $('#imgDiv' + j + '').html(GetLogo2Img(JRCPJSON[i].BankId));
+            //                $('#jrcpTitle' + j + '').html(JRCPJSON[i].Title);
+            //                if (JRCPJSON[i].LilvLow == 0 || JRCPJSON[i].DaikuanUp == 0) {
+            //                    $('#jrcplilv' + j + '').html('根据具体情况');
+            //                } else {
+            //                    $('#jrcplilv' + j + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
+            //                }
+            //                $('#jrcped' + j + '').html(JRCPJSON[i].DaikunLow + "万元-" + JRCPJSON[i].DaikuanUp + "万元");
+            //                $('#jrcpdbfs' + j + '').html(JRCPJSON[i].Desc);
+            //                $('#jrcpqx' + j + '').html(JRCPJSON[i].QxLow + "个月-" + JRCPJSON[i].QxUp + "个月");
+            //                $('#jrcpDetail' + j + '').attr("href", "products_view.html?jrcpid=" + JRCPJSON[i].Id);
+            //            }
+            //            for (var k = 9; k > j; k--) {
+            //                $('#jrcpdiv' + k + '').hide();
+            //            }
+            //        }
+            //    }
+            //});
+            //if (PageAllNum == 0) {
+            //    $('#sya').removeClass("current")
+            //    $('#syya').removeClass("current")
+            //    $('#xya').removeClass("current")
+            //    $('#wya').removeClass("current")
+            //    $('#sya').addClass("current")
+            //    $('#syya').addClass("current")
+            //    $('#xyya').removeClass("current")
+            //    $('#wya').removeClass("current")
+            //} else {
+            //    if (PageIndex == 1) {
+            //        if (PageIndex == PageAllNum) {
+            //            $('#sya').removeClass("current")
+            //            $('#syya').removeClass("current")
+            //            $('#xya').removeClass("current")
+            //            $('#wya').removeClass("current")
+            //            $('#sya').addClass("current")
+            //            $('#syya').addClass("current")
+            //            $('#xyya').addClass("current")
+            //            $('#wya').addClass("current")
+            //        } else {
+            //            $('#sya').removeClass("current")
+            //            $('#syya').removeClass("current")
+            //            $('#xya').removeClass("current")
+            //            $('#wya').removeClass("current")
+            //            $('#sya').addClass("current")
+            //            $('#syya').addClass("current")
+            //            $('#xyya').removeClass("current")
+            //            $('#wya').removeClass("current")
+            //        }
+            //    } else {
+            //        if (PageIndex == PageAllNum) {
+            //            $('#sya').removeClass("current")
+            //            $('#syya').removeClass("current")
+            //            $('#xya').removeClass("current")
+            //            $('#wya').removeClass("current")
+            //            $('#sya').removeClass("current")
+            //            $('#syya').removeClass("current")
+            //            $('#xyya').addClass("current")
+            //            $('#wya').addClass("current")
+            //        } else if (PageIndex < PageAllNum && PageIndex > 1) {
+            //            $('#sya').removeClass("current")
+            //            $('#syya').removeClass("current")
+            //            $('#xyya').removeClass("current")
+            //            $('#wya').removeClass("current")
+            //        } else if (PageIndex < PageAllNum && PageIndex == 1) {
+            //            $('#sya').removeClass("current")
+            //            $('#syya').removeClass("current")
+            //            $('#xya').removeClass("current")
+            //            $('#wya').removeClass("current")
+            //            $('#sya').addClass("current")
+            //            $('#syya').addClass("current")
+            //            $('#xyya').removeClass("current")
+            //            $('#wya').removeClass("current")
+            //        }
+            //    }
+            //}
         }
 
         function GetLogo2Img(BankId) {
@@ -208,23 +212,7 @@
             }
         }
 
-        function NextPage() {
-            if (PageIndex == PageAllNum) {
-                alert("已经是尾页");
-            } else {
-                PageIndex = PageIndex + 1;
-                loadjrcplist();
-            }
-        }
 
-        function prePage() {
-            if (PageIndex == 1) {
-                alert("已经是首页");
-            } else {
-                PageIndex = PageIndex - 1;
-                loadjrcplist();
-            }
-        }
 
         function checkxiaoshu(totalnum) {
             var num = totalnum / PageSize;
@@ -236,23 +224,7 @@
                 PageAllNum = num
             }
         }
-        function shouye() {
-            if (PageIndex == 1) {
-                alert("已经是首页");
-            } else {
-                PageIndex = 1;
-                loadjrcplist();
-            }
-        }
 
-        function weiye() {
-            if (PageIndex == PageAllNum) {
-                alert("已经是尾页");
-            } else {
-                PageIndex = PageAllNum;
-                loadjrcplist();
-            }
-        }
 
         function dkqdClick(dkqdvaule) {
             dkqd = dkqdvaule;
@@ -416,7 +388,7 @@
                     <div class="prolistl">
                         <div class="probank" id="imgDiv0"></div>
                         <div class="profont">
-                            <div class="profontu" id="jrcpTitle0">中国建设银行股份有限公司镇江分行-燕谷信保贷</div>
+                            <div class="profontu" id="jrcpTitle0"></div>
                             <div class="profontd">参考利率范围： <font id="jrcplilv0" color="#e21739">4.32%-6.0%</font></div>
                         </div>
                     </div>
@@ -623,22 +595,24 @@
                     </div>
                 </div>
 
-
+                <!--<ul id="demoContent"></ul>
+                <ul class="page" id="page"></ul>-->
 
                 <div class="clear"></div>
 
                 <div class="listpage">
-                    <div class="page">
-                        <a id="sya" href="#" onclick="shouye()">首页</a>
-                        <a id="syya" href="#" onclick="prePage()">上一页</a>
-                        <!--<a href="#">1</a>
-                        <span class="current">2</span>
-                        <a href="#">3</a>
-                        <a href="#">4</a>
-                        <a href="#">5</a>-->
-                        <a id="xyya" href="#" onclick="NextPage()">下一页</a>
-                        <a id="wya" href="#" onclick="weiye()">尾页</a>
-                    </div>
+                    <!--<div class="page">-->
+                    <!--<a id="sya" href="#" onclick="shouye()">首页</a>
+                    <a id="syya" href="#" onclick="prePage()">上一页</a>
+                    <a href="#">1</a>
+                    <span class="current">2</span>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a id="xyya" href="#" onclick="NextPage()">下一页</a>
+                    <a id="wya" href="#" onclick="weiye()">尾页</a>-->
+                    <ul class="page" id="page"></ul>
+                    <!--</div>-->
                 </div>
 
 
@@ -732,6 +706,94 @@
 
     <script type="text/javascript" src="../HtmlWebSite/js/login.js" language="javascript"></script>
 
+    <script type="text/javascript">
 
+        var datas;
+        function loadjrcplist() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                async: false,
+                data: { dkqd: dkqd, dkqx: dkqx, dbfs: dbfs, dked: dked, jgmc: jgmc, cpmc: cpmc },
+                url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetJRCPList",
+                success: function (json) {
+                    datas = json;
+                }
+            });
+            var options = {
+                "id": "page",//显示页码的元素
+                "data": datas,//显示数据
+                "maxshowpageitem": 3,//最多显示的页码个数
+                "pagelistcount": 10,//每页显示数据个数
+                "callBack": function (result) {
+                    var cHtml = "";
+                    var onePagesize = 0;
+                    for (var i = 0; i < result.length; i++) {
+                        //cHtml += "<li>" + result[i].Title + "</li>";//处理数据
+                        $('#jrcpdiv' + i + '').show();
+                        $('#imgDiv' + i + '').html(GetLogo2Img(result[i].BankId));
+                        $('#jrcpTitle' + i + '').html(result[i].Title);
+                        if (result[i].LilvLow == 0 || result[i].DaikuanUp == 0) {
+                            $('#jrcplilv' + i + '').html('根据具体情况');
+                        } else {
+                            $('#jrcplilv' + i + '').html(result[i].LilvLow + "%-" + result[i].LilvUp + "%");
+                        }
+                        //$('#jrcplilv' + i + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
+                        $('#jrcped' + i + '').html(result[i].DaikunLow + "万元-" + result[i].DaikuanUp + "万元");
+                        $('#jrcpdbfs' + i + '').html(result[i].Desc);
+                        $('#jrcpqx' + i + '').html(result[i].QxLow + "个月-" + result[i].QxUp + "个月");
+                        $('#jrcpDetail' + i + '').attr("href", "products_view.html?jrcpid=" + result[i].Id);
+                        onePagesize++;
+                    }
+                    for (var l = 10; l > onePagesize; l--) {
+                        $('#jrcpdiv' + (l - 1) + '').hide();
+                    }
+                }
+            };
+            page.init(datas.length, 1, options);
+        }
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            async: false,
+            data: { dkqd: dkqd, dkqx: dkqx, dbfs: dbfs, dked: dked, jgmc: jgmc, cpmc: cpmc },
+            url: "../../WebServer/PublishFinancialProductsWebService.ashx?Method=GetJRCPList",
+            success: function (json) {
+                datas = json;
+            }
+        });
+        var options = {
+            "id": "page",//显示页码的元素
+            "data": datas,//显示数据
+            "maxshowpageitem": 3,//最多显示的页码个数
+            "pagelistcount": 10,//每页显示数据个数
+            "callBack": function (result) {
+                var cHtml = "";
+                var onePagesize = 0;
+                for (var i = 0; i < result.length; i++) {
+                    //cHtml += "<li>" + result[i].Title + "</li>";//处理数据
+                    $('#jrcpdiv' + i + '').show();
+                    $('#imgDiv' + i + '').html(GetLogo2Img(result[i].BankId));
+                    $('#jrcpTitle' + i + '').html(result[i].Title);
+                    if (result[i].LilvLow == 0 || result[i].DaikuanUp == 0) {
+                        $('#jrcplilv' + i + '').html('根据具体情况');
+                    } else {
+                        $('#jrcplilv' + i + '').html(result[i].LilvLow + "%-" + result[i].LilvUp + "%");
+                    }
+                    //$('#jrcplilv' + i + '').html(JRCPJSON[i].LilvLow + "%-" + JRCPJSON[i].LilvUp + "%");
+                    $('#jrcped' + i + '').html(result[i].DaikunLow + "万元-" + result[i].DaikuanUp + "万元");
+                    $('#jrcpdbfs' + i + '').html(result[i].Desc);
+                    $('#jrcpqx' + i + '').html(result[i].QxLow + "个月-" + result[i].QxUp + "个月");
+                    $('#jrcpDetail' + i + '').attr("href", "products_view.html?jrcpid=" + result[i].Id);
+                    onePagesize++;
+                }
+                for (var l = 10; l > onePagesize; l--) {
+                    $('#jrcpdiv' + (l - 1) + '').hide();
+                }
+            }
+        };
+        page.init(datas.length, 1, options);
+
+    </script>
 </body>
 </html>
