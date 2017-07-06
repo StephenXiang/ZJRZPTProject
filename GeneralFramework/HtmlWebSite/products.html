@@ -8,6 +8,7 @@
     <link href="css/page.css" type="text/css" rel="stylesheet" />
     <!--<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>-->
     <script type="text/javascript" src="pagejs/page.js"></script>
+    <script src="../Scripts/jquery.cookie.js"></script>
     <script type="text/javascript">
 
         var PageIndex = 1;
@@ -243,6 +244,10 @@
             loadjrcplist();
         }
         function searchClick() {
+            dkqx = "0";
+            dbfs = "0";
+            dked = "0";
+
             PageIndex = 1;
             PageAllNum = 0;
             if ($('#jg').val() != "" && $('#jg').val() != null) {

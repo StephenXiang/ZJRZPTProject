@@ -146,9 +146,15 @@
                 alert("请输入关键词");
             } else {
                 //$.cookie('rzptSearchStr', cpmc,｛expires：7，path：'/'｝);
-                $.cookie("rzptSearchStr", cpmc, { path: "../" });
+                //$.cookie("rzptSearchStr", cpmc, { path: "../" });
+                $.cookie("rzptSearchStr", cpmc, { expires: 7, path: '/', secure: false });
+
                 location.href = "HtmlWebSite/Search.html";
             }
+        }
+
+        function searchcp() {
+            location.href = "HtmlWebSite/products.html?dkqx=" + encodeURI($('#dkqxcmb').val()) + "&dkje=" + encodeURI($('#dkjecmb').val()) + "&dbfs=" + encodeURI($('#dbfscmb').val()) + "";
         }
 
         function loadBankImgList() {
@@ -177,9 +183,6 @@
             var imghtml = "<a href='HtmlWebSite/bank_view.html?bankid=" + BankId + "'><img style='border:none;' width='162' height='51' src='../WebServer/CooperativeBank.ashx?Method=LoadLogoImg&Id=" + BankId + "'></a>";
             return imghtml;
         }
-
-
-
 
         function loadNewJRCP() {
             $.ajax({
@@ -255,9 +258,9 @@
 
             <div class="common1">
                 <div class="block1">
-                    <div class="wyrz"><a href="Manager/Index.aspx" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"><img src="HtmlWebSite/images/wyrz.png" /></a></div>
+                    <div class="wyrz"><a href="Manager/Index.aspx" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"><img style="border:none;" src="HtmlWebSite/images/wyrz.png" /></a></div>
                     <!--<div class="wyrz"><a href="Manager/Index.aspx" onclick="zzdclick()"><img src="HtmlWebSite/images/wyzz.png" /></a></div>-->
-                    <div class="wyrz"><a onclick="zzdclick()"><img src="HtmlWebSite/images/wyzz.png" /></a></div>
+                    <div class="wyrz"><a onclick="zzdclick()"><img style="border:none;" src="HtmlWebSite/images/wyzz.png" /></a></div>
                 </div>
 
                 <div class="block2">
@@ -389,7 +392,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="b3sin"><input type="submit" value="搜索产品" class="b3sub" onclick="searchjrcp()" /></div>
+                    <div class="b3sin"><input type="submit" value="搜索产品" class="b3sub" onclick="searchcp()" /></div>
                 </div>
 
                 <div class="block4">
