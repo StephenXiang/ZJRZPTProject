@@ -42,7 +42,7 @@ namespace GeneralFrameworkDAL
 left join RZDemandInfo b on a.DemandId = b.Id
 left join Enterprise c on a.EnterpriseId = c.ID
 left join Bank d on a.SLBankId = d.Id 
-where BankIds like '%" + ParentBankId + "%' and a.IsDeleted=0";
+where BankIds like '%" + ParentBankId + "%' and a.IsDeleted=0 order by PublishDate desc";
                 var dt1 = DBHelper.GetDataSet(sql);
                 if (dt1.Rows.Count == 0)
                 {
@@ -80,7 +80,7 @@ where BankIds like '%" + ParentBankId + "%' and a.IsDeleted=0";
 left join RZDemandInfo b on a.DemandId = b.Id
 left join Enterprise c on a.EnterpriseId = c.ID
 left join Bank d on a.SLBankId = d.Id 
-where a.IsDeleted=0";
+where a.IsDeleted=0 order by PublishDate desc";
                 var banks = BankInfoService.GetBanks();
                 var dt1 = DBHelper.GetDataSet(sql);
                 if (dt1.Rows.Count == 0)
