@@ -75,7 +75,7 @@
                                                if (value == 0) {
                                                    return '选中查看';
                                                } else if (value == 1) {
-                                                   return '<a href="#" onclick="slclick(' + value + ',' + row.Id + ',' + row.SLBankId + ')">是否确认受理</a>';
+                                                   return '<a href="#" onclick="slclick(' + value + ',' + row.Id + ',0)">是否确认受理</a>';
                                                } else if (value == 2) {
                                                    var BenBankId = GetBankId();
                                                    if (BenBankId == row.SLBankId) {
@@ -110,7 +110,8 @@
                 })
             });
         }
-        function slclick(status, id, slbankId) {
+
+        function slclick(status, id, SLBankId) {
             if (status == 1) {
                 $.messager.confirm('提示', '请确认该企业是否符合贵银行的融资条件！是否确认受理？', function (r) {
                     if (r) {
@@ -121,37 +122,7 @@
                 });
             } else if (status == 2) {
                 var BenBankId = GetBankId();
-                if (BenBankId == slbankId) {
-                    $.messager.defaults = { ok: "是", cancel: "否" };
-                    $.messager.confirm('提示', '该企业的融资请求是否受理成功？', function (r) {
-                        if (r) {
-                            $('#statustext2').textbox('setValue', '3');
-                            $('#rzidtext2').textbox("setValue", id);
-                            $('#RZSLdlg').dialog('open');
-                        } else {
-                            $.messager.defaults = { ok: "确定", cancel: "取消" };
-                            $('#statustext').textbox('setValue', '4');
-                            $('#rzidtext').textbox("setValue", id);
-                            $('#RZFeedBackdlg').dialog('open');
-                        }
-                    });
-                } else {
-                    $.messager.alert('提示', '当前融资申请已被' + row.SLBankName + '受理!', "info");
-                }
-            }
-        }
-        function slclick2(status, id, slbankId) {
-            if (status == 1) {
-                $.messager.confirm('提示', '请确认该企业是否符合贵银行的融资条件！是否确认受理？', function (r) {
-                    if (r) {
-                        EditRZStatus('2', id);
-                    } else {
-
-                    }
-                });
-            } else if (status == 2) {
-                var BenBankId = GetBankId();
-                if (BenBankId == row.SLBankId) {
+                if (BenBankId == SLBankId) {
                     $.messager.defaults = { ok: "是", cancel: "否" };
                     $.messager.confirm('提示', '该企业的融资请求是否受理成功？', function (r) {
                         if (r) {
