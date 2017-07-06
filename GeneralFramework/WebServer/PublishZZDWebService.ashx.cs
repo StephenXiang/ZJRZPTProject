@@ -75,7 +75,7 @@ namespace GeneralFramework.WebServer
 
         public void GetZzdMastBanks()
         {
-            var mainbankid = Request.QueryString["mainbankid"].ToString();
+            var mainbankid = HttpUtility.UrlDecode(Request.QueryString["mainbankid"].ToString());
             Response.Write(_zm.GetMastBanks(mainbankid));
         }
 

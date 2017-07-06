@@ -191,7 +191,7 @@
                 onChange: function (n, o) {
                     $('#ydkyhcmb').combobox({
                         //width: 145,
-                        url: '../../WebServer/PublishZZDWebService.ashx?Method=GetZzdMastBanks&mainbankid=' + $('#ydkyhgszhcmb').combobox('getText', n),
+                        url: '../../WebServer/PublishZZDWebService.ashx?Method=GetZzdMastBanks&mainbankid=' + $('#ydkyhgszhcmb').combobox('getValue', n),
                         valueField: 'ID',
                         textField: 'TypeName'
                     });

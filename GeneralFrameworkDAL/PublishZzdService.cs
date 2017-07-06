@@ -25,6 +25,14 @@ namespace GeneralFrameworkDAL
 
         public string GetMastBanks(string mainbankid)
         {
+            string sqlPbank = "select BankName from MainBank where Id='" + mainbankid + "'";
+            var pbankdt = DBHelper.GetDataSet(sqlPbank);
+            if (pbankdt.Rows.Count > 0)
+            {
+                var pbankdr = pbankdt.Rows[0];
+                mainbankid = pbankdr[0].ToString();
+            }
+
             if (mainbankid != "中国银行")
             {
                 mainbankid = mainbankid.Replace("中国", "");
