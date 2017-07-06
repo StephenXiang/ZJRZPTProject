@@ -114,7 +114,7 @@
         }
 
         function SaveJRCP() {
-            if ("" === $('#jrname').val().trim()) {
+            if ("" === $('#jrname').val()) {
                 $.messager.alert('提示', '标题不能为空', 'info');
             }
             else if ("" === $('#dkqxstart').combobox('getValue')) {
@@ -132,31 +132,31 @@
             else if (!checkNum("dkedstart") || !checkNum("dkedend")) {
                 $.messager.alert('提示', '贷款额度只能输入数字', 'info');
             }
-            else if (parseFloat($('#dkedstart').val().trim()) >= parseFloat($('#dkedend').val().trim())) {
+            else if (parseFloat($('#dkedstart').val()) >= parseFloat($('#dkedend').val())) {
                 $.messager.alert('提示', '贷款额度范围输入有误', 'info');
             }
                 //else if (!checkNum("llfwstart") || !checkNum("llfwend")) {
                 //    $.messager.alert('提示', '利率范围只能输入数字', 'info');
                 //}
-                //else if (parseFloat($('#llfwstart').val().trim()) >= parseFloat($('#llfwend').val().trim())) {
+                //else if (parseFloat($('#llfwstart').val()) >= parseFloat($('#llfwend').val())) {
                 //    $.messager.alert('提示', '利率范围输入有误', 'info');
                 //}
-            else if (!checkMobile($('#jrlxdh').val().trim()) && !checkPhone($('#jrlxdh').val().trim())) {
+            else if (!checkMobile($('#jrlxdh').val()) && !checkPhone($('#jrlxdh').val())) {
                 $.messager.alert('提示', '联系电话格式不正确', 'info');
             }
-            else if ("" === $('#jrcpjj').val().trim()) {
+            else if ("" === $('#jrcpjj').val()) {
                 $.messager.alert('提示', '请填写产品简介', 'info');
             }
-            else if ("" === $('#jrcptd').val().trim()) {
+            else if ("" === $('#jrcptd').val()) {
                 $.messager.alert('提示', '请填写产品特点', 'info');
             }
-            else if ("" === $('#jrsykh').val().trim()) {
+            else if ("" === $('#jrsykh').val()) {
                 $.messager.alert('提示', '请填写产品使用客户', 'info');
             }
-            else if ("" === $('#jrsqtj').val().trim()) {
+            else if ("" === $('#jrsqtj').val()) {
                 $.messager.alert('提示', '请填写产品申请条件', 'info');
             }
-            else if ("" === $('#jrcailiao').val().trim()) {
+            else if ("" === $('#jrcailiao').val()) {
                 $.messager.alert('提示', '请填写企业所需提交材料', 'info');
             }
             else {
@@ -189,20 +189,20 @@
         function GetJsonData() {
             return {
                 "UserName": UserInfo["name"],
-                "jrname": $('#jrname').val().trim(),
+                "jrname": $('#jrname').val(),
                 "dkqxstart": $('#dkqxstart').combobox('getValue'),
                 "dkqxend": $('#dkqxend').combobox('getValue'),
                 "jrdanbao": $('#jrdanbao').combobox('getValue'),
-                "dkedstart": $('#dkedstart').val().trim(),
-                "dkedend": $('#dkedend').val().trim(),
-                "llfwstart": $('#llfwstart').val().trim(),
-                "llfwend": $('#llfwend').val().trim(),
-                "jrlxdh": $('#jrlxdh').val().trim(),
-                "jrcpjj": $('#jrcpjj').val().trim(),
-                "jrcptd": $('#jrcptd').val().trim(),
-                "jrsykh": $('#jrsykh').val().trim(),
-                "jrsqtj": $('#jrsqtj').val().trim(),
-                "jrcailiao": $('#jrcailiao').val().trim()
+                "dkedstart": $('#dkedstart').val(),
+                "dkedend": $('#dkedend').val(),
+                "llfwstart": $('#llfwstart').val(),
+                "llfwend": $('#llfwend').val(),
+                "jrlxdh": $('#jrlxdh').val(),
+                "jrcpjj": $('#jrcpjj').val(),
+                "jrcptd": $('#jrcptd').val(),
+                "jrsykh": $('#jrsykh').val(),
+                "jrsqtj": $('#jrsqtj').val(),
+                "jrcailiao": $('#jrcailiao').val()
             };
         }
 

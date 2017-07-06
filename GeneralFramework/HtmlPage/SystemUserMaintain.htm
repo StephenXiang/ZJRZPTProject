@@ -208,14 +208,14 @@
             else if ($('#SysDepartmentCmb').combobox('getValue') == "") {
                 $.messager.alert('提示', '组织归属必须选择', 'info');
             }
-            else if ($('#yhmtext').val().trim() == "") {
+            else if ($('#yhmtext').val() == "") {
                 $.messager.alert('提示', '用户名必须填写', 'info');
             }
             else if ($('#SysRolesCmb').combobox('getValue') == 2) {
-                if ($('#Phonetext').val().trim() == "") {
+                if ($('#Phonetext').val() == "") {
                     $.messager.alert('提示', '联系电话必须填写', 'info');
                 }
-                else if (checkMobile($('#Phonetext').val().trim()) == false) {
+                else if (checkMobile($('#Phonetext').val()) == false) {
                     $.messager.alert('提示', '联系电话格式不正确', 'info');
                 }
                 else {
@@ -274,8 +274,8 @@
             var user = {
                 "RoleId": $('#SysRolesCmb').combobox('getValue'),
                 "DepartId": $('#SysDepartmentCmb').combobox('getValue'),
-                "UserName": $('#yhmtext').val().trim(),
-                "Phone": $('#Phonetext').val().trim()
+                "UserName": $('#yhmtext').val(),
+                "Phone": $('#Phonetext').val()
             };
             return user;
         }

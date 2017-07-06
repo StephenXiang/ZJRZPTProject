@@ -267,7 +267,7 @@
 
         function SaveRZInfo() {
 
-            var rzed = $('#RZEDtext').val().trim();
+            var rzed = $('#RZEDtext').val();
             var isdyw = $('input:radio[name="isDyw"]:checked').val();
             if (rzed == "") {
                 $.messager.alert('提示', '融资额度不能为空', 'info');
@@ -288,7 +288,7 @@
                 $.messager.alert('提示', '融资用途必须选择', 'info');
             } else {
                 if (isdyw == 1 || isdyw == 2) {
-                    if ($('#dywtext').val().trim() == "") {
+                    if ($('#dywtext').val() == "") {
                         $.messager.alert('提示', '请填写抵押物描述', 'info');
                     }
                     else {
@@ -365,7 +365,7 @@
                 {
                     "Id": isedit ? selectid : 0,
                     "UserName": UserInfo["name"],
-                    "RZED": $('#RZEDtext').val().trim(),
+                    "RZED": $('#RZEDtext').val(),
                     "RZYH": RZYHstr,
                     "RZQX": $('#RZQXcmb').combobox('getValue'),
                     "RZQT": $('#RZYTcmb').combobox('getValue'),

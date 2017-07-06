@@ -196,19 +196,19 @@
 
         function EditSaveEnterprisrInfo() {
 
-            if ($('#EditEnterpriseName').val().trim() == "") {
+            if ($('#EditEnterpriseName').val() == "") {
                 $.messager.alert('提示', '企业名称不得为空', 'info');
             }
-            else if (!/^[\u0391-\uFFE5]+$/i.test($('#EditEnterpriseName').val().trim())) {
+            else if (!/^[\u0391-\uFFE5]+$/i.test($('#EditEnterpriseName').val())) {
                 $.messager.alert('提示', '企业名称必须是中文', 'info');
             }
             else if ($('#EditCode').val() == "") {
                 $.messager.alert('提示', '信用代码不得为空', 'info');
             }
-            else if ($('#EditCode').val().trim().length != 18) {
+            else if ($('#EditCode').val().length != 18) {
                 $.messager.alert('提示', '信用代码不得大于或小于18位', 'info');
             }
-            else if (!/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/.test($('#EditCode').val().trim())) {
+            else if (!/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/.test($('#EditCode').val())) {
                 $.messager.alert('提示', '信用代码格式有误', 'info');
             }
             else if ($('#EditProfessionCmb').combobox('getValue') == "") {
@@ -324,37 +324,37 @@
         }
 
         function SaveEnterpriseFinanceInfo() {
-            if ($('#thiszczetext').val().trim() == "") {
+            if ($('#thiszczetext').val() == "") {
                 $.messager.alert('提示', '资产总额不得为空', 'info');
             }
             else if (checkNum('llzczetext') == false || checkNum('lzczetext') == false || checkNum('thiszczetext') == false) {
                 $.messager.alert('提示', '资产总额必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#thisfzzetext').val().trim() == "") {
+            else if ($('#thisfzzetext').val() == "") {
                 $.messager.alert('提示', '负债总额不得为空', 'info');
             }
             else if (checkNum('llfzzetext') == false || checkNum('lfzzetext') == false || checkNum('thisfzzetext') == false) {
                 $.messager.alert('提示', '负债总额必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#thisxssrtext').val().trim() == "") {
+            else if ($('#thisxssrtext').val() == "") {
                 $.messager.alert('提示', '销售收入不得为空', 'info');
             }
             else if (checkNum('llxssrtext') == false || checkNum('lxssrtext') == false || checkNum('thisxssrtext') == false) {
                 $.messager.alert('提示', '销售收入必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#thisyszktext').val().trim() == "") {
+            else if ($('#thisyszktext').val() == "") {
                 $.messager.alert('提示', '应收账款不得为空', 'info');
             }
             else if (checkNum('llyszktext') == false || checkNum('lyszktext') == false || checkNum('thisyszktext') == false) {
                 $.messager.alert('提示', '应收账款必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#thisjlrtext').val().trim() == "") {
+            else if ($('#thisjlrtext').val() == "") {
                 $.messager.alert('提示', '净利润不得为空', 'info');
             }
             else if (checkNum('lljlrtext') == false || checkNum('ljlrtext') == false || checkNum('thisjlrtext') == false) {
                 $.messager.alert('提示', '净利润必须输入数字且只能存在一位小数点', 'info');
             }
-            else if ($('#thissyzqytext').val().trim() == "") {
+            else if ($('#thissyzqytext').val() == "") {
                 $.messager.alert('提示', '所有者权益不得为空', 'info');
             }
             else if (checkNum('llsyzqytext') == false || checkNum('lsyzqytext') == false || checkNum('thissyzqytext') == false) {
@@ -388,18 +388,18 @@
         }
 
         function GetJsonData() {
-            var llzczetext = $('#llzczetext').val().trim() == "" ? llzczetext = 0 : $('#llzczetext').val().trim();
-            var lzczetext = $('#lzczetext').val().trim() == "" ? lzczetext = 0 : $('#lzczetext').val().trim();
-            var llfzzetext = $('#llfzzetext').val().trim() == "" ? llfzzetext = 0 : $('#llfzzetext').val().trim();
-            var lfzzetext = $('#lfzzetext').val().trim() == "" ? lfzzetext = 0 : $('#lfzzetext').val().trim();
-            var llxssrtext = $('#llxssrtext').val().trim() == "" ? llxssrtext = 0 : $('#llxssrtext').val().trim();
-            var lxssrtext = $('#lxssrtext').val().trim() == "" ? lxssrtext = 0 : $('#lxssrtext').val().trim();
-            var llyszktext = $('#llyszktext').val().trim() == "" ? llyszktext = 0 : $('#llyszktext').val().trim();
-            var lyszktext = $('#lyszktext').val().trim() == "" ? lyszktext = 0 : $('#lyszktext').val().trim();
-            var lljlrtext = $('#lljlrtext').val().trim() == "" ? lljlrtext = 0 : $('#lljlrtext').val().trim();
-            var ljlrtext = $('#ljlrtext').val().trim() == "" ? ljlrtext = 0 : $('#ljlrtext').val().trim();
-            var llsyzqytext = $('#llsyzqytext').val().trim() == "" ? llsyzqytext = 0 : $('#llsyzqytext').val().trim();
-            var lsyzqytext = $('#lsyzqytext').val().trim() == "" ? lsyzqytext = 0 : $('#lsyzqytext').val().trim();
+            var llzczetext = $('#llzczetext').val() == "" ? llzczetext = 0 : $('#llzczetext').val();
+            var lzczetext = $('#lzczetext').val() == "" ? lzczetext = 0 : $('#lzczetext').val();
+            var llfzzetext = $('#llfzzetext').val() == "" ? llfzzetext = 0 : $('#llfzzetext').val();
+            var lfzzetext = $('#lfzzetext').val() == "" ? lfzzetext = 0 : $('#lfzzetext').val();
+            var llxssrtext = $('#llxssrtext').val() == "" ? llxssrtext = 0 : $('#llxssrtext').val();
+            var lxssrtext = $('#lxssrtext').val() == "" ? lxssrtext = 0 : $('#lxssrtext').val();
+            var llyszktext = $('#llyszktext').val() == "" ? llyszktext = 0 : $('#llyszktext').val();
+            var lyszktext = $('#lyszktext').val() == "" ? lyszktext = 0 : $('#lyszktext').val();
+            var lljlrtext = $('#lljlrtext').val() == "" ? lljlrtext = 0 : $('#lljlrtext').val();
+            var ljlrtext = $('#ljlrtext').val() == "" ? ljlrtext = 0 : $('#ljlrtext').val();
+            var llsyzqytext = $('#llsyzqytext').val() == "" ? llsyzqytext = 0 : $('#llsyzqytext').val();
+            var lsyzqytext = $('#lsyzqytext').val() == "" ? lsyzqytext = 0 : $('#lsyzqytext').val();
             var EnterpriseFinanceInfoJson =
                 {
                     "UserName": UserInfo["name"],
@@ -408,40 +408,40 @@
                     "thisyear": thisyearMonth,
                     "llzcze": llzczetext,
                     "lzcze": lzczetext,
-                    "thiszcze": $('#thiszczetext').val().trim(),
+                    "thiszcze": $('#thiszczetext').val(),
                     "llfzze": llfzzetext,
                     "lfzze": lfzzetext,
-                    "thisfzze": $('#thisfzzetext').val().trim(),
+                    "thisfzze": $('#thisfzzetext').val(),
                     "llxssr": llxssrtext,
                     "lxssr": lxssrtext,
-                    "thisxssr": $('#thisxssrtext').val().trim(),
+                    "thisxssr": $('#thisxssrtext').val(),
                     "llyszk": llyszktext,
                     "lyszk": lyszktext,
-                    "thisyszk": $('#thisyszktext').val().trim(),
+                    "thisyszk": $('#thisyszktext').val(),
                     "lljlr": lljlrtext,
                     "ljlr": ljlrtext,
-                    "thisjlr": $('#thisjlrtext').val().trim(),
+                    "thisjlr": $('#thisjlrtext').val(),
                     "llsyzqy": llsyzqytext,
                     "lsyzqy": lsyzqytext,
-                    "thissyzqy": $('#thissyzqytext').val().trim()
+                    "thissyzqy": $('#thissyzqytext').val()
                 };
             return EnterpriseFinanceInfoJson;
         }
 
         function SaveEnterprisrInfo() {
-            if ($('#EnterpriseName').val().trim() == "") {
+            if ($('#EnterpriseName').val() == "") {
                 $.messager.alert('提示', '企业名称不得为空', 'info');
             }
-            else if (!/^[\u0391-\uFFE5]+$/i.test($('#EnterpriseName').val().trim())) {
+            else if (!/^[\u0391-\uFFE5]+$/i.test($('#EnterpriseName').val())) {
                 $.messager.alert('提示', '企业名称必须是中文', 'info');
             }
             else if ($('#Code').val() == "") {
                 $.messager.alert('提示', '信用代码不得为空', 'info');
             }
-            else if ($('#Code').val().trim().length != 18) {
+            else if ($('#Code').val().length != 18) {
                 $.messager.alert('提示', '信用代码不得大于或小于18位', 'info');
             }
-            else if (!/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/.test($('#Code').val().trim())) {
+            else if (!/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/.test($('#Code').val())) {
                 $.messager.alert('提示', '信用代码格式有误', 'info');
             }
             else if ($('#BusinessLicenseFile').textbox('getValue') == "") {
@@ -856,7 +856,7 @@
     </div>
 
     <div id="Enterprisedlg" class="easyui-dialog" title="企业信息编辑" style="text-align: center;
-        width: 600px; height:480px; padding: 10px" data-options="
+        width: 620px; height:480px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#Enterprisedlg-buttons'
             ">

@@ -113,10 +113,10 @@
         }
 
         function SaveLY() {
-            if ($('#LYTitle').val().trim() === '') {
+            if ($('#LYTitle').val() === '') {
                 $.messager.alert('提示', '必须填写标题!', 'info');
             }
-            else if ($('#LYContent').val().trim() === '') {
+            else if ($('#LYContent').val() === '') {
                 $.messager.alert('提示', '必须填写内容!', 'info');
             }
             else {
@@ -126,8 +126,8 @@
                     url: "../../WebServer/MessageService.ashx?Method=LeaveMsg",
                     data: {
                         UserName: UserInfo["name"],
-                        Title: $('#LYTitle').val().trim(),
-                        Content: $('#LYContent').val().trim()
+                        Title: $('#LYTitle').val(),
+                        Content: $('#LYContent').val()
                     },
                     success: function (text) {
                         if (text === "True") {

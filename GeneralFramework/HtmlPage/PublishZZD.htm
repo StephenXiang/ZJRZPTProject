@@ -224,28 +224,28 @@
             if ($('#ydkyhcmb').combobox('getValue') == "") {
                 $.messager.alert('提示', '原贷款银行必须选择', 'info');
             }
-            else if ($('#khjlxm').val().trim() == "") {
+            else if ($('#khjlxm').val() == "") {
                 $.messager.alert('提示', '客户经理姓名不能为空', 'info');
             }
-            else if ($('#khjllxdh').val().trim() == "") {
+            else if ($('#khjllxdh').val() == "") {
                 $.messager.alert('提示', '客户经理联系电话不能为空', 'info');
             }
-            else if (checkMobile($('#khjllxdh').val().trim()) == false) {
+            else if (checkMobile($('#khjllxdh').val()) == false) {
                 $.messager.alert('提示', '客户经理电话格式不正确', 'info');
             }
-            else if ($('#ydkje').val().trim() == "") {
+            else if ($('#ydkje').val() == "") {
                 $.messager.alert('提示', '原贷款金额不能为空', 'info');
             }
             else if (checkNum("ydkje") == false) {
                 $.messager.alert('提示', '原贷款金额只能输入数字', 'info');
             }
-            else if ($('#dkdqsj').val().trim() == "") {
+            else if ($('#dkdqsj').val() == "") {
                 $.messager.alert('提示', '贷款到期时间必须选择', 'info');
             }
             else if ($('#zbhcmb').combobox('getValue') == "") {
                 $.messager.alert('提示', '主办行(经办行)必须选择', 'info');
             }
-            else if ($('#bcdkje').val().trim() == "") {
+            else if ($('#bcdkje').val() == "") {
                 $.messager.alert('提示', '本次贷款金额必须填写', 'info');
             }
             else if (checkNum("bcdkje") == false) {
@@ -285,10 +285,10 @@
                     "Id": isedit ? selectid : 0,
                     "UserName": UserInfo["name"],
                     "ydkyh": $('#ydkyhcmb').combobox('getValue'),
-                    "khjlxm": $('#khjlxm').val().trim(),
-                    "khjllxdh": $('#khjllxdh').val().trim(),
-                    "ydkje": $('#ydkje').val().trim(),
-                    "dkdqsj": $('#dkdqsj').val().trim(),
+                    "khjlxm": $('#khjlxm').val(),
+                    "khjllxdh": $('#khjllxdh').val(),
+                    "ydkje": $('#ydkje').val(),
+                    "dkdqsj": $('#dkdqsj').val(),
                     "zbh": $('#zbhcmb').combobox('getValue'),
                     "bcdkje": $('#bcdkje').val()
                 };

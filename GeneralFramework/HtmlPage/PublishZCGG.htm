@@ -512,7 +512,7 @@
                     data: JSON.stringify({
                         "CreateUser": UserInfo["name"],
                         "NewsContent": editor1.html(),
-                        "NewsTitle": $('#titleZC').val().trim()
+                        "NewsTitle": $('#titleZC').val()
                     }),
                     dataType: "text",
                     success: function (text) {
@@ -543,7 +543,7 @@
                     data: JSON.stringify({
                         "CreateUser": UserInfo["name"],
                         "NewsContent": editor2.html(),
-                        "NewsTitle": $('#titleGG').val().trim()
+                        "NewsTitle": $('#titleGG').val()
                     }),
                     success: function (text) {
                         if (text > 0) {
