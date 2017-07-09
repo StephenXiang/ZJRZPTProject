@@ -72,7 +72,7 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
                 SmsService sms = new SmsService();
                 for (int h = 0; h < phonelist.Count; h++)
                 {
-                    //sms.Send(phonelist[h].ToString(), "有新的融资申请，请及时登陆镇江融资平台查看详细信息");
+                    sms.Send(phonelist[h].ToString(), "有新的融资申请，请及时登陆镇江融资平台查看详细信息");
                 }
             }
             return efc > 0;

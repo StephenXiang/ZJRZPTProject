@@ -74,7 +74,7 @@ values(@ent,@bk,@mbk,@ma,@map,@oq,@q,@ed,0,@date)";
                         phonelist.Add(Phone);
                     }
                 }
-                sql = string.Format(@"select ConnectorPhone from Bank where Id in({0})", zi.zbh);
+                sql = string.Format(@"select Phone from Bank a right join LiaisonanMan b on a.Id = b.BankId where 1=1 and b.IsDeleteed = 0 and a.Id in({0})", zi.ydkyh);
                 DataTable yhdt = DBHelper.GetDataSet(sql);
                 if (yhdt.Rows.Count > 0)
                 {
