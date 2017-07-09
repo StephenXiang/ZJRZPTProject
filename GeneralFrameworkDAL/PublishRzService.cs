@@ -59,7 +59,7 @@ values(@ent,@bks,(select top 1 Id from RZFinance where EnterpriseId=@ent),@dm,0)
                         phonelist.Add(Phone);
                     }
                 }
-                sql = string.Format(@"select ConnectorPhone from Bank where ParentBankId in({0})", rzi.RZYH);
+                sql = string.Format(@"select Phone from Bank a right join LiaisonanMan b on a.Id = b.BankId where 1=1 and b.IsDeleteed = 0 and a.ParentBankId in({0})", rzi.RZYH);
                 DataTable yhdt = DBHelper.GetDataSet(sql);
                 if (yhdt.Rows.Count > 0)
                 {

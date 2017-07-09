@@ -66,8 +66,17 @@ namespace GeneralFramework.WebServer
             string userName = Request["UserName"];
             int page = int.Parse(Request["page"].ToString());
             int rows = int.Parse(Request["rows"].ToString());
-            Response.Write(zm.GetZZDDataTable(userName,page,rows));
+            Response.Write(zm.GetZZDDataTable(userName, page, rows));
         }
+
+        public void GetMastBankZZDDT()
+        {
+            string userName = Request["UserName"];
+            int page = int.Parse(Request["page"].ToString());
+            int rows = int.Parse(Request["rows"].ToString());
+            Response.Write(zm.GetMastBankZZDDT(userName, page, rows));
+        }
+
         public void EditZZDStatus()
         {
             string status = Request["status"];
@@ -96,6 +105,12 @@ namespace GeneralFramework.WebServer
         {
             string ZZDID = Request["ZZDID"];
             Response.Write(zm.GetZZDInfoByZZDID(ZZDID));
+        }
+
+        public void GetBankInfoFoeUserName()
+        {
+            string userName = Request["UserName"];
+            Response.Write(zm.GetBankInfoForUserName(userName));
         }
     }
 }

@@ -45,7 +45,17 @@
                     { field: 'BankDesc', title: '银行描述', width: 300, align: 'center' },
                     { field: 'Leader', title: '领导姓名', width: 300, align: 'center' },
                     { field: 'Phone', title: '联系电话', width: 300, align: 'center' },
-                    { field: 'Sort', title: '排序', width: 300, align: 'center' }
+                    { field: 'Sort', title: '排序', width: 300, align: 'center' },
+                    {
+                        field: 'IsDesplay', title: '是否展示', width: 300, align: 'center', formatter:
+                                            function (value, row, index) {
+                                                if (value == "False") {
+                                                    return '是';
+                                                } else {
+                                                    return '否';
+                                                }
+                                            }
+                    },
                 ]], toolbar: [{
                     iconCls: 'icon-add',
                     text: '新增',
@@ -64,9 +74,26 @@
                             $('#BankIdtext').textbox('setValue', (BankId));
                             $('#BankNametext').textbox('setValue', row.BankName);
                             $('#BankLeadertext').textbox('setValue', row.Leader);
+                            $('#Logo1').textbox('setValue', "");
+                            $('#Logo2').textbox('setValue', "");
                             $('#Phonetext').textbox('setValue', row.Phone);
                             $('#Banksort').combobox('setValue', row.Sort);
                             $('#BankDesc').textbox('setValue', row.BankDesc);
+                            var isShow = 0;
+                            if (row.IsDesplay == "False") {
+                                isShow = 0;
+                            } else {
+                                isShow = 1;
+                            }
+                            if (isShow == 0) {
+                                $('input:radio[name="IsDesplay"]').eq(0).attr("checked", "checked");
+                                $('input:radio[name="IsDesplay"]').eq(1).removeAttr("checked");
+                                $('input:radio[name="IsDesplay"]').eq(0).click();
+                            } else {
+                                $('input:radio[name="IsDesplay"]').eq(1).attr("checked", "checked");
+                                $('input:radio[name="IsDesplay"]').eq(0).removeAttr("checked");
+                                $('input:radio[name="IsDesplay"]').eq(1).click();
+                            }
                             openBankDlg(1);
                         }
 
@@ -291,7 +318,7 @@
             "></table>
         </div>
         <div id="Bankdlg" class="easyui-dialog" title="编辑银行信息" style="text-align: center;
-        width: 450px; height: 400px; padding: 10px" data-options="
+        width: 450px; height: 430px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#Bankdlg-buttons'
             ">
@@ -324,6 +351,13 @@
                     <tr>
                         <td style=" text-align:right;">银行简介:</td>
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankDesc" name="BankDesc" class="easyui-textbox" style="width:90%;height:100px" data-options="multiline:true" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">是否展示:</td>
+                        <td style=" text-align:left;">
+                            &nbsp;&nbsp;&nbsp;<input type="radio" name="IsDesplay" value='0'>是
+                            <input type="radio" name="IsDesplay" value='1' checked="checked">否
+                        </td>
                     </tr>
                     <tr style="display:none;">
                         <td style=" text-align:right;">ID:</td>

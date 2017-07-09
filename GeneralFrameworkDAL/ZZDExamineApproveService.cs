@@ -29,16 +29,16 @@ namespace GeneralFrameworkDAL
             }
             if (BankId != 0)
             {
-                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c.Name as BankName,a.ThisQuota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.[Status],a.[Status] as cz from ZZDFlow a 
+                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c.Name as BankName,a.ThisQuota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.[Status],a.[Status] as cz,a.Feedback from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID
 left join Bank c on a.BankId = c.Id
-where  a.MastBankId = '" + BankId + "' and a.IsDeleted=0 order by a.Id Desc";
+where  a.BankId = '" + BankId + "' and a.IsDeleted=0 order by a.Id Desc";
                 var dt1 = DBHelper.GetDataSet(sql);
                 return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }
             if (RoleId == 1 || RoleId == 2)    // 系统用户或政府部门
             {
-                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c1.Name as Bank1,c2.Name as BankName,a.ThisQuota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.[Status],a.[Status] as cz from ZZDFlow a 
+                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c1.Name as Bank1,c2.Name as BankName,a.ThisQuota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.[Status],a.[Status] as cz,a.Feedback from ZZDFlow a 
 left join Enterprise b on a.EnterpriseId = b.ID
 left join Bank c1 on a.MastBankId = c1.Id
 left join Bank c2 on a.BankId = c2.Id where a.IsDeleted=0 order by a.Id Desc";
@@ -46,6 +46,60 @@ left join Bank c2 on a.BankId = c2.Id where a.IsDeleted=0 order by a.Id Desc";
                 return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
             }
             return "";
+        }
+
+        public string GetBankInfoForUserName(string UserName)
+        {
+            var sql = @"select BankId,RolesID from SysUser where UserName = '" + UserName + "'";
+            int BankId = 0;
+            int RoleId = 0;
+            DataTable dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                BankId = dr["BankId"] == DBNull.Value ? 0 : int.Parse(dr["BankId"].ToString());
+                RoleId = dr["RolesID"] == DBNull.Value ? 0 : int.Parse(dr["RolesID"].ToString());
+            }
+            else
+            {
+                return "";
+            }
+            sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,a.[Desc],a.EditDate,c.Leader,C.Phone,iszzd,BankType from Bank a 
+left join CooperativeBank c on a.ParentBankId = c.id where a.Id = " + BankId + "";
+            dt = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.SerializeObject(dt);
+            return reply;
+        }
+
+        public string GetMastBankZZDDT(string UserName, int page, int rows)
+        {
+            var sql = @"select BankId,RolesID from SysUser where UserName = '" + UserName + "'";
+            int BankId = 0;
+            int RoleId = 0;
+            DataTable dt = DBHelper.GetDataSet(sql);
+            if (dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                BankId = dr["BankId"] == DBNull.Value ? 0 : int.Parse(dr["BankId"].ToString());
+                RoleId = dr["RolesID"] == DBNull.Value ? 0 : int.Parse(dr["RolesID"].ToString());
+            }
+            else
+            {
+                return "";
+            }
+            if (BankId != 0)
+            {
+                sql = @"select a.Id,b.Id as EnterpriseId,b.Name as EnterpriseName,a.OriginalQuota,c.Name as BankName,a.ThisQuota,CONVERT(varchar(100), a.PublishDate, 23) as PublishDate,a.[Status],a.[Status] as cz,a.Feedback from ZZDFlow a 
+left join Enterprise b on a.EnterpriseId = b.ID
+left join Bank c on a.BankId = c.Id
+where  a.MastBankId = '" + BankId + "' and a.IsDeleted=0 order by a.Id Desc";
+                var dt1 = DBHelper.GetDataSet(sql);
+                return JsonHelper.TableToJson(dt1.Rows.Count, JsonHelper.GetPagedTable(dt1, page, rows));
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public bool EditZZDStatus(string status, string zzdid)
@@ -81,7 +135,7 @@ left join Bank c2 on a.BankId = c2.Id where a.IsDeleted=0 order by a.Id Desc";
                     SmsService sms = new SmsService();
                     for (int h = 0; h < phonelist.Count; h++)
                     {
-                        sms.Send(phonelist[h].ToString(), "有一笔周转贷申请受理成功，请及时登陆镇江融资平台查看详细信息");
+                        //sms.Send(phonelist[h].ToString(), "有一笔周转贷申请受理成功，请及时登陆镇江融资平台查看详细信息");
                     }
                 }
                 return true;
@@ -96,7 +150,7 @@ left join Bank c2 on a.BankId = c2.Id where a.IsDeleted=0 order by a.Id Desc";
             string reply = null;
             string sql = @"select a.Name,a.BusinessLicense,a.Code,c.[Desc] as RegistType,d.[Desc] as Profession,e.[Desc] as EnterpriseType,
                             f.[Desc] as RegistRegion,g.[Desc] as Huanping,h.[Desc] as RegFinance,i.[Desc] as RegFinanceMt,j.[Desc] as Business,
-                            a.MainProduction,a.CreateTime,a.JuridicalPerson,a.ConectionPerson,a.ConnectionTelephone,a.[Desc] from Enterprise a 
+                            a.MainProduction,CONVERT(varchar(100),a.CreateTime, 23) as CreateTime,a.JuridicalPerson,a.ConectionPerson,a.ConnectionTelephone,a.[Desc] from Enterprise a 
                             left join SysUser b on a.ID = b.EnterpriseId 
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 1) c on a.RegistTypeId = c.Id
                             left join (select Id,[Desc],[Type] from Lookup where [Type] = 2) d on a.ProfessionId = d.Id
@@ -196,7 +250,7 @@ where u.EnterpriseId='{0}'", enterpriseId);
         public string GetZZDInfoByZZDID(string zzdid)
         {
             string reply = null;
-            var sql = string.Format(@"select b.Name,a.Manager,a.ManagerPhone,a.OriginalQuota,a.ExpirationDate,c.Name,a.ThisQuota from ZZDFlow a
+            var sql = string.Format(@"select b.Name,a.Manager,a.ManagerPhone,a.OriginalQuota,CONVERT(varchar(100), a.ExpirationDate, 23) as ExpirationDate,c.Name,a.ThisQuota from ZZDFlow a
 left join Bank b on a.BankId = b.Id
 left join Bank c on a.MastBankId = c.Id where a.Id = {0}", zzdid);
             var dt = DBHelper.GetDataSet(sql);

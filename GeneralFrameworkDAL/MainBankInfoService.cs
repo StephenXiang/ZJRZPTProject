@@ -10,7 +10,7 @@ namespace GeneralFrameworkDAL
     {
         public string GetMainBankCmb()
         {
-            var sql = string.Format(" select Id as ID,BankName as TypeName from CooperativeBank order by Sort asc ");
+            var sql = string.Format(" select Id as ID,BankName as TypeName from CooperativeBank where IsDesplay = 0 order by Sort asc ");
             var dt = DBHelper.GetDataSet(sql);
             return JsonHelper.ConvertJosnData(dt);
         }

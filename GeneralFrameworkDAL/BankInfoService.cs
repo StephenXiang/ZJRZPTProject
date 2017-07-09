@@ -13,14 +13,15 @@ namespace GeneralFrameworkDAL
     {
         public string UpdateBankInfo(Bank bank)
         {
-            var sql = @"update Bank set Name=@name,[Address]=@address,Connector=@connector,ConnectorPhone=@ConnectorPhone,ParentBankId=@ParentBankId,iszzd=@iszzd
+            var sql = @"update Bank set Name=@name,[Address]=@address,ParentBankId=@ParentBankId,iszzd=@iszzd,BankType=@BankType
 where Id=@bankid";
             var efc = DBHelper.Execute(sql,
                 new SqlParameter("@bankid", bank.ID),
                 new SqlParameter("@name", bank.Name.Trim()),
                 new SqlParameter("@address", bank.Address.Trim()),
-                new SqlParameter("@connector", bank.Connector.Trim()),
-                new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                //new SqlParameter("@connector", bank.Connector.Trim()),
+                //new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                 new SqlParameter("@BankType", bank.BankType),
                 new SqlParameter("@ParentBankId", bank.ParentBankId),
                 new SqlParameter("@iszzd", bank.iszzd)) as int?;
             //if (bank.logo1 != null)
@@ -60,11 +61,12 @@ where Id=@bankid";
             //}
             //else
             //{
-            sql = @"insert into Bank(Name,[Address],Connector,ConnectorPhone,ParentBankId,iszzd)values(@name,@address,@connector,@ConnectorPhone,@ParentBankId,@iszzd)";
+            sql = @"insert into Bank(Name,[Address],ParentBankId,iszzd,BankType)values(@name,@address,@ParentBankId,@iszzd,@BankType)";
             id = DBHelper.Execute(sql, new SqlParameter("@name", bank.Name.Trim()),
                 new SqlParameter("@address", bank.Address.Trim()),
-                new SqlParameter("@connector", bank.Connector.Trim()),
-                new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                //new SqlParameter("@connector", bank.Connector.Trim()),
+                //new SqlParameter("@ConnectorPhone", bank.ConnectorPhone.Trim()),
+                new SqlParameter("@BankType", bank.BankType),
                 new SqlParameter("@ParentBankId", bank.ParentBankId),
                 new SqlParameter("@iszzd", bank.iszzd)) as int?;
             //}
@@ -112,7 +114,7 @@ where Id=@bankid";
 
         public string GetBankInfolbForBankId(string BankId)
         {
-            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,a.[Desc],a.EditDate,iszzd from Bank a 
+            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,a.[Desc],a.EditDate,c.Leader,C.Phone,iszzd,BankType from Bank a 
 left join CooperativeBank c on a.ParentBankId = c.id where a.Id = " + BankId + "";
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.SerializeObject(dt);
@@ -121,7 +123,7 @@ left join CooperativeBank c on a.ParentBankId = c.id where a.Id = " + BankId + "
 
         public string GetBankDg(int page, int rows)
         {
-            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,a.EditDate from Bank a 
+            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,c.Leader,C.Phone,iszzd,a.EditDate,a.BankType from Bank a 
 left join CooperativeBank c on a.ParentBankId = c.id";
             DataTable dt = DBHelper.GetDataSet(sql);
             var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
@@ -215,5 +217,74 @@ left join CooperativeBank c on a.ParentBankId = c.id";
                 return true;
             }
         }
+
+        public bool AddLiaisonanMan(LiaisonanMan lman)
+        {
+            string sql = "insert into LiaisonanMan (BankId,Name,Post,Phone)values(@BankId,@Name,@Post,@Phone)";
+
+            var sid = DBHelper.Execute(sql,
+                new SqlParameter("@BankId", lman.BankId),
+                new SqlParameter("@Name", lman.Name),
+                new SqlParameter("@Post", lman.Post),
+                new SqlParameter("@Phone", lman.Phone));
+            if (sid > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public string GetLiaisonanManDG(int BankId, int page, int rows)
+        {
+            var sql = "select a.ID,a.Name,a.Post,a.Phone,b.Name as BankName from LiaisonanMan a left join Bank b on a.BankId = b.Id where a.BankId = '" + BankId + "' and IsDeleteed != 1";
+            DataTable dt = DBHelper.GetDataSet(sql);
+            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
+            return reply;
+        }
+
+        public bool EditLiaisonanMan(LiaisonanMan lman)
+        {
+            var sql = "update LiaisonanMan set Name = @Name,Post= @Post,Phone=@Phone where ID = @Id";
+            var sid = DBHelper.Execute(sql,
+               new SqlParameter("@Id", lman.Id),
+               new SqlParameter("@Name", lman.Name),
+               new SqlParameter("@Post", lman.Post),
+               new SqlParameter("@Phone", lman.Phone));
+            if (sid > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool DelLiaisonanMan(LiaisonanMan lman)
+        {
+            var sql = "Update LiaisonanMan set IsDeleteed = 1 where ID = @Id";
+            var sid = DBHelper.Execute(sql,
+              new SqlParameter("@Id", lman.Id));
+            if (sid > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //        public string GetBankDg(int page, int rows)
+        //        {
+        //            var sql = @"select a.Id, Name,[Address],Connector,ConnectorPhone,ParentBankId,c.BankName,a.EditDate from Bank a 
+        //left join CooperativeBank c on a.ParentBankId = c.id";
+        //            DataTable dt = DBHelper.GetDataSet(sql);
+        //            var reply = JSON.JsonHelper.TableToJson(dt.Rows.Count, JsonHelper.GetPagedTable(dt, page, rows));
+        //            return reply;
+        //        }
     }
 }

@@ -44,12 +44,12 @@
                     { field: 'Id', title: 'ID', width: 150, hidden: true, align: 'center' },
                     { field: 'EnterpriseId', title: '企业ID', width: 0, hidden: true, align: 'center' },
                     { field: 'Name', title: '企业名称', width: 150, align: 'center' },
-                    { field: 'Quota', title: '融资额度', width: 150, align: 'center' },
+                    { field: 'Quota', title: '融资额度(单位:万元)', width: 150, align: 'center' },
                     { field: 'Banks', title: '申请银行', width: 150, align: 'center' },
                     { field: 'PublishDate', title: '发布时间', width: 150, align: 'center' },
                     { field: 'SLBankName', title: '受理银行', width: 150, align: 'center' },
                     { field: 'CreditAmount', title: '放贷金额(单位:万元)', width: 150, align: 'center' },
-                    { field: 'CreditDate', title: '放款日期', width: 150, align: 'center' },
+                    { field: 'CreditDate', title: '放贷日期', width: 150, align: 'center' },
                     {
                         field: 'Status', title: '受理状态', width: 150, align: 'center', formatter:
                         function (value, row, index) {
@@ -106,18 +106,26 @@
                         field: 'Status', title: '受理状态', width: 300, align: 'center', formatter:
                         function (value, row, index) {
                             if (value == 0) {
-                                return '<b style="color:#FF0000;">待受理</b>';
+                                return '<b style="color:#FF0000;">协办行待受理</b>';
                             } else if (value == 1) {
-                                return '<b style="color:#CD00CD;">受理中</b>';
+                                return '<b style="color:#CD00CD;">协办行受理中</b>';
                             } else if (value == 2) {
-                                return '<b style="color:#8DB6CD;">已受理</b>';
-                            } else if (value == 3) {
-                                return '<b style="color:green;">受理成功</b>';
+                                return '<b style="color:#8DB6CD;">协办行已同意,主办行待受理</b>';
+                            }
+                            else if (value == 3) {
+                                return '<b style="color:#8DB6CD;">主办行受理中</b>';
                             } else if (value == 4) {
-                                return '<b style="color:#CDC5BF;">受理不成功</b>';
+                                return '<b style="color:#8DB6CD;">主办行已受理</b>';
+                            }
+                            else if (value == 5) {
+                                return '<b style="color:green;">受理成功</b>';
+                            } else if (value == 6) {
+                                return '<b style="color:#CDC5BF;">协办行受理不成功</b>';
+                            } else if (value == 7) {
+                                return '<b style="color:#CDC5BF;">主办行受理不成功</b>';
                             }
                         }
-                    }
+                    }, { field: 'Feedback', title: '受理不成功原因', width: 300, align: 'center' }
                 ]],
                 onClickRow: (function (index, row) {
                     loadEnterpriseInfoZZD(row.EnterpriseId);

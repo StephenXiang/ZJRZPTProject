@@ -15,15 +15,38 @@
             $('#loading').remove();
         }
         var UserInfo;
+        var BankAllInfo;
         UserInfo = JSON.parse($.cookie('UserInfo'));
         $(function () {
             $('#DetialInfo').hide();
+            $('#MastDetialInfo').panel('close');
             $('#statusdiv').hide();
             $('#zzdiddiv').hide();
             $('#ZZDFeedBackdlg').dialog('close');
             $('#yyzzDialog').dialog('close');
+
+            if (UserInfo["role"] == 3) {
+                GetBankInfoFoeUserName(UserInfo["name"]);
+                if (BankAllInfo[0]["BankType"] == 1) {
+                    loadMastzzddg();
+                }
+            }
             loadzzddg();
         });
+
+        function GetBankInfoFoeUserName(UserName) {
+            $.ajax({
+                type: "get",
+                async: false,
+                url: "../../WebServer/ZZDExamineApproveWebService.ashx?Method=GetBankInfoFoeUserName",
+                data: { UserName: UserInfo["name"] },
+                dataType: "json",
+                success: function (json) {
+                    BankAllInfo = json;
+
+                }
+            });
+        }
 
         function loadzzddg() {
             $('#ZZD_dg').datagrid({
@@ -32,7 +55,7 @@
                 rownumbers: true,
                 singleSelect: true,
                 striped: true,
-                title: '周转贷列表',
+                title: '周转贷列表(协办行)',
                 fitColumns: true,
                 pagination: true,
                 pagePosition: 'bottom',
@@ -52,15 +75,23 @@
                                         field: 'Status', title: '受理状态', width: 300, align: 'center', formatter:
                                             function (value, row, index) {
                                                 if (value == 0) {
-                                                    return '<b style="color:#FF0000;">待受理</b>';
+                                                    return '<b style="color:#FF0000;">协办行待受理</b>';
                                                 } else if (value == 1) {
-                                                    return '<b style="color:#CD00CD;">受理中</b>';
+                                                    return '<b style="color:#CD00CD;">协办行受理中</b>';
                                                 } else if (value == 2) {
-                                                    return '<b style="color:#8DB6CD;">已受理</b>';
-                                                } else if (value == 3) {
-                                                    return '<b style="color:green;">受理成功</b>';
+                                                    return '<b style="color:#8DB6CD;">协办行已同意,主办行待受理</b>';
+                                                }
+                                                else if (value == 3) {
+                                                    return '<b style="color:#8DB6CD;">主办行受理中</b>';
                                                 } else if (value == 4) {
-                                                    return '<b style="color:#CDC5BF;">受理不成功</b>';
+                                                    return '<b style="color:#8DB6CD;">主办行已受理</b>';
+                                                }
+                                                else if (value == 5) {
+                                                    return '<b style="color:green;">受理成功</b>';
+                                                } else if (value == 6) {
+                                                    return '<b style="color:#CDC5BF;">协办行受理不成功</b>';
+                                                } else if (value == 7) {
+                                                    return '<b style="color:#CDC5BF;">主办行受理不成功</b>';
                                                 }
                                             }
                                     }, {
@@ -69,16 +100,22 @@
                                                 if (value == 0) {
                                                     return '选中查看';
                                                 } else if (value == 1) {
-                                                    return '<a href="#" onclick="slclick(' + value + ',' + row.Id + ')">是否确认受理</a>';
+                                                    return '<a href="#" onclick="slclick(' + value + ',' + row.Id + ')">是否同意</a>';
                                                 } else if (value == 2) {
-                                                    return '<a href="#" onclick="slclick(' + value + ',' + row.Id + ')">是否受理成功</a>';
+                                                    return '无操作';
                                                 } else if (value == 3) {
                                                     return '无操作';
                                                 } else if (value == 4) {
                                                     return '无操作';
+                                                } else if (value == 5) {
+                                                    return '无操作';
+                                                } else if (value == 6) {
+                                                    return '无操作';
+                                                } else if (value == 7) {
+                                                    return '无操作';
                                                 }
                                             }
-                                    }
+                                    }, { field: 'Feedback', title: '受理不成功原因', width: 300, align: 'center' }
                 ]],
                 onClickRow: (function (index, row) {
                     if (row.Status == 0) {
@@ -98,28 +135,151 @@
                 })
             });
         }
-        function slclick(status, id) {
-            if (status == 1) {
-                $.messager.confirm('提示', '请确认该企业是否符合贵银行的周转贷条件！是否确认受理？', function (r) {
-                    if (r) {
-                        EditZZDStatus('2', id);
-                    } else {
 
+        function loadMastzzddg() {
+            $('#MastZZD_dg').datagrid({
+                url: '../../WebServer/ZZDExamineApproveWebService.ashx?Method=GetMastBankZZDDT',
+                queryParams: { UserName: UserInfo["name"] },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '周转贷列表(主办行)',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                                    { field: 'Id', title: 'ID', width: 0, hidden: true, align: 'center' },
+                                    { field: 'EnterpriseId', title: '企业ID', width: 0, hidden: true, align: 'center' },
+                                    { field: 'EnterpriseName', title: '企业名称', width: 300, align: 'center' },
+                                    { field: 'OriginalQuota', title: '原贷款金额(单位：万元)', width: 300, align: 'center' },
+                                    { field: 'BankName', title: '原贷款银行', width: 300, align: 'center' },
+                                    { field: 'ThisQuota', title: '本次贷款金额(单位：万元)', width: 300, align: 'center' },
+                                    { field: 'PublishDate', title: '发布时间', width: 300, align: 'center' },
+                                    {
+                                        field: 'Status', title: '受理状态', width: 300, align: 'center', formatter:
+                                            function (value, row, index) {
+                                                if (value == 0) {
+                                                    return '<b style="color:#FF0000;">协办行待受理</b>';
+                                                } else if (value == 1) {
+                                                    return '<b style="color:#CD00CD;">协办行受理中</b>';
+                                                } else if (value == 2) {
+                                                    return '<b style="color:#8DB6CD;">协办行已同意,主办行待受理</b>';
+                                                }
+                                                else if (value == 3) {
+                                                    return '<b style="color:#8DB6CD;">主办行受理中</b>';
+                                                } else if (value == 4) {
+                                                    return '<b style="color:#8DB6CD;">主办行已受理</b>';
+                                                }
+                                                else if (value == 5) {
+                                                    return '<b style="color:green;">受理成功</b>';
+                                                } else if (value == 6) {
+                                                    return '<b style="color:#CDC5BF;">协办行受理不成功</b>';
+                                                } else if (value == 7) {
+                                                    return '<b style="color:#CDC5BF;">主办行受理不成功</b>';
+                                                }
+                                            }
+                                    }, {
+                                        field: 'cz', title: '操作', width: 300, align: 'center', formatter:
+                                            function (value, row, index) {
+                                                if (value == 0) {
+                                                    return '选中查看';
+                                                } else if (value == 1) {
+                                                    return '选中查看';
+                                                } else if (value == 2) {
+                                                    return '选中查看';
+                                                } else if (value == 3) {
+                                                    return '<a href="#" onclick="Mastslclick(' + value + ',' + row.Id + ',0)">是否确认受理</a>';
+                                                } else if (value == 4) {
+                                                    return '<a href="#" onclick="Mastslclick(' + value + ',' + row.Id + ',0)">是否受理成功</a>';
+                                                } else if (value == 5) {
+                                                    return '无操作';
+                                                } else if (value == 6) {
+                                                    return '无操作';
+                                                } else if (value == 7) {
+                                                    return '无操作';
+                                                }
+                                            }
+                                    }, { field: 'Feedback', title: '受理不成功原因', width: 300, align: 'center' }
+                ]],
+                onClickRow: (function (index, row) {
+                    if (row.Status == 2) {
+                        loadMastEnterpriseInfo(row.EnterpriseId);
+                        loadMastEnterpriseFiancialInfo(row.EnterpriseId);
+                        loadMastZZDInfo(row.Id);
+                        EditZZDStatus('3', row.Id);
+
+                    } else {
+                        loadMastEnterpriseInfo(row.EnterpriseId);
+                        loadMastEnterpriseFiancialInfo(row.EnterpriseId);
+                        loadMastZZDInfo(row.Id);
+                    }
+                    $('#MastDetialInfo').panel('open');
+                }),
+                onDblClickRow: (function (index, row) {
+
+                })
+            });
+        }
+
+        function Mastslclick(status, id) {
+            if (status == 3) {
+                $.messager.defaults = { ok: "是", cancel: "否" };
+                $.messager.confirm('提示', '请确认该企业是否符合贵行的周转贷条件，是否确认受理？', function (r) {
+                    if (r) {
+                        EditZZDStatus('4', id);
+                    } else {
+                        //$.messager.defaults = { ok: "确定", cancel: "取消" };
+                        //$('#statustext').textbox('setValue', '5');
+                        //$('#zzdidtext').textbox("setValue", id);
+                        //$('#ZZDFeedBackdlg').dialog('open');
                     }
                 });
-            } else if (status == 2) {
+            } else if (status == 4) {
                 $.messager.defaults = { ok: "是", cancel: "否" };
                 $.messager.confirm('提示', '该企业的周转贷请求是否受理成功？', function (r) {
                     if (r) {
-                        EditZZDStatus('3', id);
+                        EditZZDStatus('5', id);
                     } else {
                         $.messager.defaults = { ok: "确定", cancel: "取消" };
-                        $('#statustext').textbox('setValue', '4');
+                        $('#statustext').textbox('setValue', '7');
                         $('#zzdidtext').textbox("setValue", id);
                         $('#ZZDFeedBackdlg').dialog('open');
                     }
                 });
             }
+        }
+
+        function slclick(status, id) {
+            if (status == 1) {
+                $.messager.defaults = { ok: "是", cancel: "否" };
+                $.messager.confirm('提示', '是否同意该企业的周转贷申请？', function (r) {
+                    if (r) {
+                        EditZZDStatus('2', id);
+                    } else {
+                        $.messager.defaults = { ok: "确定", cancel: "取消" };
+                        $('#statustext').textbox('setValue', '6');
+                        $('#zzdidtext').textbox("setValue", id);
+                        $('#ZZDFeedBackdlg').dialog('open');
+                    }
+                });
+            }
+            //else if (status == 2) {
+            //    $.messager.defaults = { ok: "是", cancel: "否" };
+            //    $.messager.confirm('提示', '该企业的周转贷请求是否受理成功？', function (r) {
+            //        if (r) {
+            //            EditZZDStatus('3', id);
+            //        } else {
+            //            $.messager.defaults = { ok: "确定", cancel: "取消" };
+            //            $('#statustext').textbox('setValue', '4');
+            //            $('#zzdidtext').textbox("setValue", id);
+            //            $('#ZZDFeedBackdlg').dialog('open');
+            //        }
+            //    });
+            //}
         }
         function EditZZDStatus(status, zzdid) {
             $.ajax({
@@ -130,7 +290,12 @@
                 dataType: "text",
                 success: function (text) {
                     if (text == "True") {
-                        loadzzddg();
+                        if (BankAllInfo[0]["BankType"] == 1) {
+                            loadzzddg();
+                            loadMastzzddg();
+                        } else {
+                            loadzzddg();
+                        }
                     } else {
                         $.messager.alert('提示', '周转贷数据状态修改失败!', "info");
                     }
@@ -148,7 +313,7 @@
                 $('#ZZDFeedBackdlg').dialog('close');
             }
             else if ($('#Feebacktext').textbox("getValue") == "") {
-                $.messager.alert('提示', '拒绝原因必须填写!', "info");
+                $.messager.alert('提示', '受理不成功原因必须填写!', "info");
             }
             else {
                 $.ajax({
@@ -160,7 +325,13 @@
                     success: function (text) {
                         if (text == "True") {
                             $('#ZZDFeedBackdlg').dialog('close');
-                            loadzzddg();
+
+                            if (BankAllInfo[0]['BankType'] == 1) {
+                                loadMastzzddg();
+                                loadzzddg();
+                            } else {
+                                loadzzddg();
+                            }
                         } else {
                             $.messager.alert('提示', '周转贷数据状态修改失败!', "info");
                         }
@@ -169,7 +340,54 @@
             }
 
         }
+        function loadMastEnterpriseInfo(EnterpriseId) {
+            $.ajax({
+                type: "Post",
+                dataType: "json",
+                async: true,
+                data: { EnterpriseId: EnterpriseId },
+                url: "../../WebServer/ZZDExamineApproveWebService.ashx?Method=GetEnterpriseInfoForEnterpriseId",
+                success: function (json) {
+                    var Enterprise = json;
+                    if (Enterprise["DataCount"] == 0) {
+                        $('#MastDetialInfo').hide();
+                        $.messager.alert('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
+                    } else {
+                        $('#MastDetialInfo').show();
+                        var Code = "";
+                        $('#MastlabEnterpriseName').html(Enterprise["Name"]);
+                        $('#MastlabCode').html(Enterprise["Code"]);
+                        $('#MastlabRegistType').html(Enterprise["RegistType"]);
+                        $('#MastlabProfession').html(Enterprise["Profession"]);
+                        $('#MastlabEnterpriseType').html(Enterprise["EnterpriseType"]);
+                        $('#MastlabRegistRegion').html(Enterprise["RegistRegion"]);
+                        $('#MastlabHuanping').html(Enterprise["Huanping"]);
+                        $('#MastlabRegFinance').html(Enterprise["RegFinance"]);
+                        $('#MastlabRegFinanceMt').html(Enterprise["RegFinanceMt"]);
+                        $('#MastlabBusiness').html(Enterprise["Business"]);
+                        $('#MastlabMainProduction').html(Enterprise["MainProduction"]);
+                        $('#MastlabCreateTime').html(Enterprise["CreateTime"]);
+                        $('#MastlabJuridicalPerson').html(Enterprise["JuridicalPerson"]);
+                        $('#MastlabConectionPerson').html(Enterprise["ConectionPerson"]);
+                        $('#MastlabConectionTelephone').html(Enterprise["ConnectionTelephone"]);
+                        $('#MastlabDesc').html(Enterprise["Desc"]);
+                        Code = Enterprise["Code"];
+                        if (Code == undefined || Code == "") {
+                            $('#MastBusinessLicenseImgTD').hide();
+                        } else {
+                            $("#MastBusinessLicenseImg").click(function () {
+                                yyzzShow(Code);
+                                $('#yyzzDialog').dialog('open');
+                            });
 
+
+                            //$('#BusinessLicenseImg').attr('href', '../../WebServer/EnterpriseService.ashx?Method=LoadBusinessLicenseImg&Code=' + Code + '');
+                            $('#MastBusinessLicenseImgTD').show();
+                        }
+                    }
+                }
+            });
+        }
         function loadEnterpriseInfo(EnterpriseId) {
             $.ajax({
                 type: "Post",
@@ -218,6 +436,46 @@
                 }
             });
         }
+        function loadMastEnterpriseFiancialInfo(EnterpriseId) {
+            $.ajax({
+                type: "get",
+                async: true,
+                url: '../../WebServer/ZZDExamineApproveWebService.ashx?Method=GetEnterpriseFinanceInfoByEnterpriseId',
+                data: { EnterpriseId: EnterpriseId },
+                dataType: "json",
+                success: function (json) {
+                    EnterpriseFiancia = json;
+                    if (EnterpriseFiancia["DataCount"] == 0) {
+                        $('#MastDetialInfo').hide();
+                        $.messager.alert('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
+                    } else {
+                        $('#MastDetialInfo').show();
+                        var thisyearMonths = EnterpriseFiancia["thisyear"].split('-');
+                        $('#MastllYear').html(EnterpriseFiancia["llyear"] + "年");
+                        $('#MastlYear').html(EnterpriseFiancia["lyear"] + "年");
+                        $('#MastthisYearMonth').html(thisyearMonths[0] + "年" + thisyearMonths[1] + "月");
+                        $('#MastllzczeLab').html(EnterpriseFiancia["llzcze"] + "&nbsp万元");
+                        $('#MastllfzzeLab').html(EnterpriseFiancia["llfzze"] + "&nbsp万元");
+                        $('#MastllsyzqyLab').html(EnterpriseFiancia["llsyzqy"] + "&nbsp万元");
+                        $('#MastllxssrLab').html(EnterpriseFiancia["llxssr"] + "&nbsp万元");
+                        $('#MastllyszkLab').html(EnterpriseFiancia["llyszk"] + "&nbsp万元");
+                        $('#MastlljlrLab').html(EnterpriseFiancia["lljlr"] + "&nbsp万元");
+                        $('#MastlzczeLab').html(EnterpriseFiancia["lzcze"] + "&nbsp万元");
+                        $('#MastlfzzeLab').html(EnterpriseFiancia["lzcze"] + "&nbsp万元");
+                        $('#MastlsyzqyLab').html(EnterpriseFiancia["lsyzqy"] + "&nbsp万元");
+                        $('#MastlxssrLab').html(EnterpriseFiancia["lxssr"] + "&nbsp万元");
+                        $('#MastlyszkLab').html(EnterpriseFiancia["lyszk"] + "&nbsp万元");
+                        $('#MastljlrLab').html(EnterpriseFiancia["ljlr"] + "&nbsp万元");
+                        $('#MastthiszczeLab').html(EnterpriseFiancia["thiszcze"] + "&nbsp万元");
+                        $('#MastthisfzzeLab').html(EnterpriseFiancia["thisfzze"] + "&nbsp万元");
+                        $('#MastthissyzqyLab').html(EnterpriseFiancia["thissyzqy"] + "&nbsp万元");
+                        $('#MastthisxssrLab').html(EnterpriseFiancia["thisxssr"] + "&nbsp万元");
+                        $('#MastthisyszkLab').html(EnterpriseFiancia["thisyszk"] + "&nbsp万元");
+                        $('#MastthisjlrLab').html(EnterpriseFiancia["thisjlr"] + "&nbsp万元");
+                    }
+                }
+            });
+        }
         function loadEnterpriseFiancialInfo(EnterpriseId) {
             $.ajax({
                 type: "get",
@@ -254,6 +512,32 @@
                         $('#thisxssrLab').html(EnterpriseFiancia["thisxssr"] + "&nbsp万元");
                         $('#thisyszkLab').html(EnterpriseFiancia["thisyszk"] + "&nbsp万元");
                         $('#thisjlrLab').html(EnterpriseFiancia["thisjlr"] + "&nbsp万元");
+                    }
+                }
+            });
+        }
+
+        function loadMastZZDInfo(zzdid) {
+            $.ajax({
+                type: "get",
+                async: true,
+                url: '../../WebServer/ZZDExamineApproveWebService.ashx?Method=GetZZDInfoByZZDID',
+                data: { ZZDID: zzdid },
+                dataType: "json",
+                success: function (json) {
+                    var EnterpriseZZDInfo = json;
+                    if (EnterpriseZZDInfo["DataCount"] == 0) {
+                        $('#MastDetialInfo').hide();
+                        $.messager.alert('提示', '获取企业信息失败，请重新选中企业融资数据行!', "info");
+                    } else {
+                        $('#MastDetialInfo').show();
+                        $('#Mastlabydkyh').html(EnterpriseZZDInfo["ydkyh"]);
+                        $('#Mastlabkhjlxm').html(EnterpriseZZDInfo["khjlxm"]);
+                        $('#Mastlabkhjllxdh').html(EnterpriseZZDInfo["khjllxdh"]);
+                        $('#Mastlabydkje').html(EnterpriseZZDInfo["ydkje"] + "&nbsp万元");
+                        $('#Mastlabdkdqsj').html(EnterpriseZZDInfo["dkdqsj"]);
+                        $('#Mastlabzbh').html(EnterpriseZZDInfo["zbh"]);
+                        $('#Mastlabbcdkje').html(EnterpriseZZDInfo["bcdkje"] + "&nbsp万元");
                     }
                 }
             });
@@ -570,8 +854,220 @@
                 </div>
             </div>
         </div>
+        <div>
+            <table id="MastZZD_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#MastZZD_dg-buttons'
+            "></table>
+        </div>
+        <div id="MastDetialInfo" class="easyui-panel" title="详细信息" style="width:100%;height:420px;padding:10px;">
+            <div class="easyui-layout" data-options="fit:true">
+                <div data-options="region:'west',split:false" style="width:35%;padding:10px;">
+                    <h2> 协办行已受理企业信息</h2>
+                    <div class="easyui-layout" data-options="fit:false" style=" min-width:500px; height:280px; width:98%; padding-bottom:5px;">
+                        <div data-options="region:'center'" style="width:33%;padding:10px">
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" width:80px; text-align:left;  ">企业名称:</td>
+                                    <td style=" text-align:left;"><label id="MastlabEnterpriseName" />无</td>
+                                    <td style=" text-align:right; ">信用代码:</td>
+                                    <td style=" text-align:left;"><label id="MastlabCode" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">企业类型:</td>
+                                    <td style=" text-align:left;"><label id="MastlabEnterpriseType" />无</td>
+                                    <td style=" text-align:right;">行业分类:</td>
+                                    <td style=" text-align:left;"><label id="MastlabProfession" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">主要产品:</td>
+                                    <td style=" text-align:left;"><label id="MastlabMainProduction" />无</td>
+                                    <td style=" text-align:right; ">环评结果:</td>
+                                    <td style=" text-align:left;"><label id="MastlabHuanping" />无</td>
+
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">注册类型:</td>
+                                    <td style=" text-align:left;"><label id="MastlabRegistType" />无</td>
+                                    <td style=" text-align:right;">注册地区:</td>
+                                    <td style=" text-align:left;"><label id="MastlabRegistRegion" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">注册资金:</td>
+                                    <td style=" text-align:left;"><label id="MastlabRegFinance" />无</td>
+                                    <td style=" text-align:right;">注册币种:</td>
+                                    <td style=" text-align:left;"><label id="MastlabRegFinanceMt" />无</td>
+                                </tr>
+                                <tr>
+
+                                    <td style=" text-align:left;">营业范围:</td>
+                                    <td style=" text-align:left;"><label id="MastlabBusiness" />无</td>
+                                    <td style=" text-align:right;">成立时间:</td>
+                                    <td style=" text-align:left;"><label id="MastlabCreateTime" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">法人代表:</td>
+                                    <td style=" text-align:left;"><label id="MastlabJuridicalPerson" />无</td>
+                                    <td style=" text-align:right;">营业执照:</td>
+                                    <td id="MastBusinessLicenseImgTD" style=" text-align:left;" colspan="5">
+                                        <a id="MastBusinessLicenseImg" name="MastBusinessLicenseImg" href="#">点击查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">联系人姓名:</td>
+                                    <td style=" text-align:left;"><label id="MastlabConectionPerson" />无</td>
+                                    <td style=" text-align:right;">联系人电话:</td>
+                                    <td style=" text-align:left;"><label id="MastlabConectionTelephone" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">企业简介:</td>
+                                    <td style=" text-align:left;" colspan="5"><label id="MastlabDesc" />无</td>
+
+                                </tr>
+                                <tr></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div data-options="region:'center'" style="padding:10px">
+                    <h2>财务信息</h2>
+                    <div class="easyui-layout" data-options="fit:false" style=" min-width:600px; height:280px; width:99%;padding-bottom:5px;">
+                        <div data-options="region:'west'" style=" min-width:200px; width:33%;padding:10px">
+                            <h3> <label id="MastllYear">无</label></h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">资产总额:</td>
+                                    <td style=" text-align:right;"><label id="MastllzczeLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">负债总额:</td>
+                                    <td style=" text-align:right;"><label id="MastllfzzeLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">销售收入:</td>
+                                    <td style=" text-align:right;"><label id="MastllxssrLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">应收账款:</td>
+                                    <td style=" text-align:right;"><label id="MastllyszkLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">净利润:</td>
+                                    <td style=" text-align:right;"><label id="MastlljlrLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">所有者权益:</td>
+                                    <td style=" text-align:right;"><label id="MastllsyzqyLab">无</label></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div data-options="region:'center'" style="width:33%;padding:10px">
+                            <h3> <label id="MastlYear">无</label></h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">资产总额:</td>
+                                    <td style=" text-align:right;"><label id="MastlzczeLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">负债总额:</td>
+                                    <td style=" text-align:right;"><label id="MastlfzzeLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">销售收入:</td>
+                                    <td style=" text-align:right;"><label id="MastlxssrLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">应收账款:</td>
+                                    <td style=" text-align:right;"><label id="MastlyszkLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">净利润:</td>
+                                    <td style=" text-align:right;"><label id="MastljlrLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">所有者权益:</td>
+                                    <td style=" text-align:right;"><label id="MastlsyzqyLab">无</label></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div data-options="region:'east'" style="width:33%;padding:10px">
+                            <h3> <label id="MastthisYearMonth">无</label></h3>
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" text-align:right;">资产总额:</td>
+                                    <td style=" text-align:right;"><label id="MastthiszczeLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">负债总额:</td>
+                                    <td style=" text-align:right;"><label id="MastthisfzzeLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">销售收入:</td>
+                                    <td style=" text-align:right;"><label id="MastthisxssrLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">应收账款:</td>
+                                    <td style=" text-align:right;"><label id="MastthisyszkLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">净利润:</td>
+                                    <td style=" text-align:right;"><label id="MastthisjlrLab">无</label></td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:right;">所有者权益:</td>
+                                    <td style=" text-align:right;"><label id="MastthissyzqyLab">无</label></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div data-options="region:'east'" style="width:30%;padding:10px">
+                    <h2> 周转贷需求</h2>
+                    <div class="easyui-layout" data-options="fit:false" style=" height:280px; width:98%;">
+                        <div data-options="region:'center'" style="width:33%;padding:10px">
+                            <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                                <tr>
+                                    <td style=" min-width:80px; text-align:left;">原贷款银行:</td>
+                                    <td style=" text-align:left;"><label id="Mastlabydkyh" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">客户经理姓名:</td>
+                                    <td style=" text-align:left;"><label id="Mastlabkhjlxm" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">客户经理联系电话:</td>
+                                    <td style=" text-align:left;"><label id="Mastlabkhjllxdh" />无</td>
+                                </tr>
+
+                                <tr>
+                                    <td style=" text-align:left;">原贷款金额:</td>
+                                    <td style=" text-align:left;"><label id="Mastlabydkje" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">贷款到期时间:</td>
+                                    <td style=" text-align:left;"><label id="Mastlabdkdqsj" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">主办行(经办行):</td>
+                                    <td style=" text-align:left;"><label id="Mastlabzbh" />无</td>
+                                </tr>
+                                <tr>
+                                    <td style=" text-align:left;">本次贷款金额:</td>
+                                    <td style=" text-align:left;"><label id="Mastlabbcdkje" />无</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="ZZDFeedBackdlg" class="easyui-dialog" title="拒绝受理原因" style="text-align: center;
+    <div id="ZZDFeedBackdlg" class="easyui-dialog" title="受理不成功原因" style="text-align: center;
         width: 500px; height:200px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#ZZDFeedBackdlg-buttons'
@@ -583,7 +1079,7 @@
             <input class="easyui-textbox" id="zzdidtext" name="zzdidtext" style="width:80%; height:80px;" data-options="label:'周转贷ID:'">
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" id="Feebacktext" name="Feebacktext" style="width:80%; height:80px;" data-options="label:'拒绝原因:',multiline:true">
+            <input class="easyui-textbox" id="Feebacktext" name="Feebacktext" style="width:80%; height:80px;" data-options="label:'情况说明:',multiline:true,prompt:'请描述受理不成功原因'">
         </div>
     </div>
     <div id="ZZDFeedBackdlg-buttons">

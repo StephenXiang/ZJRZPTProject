@@ -48,6 +48,7 @@
     <Compile Include="IndexTJInfo.cs" />
     <Compile Include="JRCPApply.cs" />
     <Compile Include="JRCPInfo.cs" />
+    <Compile Include="LiaisonanMan.cs" />
     <Compile Include="MainBank.cs" />
     <Compile Include="MessageInfo.cs" />
     <Compile Include="NewsInfo.cs" />

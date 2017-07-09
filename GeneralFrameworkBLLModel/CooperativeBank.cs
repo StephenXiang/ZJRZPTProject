@@ -15,6 +15,6 @@ namespace GeneralFrameworkBLLModel
         public int sort { get; set; }
         public string Leader { get; set; }
         public string Phone { get; set; }
-
+        public int IsDesplay { get; set; }
     }
 }

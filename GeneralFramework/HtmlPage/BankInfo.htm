@@ -10,6 +10,7 @@
     <script type="text/javascript" src="../jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/jquery.cookie.js"></script>
+
     <script type="text/javascript">
         $.parser.onComplete = function () {
             $('#loading').remove();
@@ -23,8 +24,9 @@
             $('#Logo1').filebox
             $('#UserNameTD').hide();
             $('#ExtraBankInfo').hide();
+            $('#dengdiv').hide();
             $('#Bankdlg').dialog('close');
-
+            $('#LiaisonanMandlg').dialog('close');
             if (UserInfo["role"] == 3) {
                 BankInfoID = GetBankId();
                 if (BankInfoID == "") {
@@ -32,10 +34,13 @@
                         if (r) {
                             isedit = false;
                             openBankdlg();
+                        } else {
+                            $('#dengdiv').show();
                         }
                     });
                 } else {
                     LoadBankDG(BankInfoID);
+                    LoadLiaisonanManDG(BankInfoID);
                 }
             } else {
                 loadBankAllDg();
@@ -60,28 +65,102 @@
                 pageList: [10, 20, 30],
                 columns: [[
                     { field: 'Id', title: 'ID', width: '10', hidden: true, align: 'center' },
-                    { field: 'Name', title: '银行名称', width: '450', align: 'center' },
-                    { field: 'Address', title: '地址', width: '450', align: 'center' },
-                    { field: 'Connector', title: '联系人', width: '250', align: 'center' },
-                    { field: 'ConnectorPhone', title: '电话', width: '250', align: 'center' },
-                    { field: 'BankName', title: '归属银行', width: '250', align: 'center' },
+                    { field: 'Name', title: '银行名称', width: 150, align: 'center' },
+                    { field: 'Address', title: '地址', width: 150, align: 'center' },
+                    { field: 'Connector', title: '联系人', width: '250', hidden: true, align: 'center' },
+                    { field: 'ConnectorPhone', title: '电话', width: '250', hidden: true, align: 'center' },
+                    { field: 'BankName', title: '归属银行', width: 300, align: 'center' },
                     { field: 'Desc', title: '银行简介', width: '250', hidden: true, align: 'center' },
                     { field: 'ParentBankId', title: 'ParentBankId', width: '10', hidden: true, align: 'center' },
-                    { field: 'iszzd', title: 'iszzd', width: '10', hidden: true, align: 'center' }
+                    { field: 'Leader', title: '领导姓名', width: 150, hidden: true, align: 'center' },
+                    { field: 'Phone', title: '联系电话', width: 150, hidden: true, align: 'center' },
+                    {
+                        field: 'iszzd', title: '是否允许周转贷', width: 150, hidden: false, align: 'center', formatter:
+                                              function (value, row, index) {
+                                                  if (value == false) {
+                                                      return '是';
+                                                  } else {
+                                                      return '否';
+                                                  }
+                                              }
+                    }, {
+                        field: 'BankType', title: '周转贷主办行', width: 150, hidden: false, align: 'center', formatter:
+                                             function (value, row, index) {
+                                                 if (value == 1) {
+                                                     return '是';
+                                                 } else {
+                                                     return '否';
+                                                 }
+                                             }
+                    }
                 ]], toolbar: [{
                     iconCls: 'icon-edit',
                     text: '编辑',
                     handler: function () {
                         isedit = true;
+                        var rows = $('#Bank_dg').datagrid('getRows');
+                        BankInfo = rows[0];
                         openBankdlg();
                     }
                 }],
+                onClickRow: (function (index, data) {
+                    if (data.length > 0) {
+                        BankInfo = data;
+                    }
+
+                }),
                 onLoadSuccess: (function (data) {
                     if (data.rows.length > 0)
                         BankInfo = data.rows[0];
                 })
             });
         }
+
+        function LoadLiaisonanManDG(bankid) {
+            $('#LiaisonanMan_dg').datagrid({
+                url: '../../WebServer/BankInfoWebService.ashx?Method=GetLiaisonanManDG',
+                queryParams: { BankID: bankid },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '银行联络员列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'Name', title: '联络员姓名', width: '450', align: 'center' },
+                    { field: 'Post', title: '职位', width: '450', align: 'center' },
+                    { field: 'Phone', title: '联系电话', width: '250', align: 'center' },
+                    { field: 'BankName', title: '归属银行', width: '250', align: 'center' }
+                ]], toolbar: [{
+                    iconCls: 'icon-add',
+                    text: '新增',
+                    handler: function () {
+                        openLiaisonanMandlg(0);
+
+                    }
+                }, '-', {
+                    iconCls: 'icon-edit',
+                    text: '修改',
+                    handler: function () {
+                        openLiaisonanMandlg(1);
+
+                    }
+                }, '-', {
+                    iconCls: 'icon-remove',
+                    text: '删除',
+                    handler: function () {
+                        DelLiaisonanMan();
+                    }
+                }]
+            });
+        }
+
 
         function loadBankAllDg() {
             $('#Bank_dg').datagrid({
@@ -102,17 +181,66 @@
                     { field: 'Id', title: 'ID', width: 150, hidden: true, align: 'center' },
                     { field: 'Name', title: '银行名称', width: 150, align: 'center' },
                     { field: 'Address', title: '银行地址', width: 150, align: 'center' },
-                    { field: 'Connector', title: '联系人', width: 150, align: 'center' },
-                    { field: 'ConnectorPhone', title: '电话', width: 150, align: 'center' },
-                    { field: 'BankName', title: '归属银行', width: 150, align: 'center' }
+                    { field: 'Connector', title: '联系人', width: 150, hidden: true, align: 'center' },
+                    { field: 'ConnectorPhone', title: '电话', width: 150, hidden: true, align: 'center' },
+                    { field: 'BankName', title: '归属银行', width: 150, align: 'center' },
+                    { field: 'Leader', title: '领导姓名', width: 150, hidden: true, align: 'center' },
+                    { field: 'Phone', title: '联系电话', width: 150, hidden: true, align: 'center' },
+                    {
+                        field: 'iszzd', title: '是否允许周转贷', width: 150, hidden: false, align: 'center', formatter:
+                    function (value, row, index) {
+                        if (value == "False") {
+                            return '是';
+                        } else {
+                            return '否';
+                        }
+                    }
+                    }, {
+                        field: 'BankType', title: '周转贷主办行', width: 150, hidden: false, align: 'center', formatter:
+                                            function (value, row, index) {
+                                                if (value == 1) {
+                                                    return '是';
+                                                } else {
+                                                    return '否';
+                                                }
+                                            }
+                    }
                 ]],
                 onClickRow: (function (index, data) {
+                    LoadAllLiaisonanManDG(data.Id);
                 }),
                 onDblClickRow: (function (index, row) {
 
                 })
             });
         }
+
+
+        function LoadAllLiaisonanManDG(bankid) {
+            $('#LiaisonanMan_dg').datagrid({
+                url: '../../WebServer/BankInfoWebService.ashx?Method=GetLiaisonanManDG',
+                queryParams: { BankID: bankid },
+                rownumbers: true,
+                singleSelect: true,
+                striped: true,
+                title: '银行联络员列表',
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                loadMsg: '正在加载数据...请稍后',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                columns: [[
+                    { field: 'ID', title: 'ID', width: '10', hidden: true, align: 'center' },
+                    { field: 'Name', title: '联络员姓名', width: '450', align: 'center' },
+                    { field: 'Post', title: '职位', width: '450', align: 'center' },
+                    { field: 'Phone', title: '联系电话', width: '250', align: 'center' },
+                    { field: 'BankName', title: '归属银行', width: '250', align: 'center' }
+                ]]
+            });
+        }
+
 
         function GetBankId() {
             var bankid = "";
@@ -133,7 +261,7 @@
         function openBankdlg() {
             $('#MainBankCmb').combobox({
                 //width: 145,
-                url: '../../WebServer/MainBankInfoWebService.ashx?Method=GetMainBankCmb',
+                url: '../../WebServer/CooperativeBank.ashx?Method=GetMainBankCmb',
                 valueField: 'ID',
                 textField: 'TypeName'
             });
@@ -152,6 +280,15 @@
                     $('input:radio[name="rd"]').eq(1).attr("checked", "checked");
                     $('input:radio[name="rd"]').eq(0).removeAttr("checked");
                     $('input:radio[name="rd"]').eq(1).click();
+                }
+                if (BankInfo.BankType == 1) {
+                    $('input:radio[name="BankType"]').eq(0).attr("checked", "checked");
+                    $('input:radio[name="BankType"]').eq(1).removeAttr("checked");
+                    $('input:radio[name="BankType"]').eq(0).click();
+                } else {
+                    $('input:radio[name="BankType"]').eq(1).attr("checked", "checked");
+                    $('input:radio[name="BankType"]').eq(0).removeAttr("checked");
+                    $('input:radio[name="BankType"]').eq(1).click();
                 }
             }
             else {
@@ -182,57 +319,14 @@
             else if ($('#BankAddresstext').val() == "") {
                 $.messager.alert('提示', '银行地址不得为空', 'info');
             }
-            else if ($('#Connectortext').val() == "") {
-                $.messager.alert('提示', '联系人不得为空', 'info');
-            }
-            else if ($('#ConnectorPhonetext').val() == "") {
-                $.messager.alert('提示', '联系电话不得为空', 'info');
-            }
-            else if (checkMobile($('#ConnectorPhonetext').val()) == false && checkPhone($('#ConnectorPhonetext').val()) == false) {
-                $.messager.alert('提示', '联系电话格式不正确', 'info');
-            }
-                //else if ($("input[name='rd']:checked").val() == 1) {
-                //    if ($('#Logo1').textbox('getValue') == "" && !isedit) {
-                //        $.messager.alert('提示', '请上传log1,白底，JPG格式，140*42像素', 'info');
-                //    }
-                //    else if ($('#Logo2').textbox('getValue') == "" && !isedit) {
-                //        $.messager.alert('提示', '请上传请上传log2,透明背景，JPG格式，124*46像素', 'info');
-                //    }
-                //    else if ($('#BankDesc').val() == "") {
-                //        $.messager.alert('提示', '请填写银行简介', 'info');
-                //    }
-                //    else {
-                //        $.messager.confirm('提示', '请确认您所填写的银行信息真实有效！是否现在保存？', function (r) {
-                //            if (r) {
-                //                var formData = new FormData($("#Bankff")[0]);
-                //                $.ajax({
-                //                    url: "../../WebServer/BankInfoWebService.ashx?Method=SaveBankInfo",
-                //                    type: 'POST',
-                //                    data: formData,
-                //                    async: false,
-                //                    cache: false,
-                //                    contentType: false,
-                //                    processData: false,
-                //                    //dataType: "text",
-                //                    success: function (data) {
-                //                        if (data != "") {
-                //                            $('#Bankdlg').dialog('close');
-                //                            $.messager.alert('提示', '银行信息保存成功', 'info');
-                //                            LoadBankDG(data);
-                //                        } else {
-                //                            $.messager.alert('提示', '银行信息保存失败，请重试', 'error');
-                //                        }
-                //                    },
-                //                    error: function (data) {
-                //                        $.messager.alert('提示', '银行信息保存失败', 'info');
-                //                    }
-                //                });
-                //            }
-                //        });
-                //    }
+                //else if ($('#Connectortext').val() == "") {
+                //    $.messager.alert('提示', '联系人不得为空', 'info');
                 //}
-                //else if ($('#BankDesc').val() == "") {
-                //    $.messager.alert('提示', '请填写银行简介', 'info');
+                //else if ($('#ConnectorPhonetext').val() == "") {
+                //    $.messager.alert('提示', '联系电话不得为空', 'info');
+                //}
+                //else if (checkMobile($('#ConnectorPhonetext').val()) == false && checkPhone($('#ConnectorPhonetext').val()) == false) {
+                //    $.messager.alert('提示', '联系电话格式不正确', 'info');
                 //}
             else {
                 $.messager.confirm('提示', '请确认您所填写的银行信息真实有效！是否现在保存？', function (r) {
@@ -252,6 +346,7 @@
                                     $('#Bankdlg').dialog('close');
                                     $.messager.alert('提示', '银行信息保存成功', 'info');
                                     LoadBankDG(data);
+                                    $('#dengdiv').hide();
                                 } else {
                                     $.messager.alert('提示', '银行信息保存失败，请重试', 'error');
                                 }
@@ -295,6 +390,130 @@
             }
         }
 
+        function openLiaisonanMandlg(isEdit) {
+            if (BankInfoID == "") {
+                $.messager.alert('提示', '银行编号获取失败，请刷新页面！', 'info');
+            } else {
+                $('#LiaisonanManBankId').textbox('setValue', BankInfoID);
+                $('#LiaisonanManIsEdit').textbox('setValue', isEdit);
+                if (isEdit == 1) {
+                    var LiaisonanManDGRow = $('#LiaisonanMan_dg').datagrid('getChecked');
+                    if (LiaisonanManDGRow.length > 0) {
+                        $('#LiaisonanManUserIdtxt').textbox('setValue', LiaisonanManDGRow[0].ID)
+                        $('#LiaisonanManName').textbox('setValue', LiaisonanManDGRow[0].Name);
+                        $('#LiaisonanManPost').textbox('setValue', LiaisonanManDGRow[0].Post);
+                        $('#LiaisonanManPhone').textbox('setValue', LiaisonanManDGRow[0].Phone);
+                        $('#LiaisonanMandlg').dialog('open');
+                    } else {
+                        $.messager.alert('提示', '没有选中需要修改的联络员信息，请先选中需要修改的联络员！', 'info');
+                    }
+                } else {
+                    $('#LiaisonanManName').textbox('setValue', "");
+                    $('#LiaisonanManPost').textbox('setValue', "");
+                    $('#LiaisonanManPhone').textbox('setValue', "");
+                    $('#LiaisonanMandlg').dialog('open');
+                }
+
+            }
+        }
+
+        function SaveLiaisonanMan() {
+            var LiaIsedit = $('#LiaisonanManIsEdit').textbox('getValue');
+            var Name = $('#LiaisonanManName').textbox('getValue');
+            var Post = $('#LiaisonanManPost').textbox('getValue');
+            var Phone = $('#LiaisonanManPhone').textbox('getValue');
+            if (Name == "") {
+                $.messager.alert('提示', '姓名不得为空！', 'info');
+            } else if (Post == "") {
+                $.messager.alert('提示', '职位不得为空！', 'info');
+            } else if (Phone == "") {
+                $.messager.alert('提示', '联系电话不得为空！', 'info');
+            } else if (!checkMobile(Phone)) {
+                $.messager.alert('提示', '联系电话格式不正确，只允许输入手机号！', 'info');
+            } else {
+                if (LiaIsedit == 0) {
+                    var formData = new FormData($("#LiaisonanManff")[0]);
+                    $.ajax({
+                        url: "../../WebServer/BankInfoWebService.ashx?Method=AddLiaisonanMan",
+                        type: 'POST',
+                        data: formData,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                $('#LiaisonanMandlg').dialog('close');
+                                $.messager.alert('提示', '联络员信息保存成功', 'info');
+                                LoadLiaisonanManDG($('#LiaisonanManBankId').textbox('getValue'));
+                            } else {
+                                $.messager.alert('提示', '联络员信息保存失败，请重试', 'error');
+                            }
+                        },
+                        error: function (data) {
+                            $.messager.alert('提示', '联络员信息保存失败', 'info');
+                        }
+                    })
+                }
+                else if (LiaIsedit == 1) {
+                    var EditformData = new FormData($("#LiaisonanManff")[0]);
+                    $.ajax({
+                        url: "../../WebServer/BankInfoWebService.ashx?Method=EditLiaisonanMan",
+                        type: 'POST',
+                        data: EditformData,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        dataType: "text",
+                        success: function (text) {
+                            if (text == "True") {
+                                $('#LiaisonanMandlg').dialog('close');
+                                $.messager.alert('提示', '联络员信息修改成功', 'info');
+                                LoadLiaisonanManDG($('#LiaisonanManBankId').textbox('getValue'));
+                            } else {
+                                $.messager.alert('提示', '联络员信息修改失败，请重试', 'error');
+                            }
+                        },
+                        error: function (data) {
+                            $.messager.alert('提示', '联络员信息修改失败', 'info');
+                        }
+                    })
+                }
+            }
+        }
+
+        function DelLiaisonanMan() {
+            var LiaisonanManDGRow = $('#LiaisonanMan_dg').datagrid('getChecked');
+            if (LiaisonanManDGRow.length > 0) {
+                $.messager.confirm('提示', '您确认要删除选中的联络人么？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            url: "../../WebServer/BankInfoWebService.ashx?Method=DelLiaisonanMan",
+                            type: 'POST',
+                            data: { 'Userid': LiaisonanManDGRow[0].ID },
+                            dataType: "text",
+                            success: function (text) {
+                                if (text == "True") {
+                                    $('#LiaisonanMandlg').dialog('close');
+                                    $.messager.alert('提示', '联络员信息删除成功', 'info');
+                                    LoadLiaisonanManDG(BankInfoID);
+                                } else {
+                                    $.messager.alert('提示', '联络员信息删除失败，请重试', 'error');
+                                }
+                            },
+                            error: function (data) {
+                                $.messager.alert('提示', '联络员信息删除失败', 'info');
+                            }
+                        });
+                    }
+                });
+            } else {
+                $.messager.alert('提示', '没有选中需要删除的联络员信息，请先选中需要删除的联络员！', 'info');
+            }
+        }
+
         function redioselect() {
             //var selected = $("input[name='rd']:checked").val();
             //if (selected == 0) {
@@ -306,21 +525,43 @@
             //    $('#log2tr').show();
             //}
         }
+
+        function closeBankDlg() {
+            $('#Bankdlg').dialog('close');
+            var rows = $('#Bank_dg').datagrid('getRows');
+            if (rows.length > 0) {
+                $('#dengdiv').hide();
+            } else {
+                $('#dengdiv').show();
+            }
+
+        }
     </script>
 </head>
 <body class="easyui-layout">
     <div id="loading" style="position:absolute;z-index:1000;top:0px;left:0px;width:100%;height:100%;background:#ffffff;">
         <font color="#15428B">加载中....</font>
     </div>
+
     <div data-options="region:'center'" style="height: 100%; border: 0px solid red;">
+        <div id="dengdiv">
+            <a href="#" id="dengjiBankInfoBtn" class="easyui-linkbutton" onclick="openBankdlg()">登记银行信息</a>
+        </div>
         <div>
             <table id="Bank_dg" data-options="
                 iconCls: 'icon-save',
                 buttons: '#RZ_dg-buttons'
             "></table>
         </div>
+        <div></div>
+        <div>
+            <table id="LiaisonanMan_dg" data-options="
+                iconCls: 'icon-save',
+                buttons: '#LiaisonanMan_dg-buttons'
+            "></table>
+        </div>
         <div id="Bankdlg" class="easyui-dialog" title="编辑银行信息" style="text-align: center;
-        width: 450px; height: 360px; padding: 10px" data-options="
+        width: 450px; height: 250px; padding: 10px" data-options="
                 iconCls: 'icon-save',
                 buttons: '#Bankdlg-buttons'
             ">
@@ -342,19 +583,26 @@
                         <td style=" text-align:right;">银行地址:</td>
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="BankAddresstext" name=" BankAddresstext" class="f1 easyui-textbox" style="width:90%;" /></td>
                     </tr>
-                    <tr>
+                    <tr style="display:none;">
                         <td style=" text-align:right;">联系人:</td>
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="Connectortext" name=" Connectortext" class="f1 easyui-textbox" style="width:90%;" /></td>
                     </tr>
-                    <tr>
+                    <tr style="display:none;">
                         <td style=" text-align:right;">联系电话:</td>
                         <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="ConnectorPhonetext" name=" ConnectorPhonetext" class="f1 easyui-textbox" style="width:90%;" /></td>
                     </tr>
                     <tr>
-                        <td style=" text-align:right;">是否接受周转贷:</td>
+                        <td style=" text-align:right;">接受周转贷:</td>
                         <td style=" text-align:left;">
                             &nbsp;&nbsp;&nbsp;<input type="radio" name="rd" value='0' onclick="redioselect()">是
                             <input type="radio" name="rd" value='1' checked="checked" onclick="redioselect()">否
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">周转贷主办行:</td>
+                        <td style=" text-align:left;">
+                            &nbsp;&nbsp;&nbsp;<input type="radio" name="BankType" value='1'>是
+                            <input type="radio" name="BankType" value='0' checked="checked">否
                         </td>
                     </tr>
                     <!--<tr id="log1tr">
@@ -381,7 +629,44 @@
         </div>
         <div id="Bankdlg-buttons">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveBankInfo()">保存</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#Bankdlg').dialog('close')">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="closeBankDlg()">
+                关闭
+            </a>
+        </div>
+
+        <div id="LiaisonanMandlg" class="easyui-dialog" title="添加联络员" style="text-align: center;
+        width: 350px; height: 200px; padding: 10px" data-options="
+                iconCls: 'icon-save',
+                buttons: '#LiaisonanMandlg-buttons'
+            ">
+            <form id="LiaisonanManff" method="post">
+                <table border="0" style=" width:100%; border-collapse:separate; border-spacing:0px 6px;">
+                    <tr id="LiaisonanManUserNameTD" style="display:none;">
+                        <td style=" text-align:right;">*联络员Id:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="LiaisonanManUserIdtxt" name="LiaisonanManUserIdtxt" class="f1 easyui-textbox" style="width:90%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">*姓名:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="LiaisonanManName" name="LiaisonanManName" class="easyui-textbox" style="width:90%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">*职位:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="LiaisonanManPost" name="LiaisonanManPost" class="f1 easyui-textbox" style="width:90%;" /></td>
+                    </tr>
+                    <tr>
+                        <td style=" text-align:right;">*联系电话:</td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="LiaisonanManPhone" name="LiaisonanManPhone" class="f1 easyui-textbox" style="width:90%;" /></td>
+                    </tr>
+                    <tr id="LiaisonanManIsEditExtraBankInfo" style="display:none;">
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="LiaisonanManBankId" name="LiaisonanManBankId" class="f1 easyui-textbox" style="width:90%;" /></td>
+                        <td style=" text-align:left;">&nbsp;&nbsp;&nbsp;<input id="LiaisonanManIsEdit" name="LiaisonanManIsEdit" class="f1 easyui-textbox" style="width:90%;" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="LiaisonanMandlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveLiaisonanMan()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#LiaisonanMandlg').dialog('close')">
                 关闭
             </a>
         </div>

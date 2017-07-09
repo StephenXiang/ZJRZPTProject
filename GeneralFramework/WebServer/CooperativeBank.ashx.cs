@@ -75,6 +75,7 @@ namespace GeneralFramework.WebServer
                 Phone = _request.Form[2],
                 sort = int.Parse(_request.Form[3].ToString()),
                 BankDesc = _request.Form[4],
+                IsDesplay = int.Parse(_request.Form["IsDesplay"].ToString()),
                 logo1 = StreamToBytes(logo1.InputStream),
                 logo2 = StreamToBytes(logo2.InputStream)
             };
@@ -88,12 +89,13 @@ namespace GeneralFramework.WebServer
             var logo2 = fs["logo2"];
             GeneralFrameworkBLLModel.CooperativeBank BankInfo = new GeneralFrameworkBLLModel.CooperativeBank
             {
-                Id = int.Parse(_request.Form[5].ToString()),
+                Id = int.Parse(_request.Form[6].ToString()),
                 BankName = _request.Form[0],
                 Leader = _request.Form[1],
                 Phone = _request.Form[2],
                 sort = int.Parse(_request.Form[3].ToString()),
                 BankDesc = _request.Form[4],
+                IsDesplay = int.Parse(_request.Form["IsDesplay"].ToString()),
                 logo1 = StreamToBytes(logo1.InputStream),
                 logo2 = StreamToBytes(logo2.InputStream)
             };
@@ -138,6 +140,11 @@ namespace GeneralFramework.WebServer
             _response.BinaryWrite(bytes);
             _response.Flush();
             _response.End();
+        }
+
+        public void GetMainBankCmb()
+        {
+            _response.Write(cbService.GetMainBankCmb());
         }
     }
 }

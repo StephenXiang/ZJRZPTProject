@@ -35,5 +35,14 @@ namespace GeneralFrameworkBLL
         {
             return zs.EditZZDStatus(status, zzdid, liyou);
         }
+        public string GetBankInfoForUserName(string UserName)
+        {
+            return zs.GetBankInfoForUserName(UserName);
+        }
+
+        public string GetMastBankZZDDT(string UserName, int page, int rows)
+        {
+            return zs.GetMastBankZZDDT(UserName, page, rows);
+        }
     }
 }

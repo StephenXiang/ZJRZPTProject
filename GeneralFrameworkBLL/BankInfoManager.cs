@@ -43,7 +43,7 @@ namespace GeneralFrameworkBLL
             return bi.GetBankDg(page, rows);
 
         }
-		
+
         public string GetMainBank(int page, int rows)
         {
             return bi.GetMainBank(page, rows);
@@ -56,6 +56,26 @@ namespace GeneralFrameworkBLL
         public bool DelMainBank(int mainBankId)
         {
             return bi.DelMainBank(mainBankId);
+        }
+
+        public bool AddLiaisonanMan(LiaisonanMan lman)
+        {
+            return bi.AddLiaisonanMan(lman);
+        }
+
+        public string GetLiaisonanManDG(int BankId, int page, int rows)
+        {
+            return bi.GetLiaisonanManDG(BankId, page, rows);
+        }
+
+        public bool EditLiaisonanMan(LiaisonanMan lman)
+        {
+            return bi.EditLiaisonanMan(lman);
+        }
+
+        public bool DelLiaisonanMan(LiaisonanMan lman)
+        {
+            return bi.DelLiaisonanMan(lman);
         }
     }
 }

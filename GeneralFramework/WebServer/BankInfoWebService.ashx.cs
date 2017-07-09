@@ -72,7 +72,7 @@ namespace GeneralFramework.WebServer
                 //var fs = _request.Files;
                 //var logo1 = fs["Logo1"];
                 //var logo2 = fs["logo2"];
-                var id = int.Parse(_request.Form[7]);
+                var id = int.Parse(_request.Form[8]);
                 if (id <= 0) return;
                 Bank BankInfo = new Bank
                 {
@@ -81,9 +81,10 @@ namespace GeneralFramework.WebServer
                     ParentBankId = _request.Form[1],
                     Name = _request.Form[2],
                     Address = _request.Form[3],
-                    Connector = _request.Form[4],
-                    ConnectorPhone = _request.Form[5],
+                    //Connector = _request.Form[4],
+                    //ConnectorPhone = _request.Form[5],
                     iszzd = int.Parse(_request.Form[6]),
+                    BankType = int.Parse(_request.Form[7])
                     //BankDesc = _request.Form[7],
                     //logo1 = logo1 == null ? null : StreamToBytes(logo1.InputStream),
                     //logo2 = logo2 == null ? null : StreamToBytes(logo2.InputStream)
@@ -103,9 +104,10 @@ namespace GeneralFramework.WebServer
                     ParentBankId = _request.Form[1],
                     Name = _request.Form[2],
                     Address = _request.Form[3],
-                    Connector = _request.Form[4],
-                    ConnectorPhone = _request.Form[5],
+                    //Connector = _request.Form[4],
+                    //ConnectorPhone = _request.Form[5],
                     iszzd = int.Parse(_request.Form[6]),
+                    BankType = int.Parse(_request.Form[7])
                     //BankDesc = _request.Form[7],
                     //logo1 = StreamToBytes(logo1.InputStream),
                     //logo2 = StreamToBytes(logo2.InputStream)
@@ -201,6 +203,56 @@ namespace GeneralFramework.WebServer
         {
             int mainbanid = int.Parse(_request["bankid"]);
             _response.Write(_bi.DelMainBank(mainbanid));
+        }
+
+
+
+        public void AddLiaisonanMan()
+        {
+            LiaisonanMan lman = new LiaisonanMan();
+            var data = _request;
+            var LiaisonanManName = data.Form["LiaisonanManName"].ToString();
+            var LiaisonanManPost = data.Form["LiaisonanManPost"].ToString();
+            var LiaisonanManPhone = data.Form["LiaisonanManPhone"].ToString();
+            var LiaisonanManBankId = data.Form["LiaisonanManBankId"].ToString();
+            lman.Name = LiaisonanManName;
+            lman.Post = LiaisonanManPost;
+            lman.Phone = LiaisonanManPhone;
+            lman.BankId = int.Parse(LiaisonanManBankId);
+            _response.Write(_bi.AddLiaisonanMan(lman));
+        }
+
+        public void GetLiaisonanManDG()
+        {
+            int BankId; int page; int rows;
+            BankId = int.Parse(_request["BankID"].ToString());
+            page = int.Parse(_request["page"].ToString());
+            rows = int.Parse(_request["rows"].ToString());
+            _response.Write(_bi.GetLiaisonanManDG(BankId, page, rows));
+        }
+
+        public void EditLiaisonanMan()
+        {
+            LiaisonanMan lman = new LiaisonanMan();
+            var data = _request;
+            var Id = data.Form["LiaisonanManUserIdtxt"].ToString();
+            var LiaisonanManName = data.Form["LiaisonanManName"].ToString();
+            var LiaisonanManPost = data.Form["LiaisonanManPost"].ToString();
+            var LiaisonanManPhone = data.Form["LiaisonanManPhone"].ToString();
+            var LiaisonanManBankId = data.Form["LiaisonanManBankId"].ToString();
+            lman.Name = LiaisonanManName;
+            lman.Post = LiaisonanManPost;
+            lman.Phone = LiaisonanManPhone;
+            lman.Id = int.Parse(Id);
+            _response.Write(_bi.EditLiaisonanMan(lman));
+        }
+
+        public void DelLiaisonanMan()
+        {
+            LiaisonanMan lman = new LiaisonanMan();
+            var Id = int.Parse(_request.Form["Userid"].ToString());
+            lman.Id = Id;
+            _response.Write(_bi.DelLiaisonanMan(lman));
         }
     }
 }
